@@ -1,0 +1,8 @@
+<type id="0" texture="units.png">
+	<unit name="unit_tank">
+		<frame x="452" y="287" width="13" height="13" />
+		<frame x="472" y="288" width="13" height="12" />
+		<frame x="489" y="288" width="13" height="12" />
+		<frame x="508" y="288" width="13" height="12" />
+	</unit>
+</type>

@@ -1,0 +1,113 @@
+<type id="0" texture="tiles.png">
+	<tile name="map_water">
+		<frame x="18" y="1" width="16" height="16" />
+	</tile>
+	<tile name="map_ground">
+		<frame x="1" y="1" width="16" height="16" />
+	</tile>
+	<tile name="map_forest">
+		<frame x="35" y="1" width="16" height="16" />
+	</tile>
+	<tile name="map_mountain">
+		<frame x="52" y="1" width="16" height="21" />
+	</tile>
+	<tile name="map_qg_red">
+		<frame x="31" y="18" width="16" height="31" />
+		<frame x="31" y="50" width="16" height="31" />
+	</tile>
+	<tile name="map_qg_blue">
+		<frame x="48" y="23" width="16" height="31" />
+		<frame x="48" y="55" width="16" height="31" />
+	</tile>
+	<tile name="map_qg_green">
+		<frame x="31" y="82" width="16" height="31" />
+		<frame x="31" y="114" width="16" height="31" />
+	</tile>
+	<tile name="map_qg_yellow">
+		<frame x="48" y="87" width="16" height="31" />
+		<frame x="48" y="119" width="16" height="31" />
+	</tile>
+	<tile name="map_qg_black">
+		<frame x="65" y="23" width="16" height="31" />
+		<frame x="65" y="55" width="16" height="31" />
+	</tile>
+	<tile name="map_tower_red">
+		<frame x="1" y="18" width="14" height="20" />
+		<frame x="16" y="18" width="14" height="20" />
+	</tile>
+	<tile name="map_tower_blue">
+		<frame x="1" y="39" width="14" height="20" />
+		<frame x="16" y="39" width="14" height="20" />
+	</tile>
+	<tile name="map_tower_green">
+		<frame x="1" y="60" width="14" height="20" />
+		<frame x="16" y="60" width="14" height="20" />
+	</tile>
+	<tile name="map_tower_yellow">
+		<frame x="1" y="81" width="14" height="20" />
+		<frame x="16" y="81" width="14" height="20" />
+	</tile>
+	<tile name="map_tower_black">
+		<frame x="1" y="102" width="14" height="20" />
+		<frame x="16" y="102" width="14" height="20" />
+	</tile>
+	<tile name="map_tower_neutral">
+		<frame x="1" y="123" width="14" height="20" />
+	</tile>
+	<tile name="map_gfactory_red">
+		<frame x="82" y="23" width="15" height="28" />
+		<frame x="82" y="52" width="15" height="28" />
+		<frame x="82" y="81" width="15" height="28" />
+		<frame x="82" y="110" width="15" height="28" />
+	</tile>
+	<tile name="map_gfactory_blue">
+		<frame x="98" y="23" width="15" height="28" />
+		<frame x="98" y="52" width="15" height="28" />
+		<frame x="98" y="81" width="15" height="28" />
+		<frame x="98" y="110" width="15" height="28" />
+	</tile>
+	<tile name="map_gfactory_green">
+		<frame x="114" y="23" width="15" height="28" />
+		<frame x="114" y="52" width="15" height="28" />
+		<frame x="114" y="81" width="15" height="28" />
+		<frame x="114" y="110" width="15" height="28" />
+	</tile>
+	<tile name="map_gfactory_yellow">
+		<frame x="130" y="23" width="15" height="28" />
+		<frame x="130" y="52" width="15" height="28" />
+		<frame x="130" y="81" width="15" height="28" />
+		<frame x="130" y="110" width="15" height="28" />
+	</tile>
+	<tile name="map_gfactory_black">
+		<frame x="83" y="139" width="15" height="28" />
+		<frame x="83" y="168" width="15" height="28" />
+		<frame x="83" y="197" width="15" height="28" />
+		<frame x="83" y="226" width="15" height="28" />
+	</tile>
+	<tile name="map_gfactory_neutral">
+		<frame x="16" y="123" width="14" height="16" />
+	</tile>
+	<tile name="map_afactory_red">
+		<frame x="1" y="144" width="16" height="18" />
+		<frame x="1" y="163" width="16" height="18" />
+	</tile>
+	<tile name="map_afactory_blue">
+		<frame x="18" y="146" width="16" height="18" />
+		<frame x="18" y="165" width="16" height="18" />
+	</tile>
+	<tile name="map_afactory_green">
+		<frame x="1" y="182" width="16" height="18" />
+		<frame x="1" y="201" width="16" height="18" />
+	</tile>
+	<tile name="map_afactory_yellow">
+		<frame x="18" y="184" width="16" height="18" />
+		<frame x="18" y="203" width="16" height="18" />
+	</tile>
+	<tile name="map_afactory_black">
+		<frame x="1" y="220" width="16" height="18" />
+		<frame x="18" y="222" width="16" height="18" />
+	</tile>
+	<tile name="map_afactory_neutral">
+		<frame x="65" y="87" width="16" height="18" />
+	</tile>
+</type>
