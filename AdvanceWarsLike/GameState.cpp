@@ -31,3 +31,9 @@ void GameState::display(sf::RenderWindow &window)
 {
 	this->_mapManager.draw(window);
 }
+
+void GameState::spawnUnit(Player &player, IUnit *unit)
+{
+	unit->setGraphicsComponent(new GraphicsComponent(this->_resourcesManager.at("unit_tank")));
+	player.addUnit(unit);
+}

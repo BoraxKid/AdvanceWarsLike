@@ -2,7 +2,7 @@
 #define RESOURCESMANAGER_H_
 #pragma once
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 #include "pugixml.hpp"
@@ -13,6 +13,7 @@ class ResourcesManager
 public:
 	ResourcesManager();
 	virtual ~ResourcesManager();
+
 	void update(const sf::Time &elapsed);
 	void loadTexture(sf::String textureName);
 	void loadSprites(const char *file);

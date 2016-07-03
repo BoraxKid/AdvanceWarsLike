@@ -9,6 +9,7 @@ class Player
 public:
 	Player();
 	virtual ~Player();
+
 	void addUnit(IUnit *unit);
 	const std::vector<IUnit *> &getUnits() const;
 

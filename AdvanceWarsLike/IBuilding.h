@@ -6,6 +6,7 @@ class IBuilding
 {
 public:
 	virtual ~IBuilding() {}
+
 	virtual void update() = 0;
 };
 

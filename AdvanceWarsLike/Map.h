@@ -2,11 +2,12 @@
 #define MAP_H_
 #pragma once
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
 
 #include "ResourcesManager.h"
+#include "IUnit.h"
 
 typedef int Tile;
 
@@ -16,6 +17,7 @@ class Map : public sf::Drawable, public sf::Transformable
 public:
 	Map(ResourcesManager &resourcesManager);
 	virtual ~Map();
+
 	void dump() const;
 
 private:
@@ -24,6 +26,7 @@ private:
 	ResourcesManager &_resourcesManager;
 	std::map<sf::String, std::vector<std::vector<Tile>>> _tiles;
 	std::vector<std::vector<Tile>> _buildings;
+	std::vector<std::vector<IUnit *>> _units;
 	std::map<Tile, sf::String> _tilesNames;
 	sf::Vector2u _tileSize;
 	sf::Vector2u _size;

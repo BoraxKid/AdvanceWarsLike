@@ -2,7 +2,7 @@
 #define APPLICATION_H_
 #pragma once
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <queue>
 
@@ -15,6 +15,7 @@ class Application
 public:
 	Application();
 	virtual ~Application();
+
 	void run();
 
 private:

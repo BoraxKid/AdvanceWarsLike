@@ -2,7 +2,7 @@
 #define ANIMATEDSPRITE_H_
 #pragma once
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 class AnimatedSprite : public sf::Drawable, public sf::Transformable
 {
@@ -11,6 +11,7 @@ public:
 	AnimatedSprite(const AnimatedSprite &cpy);
 	AnimatedSprite &operator=(const AnimatedSprite &cpy);
 	virtual ~AnimatedSprite();
+
 	void update(const sf::Time &elapsed);
 	void setTexture(const sf::Texture *texture);
 	void addFrame(sf::IntRect rect);

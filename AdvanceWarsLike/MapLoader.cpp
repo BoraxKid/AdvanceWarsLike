@@ -1,4 +1,3 @@
-#include <iostream>
 #include "MapLoader.h"
 
 MapLoader::MapLoader()
@@ -44,6 +43,7 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 bool MapLoader::loadMap(Map &map, const char *fileName) const
 {
 	std::vector<std::vector<Tile>>::iterator iter;
+	std::vector<std::vector<IUnit *>>::iterator iterUnits;
 	std::vector<Tile>::iterator iter2;
 	pugi::xml_parse_result result;
 	pugi::xml_document doc;
@@ -55,6 +55,13 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 	data = doc.child("map");
 	map._tileSize = sf::Vector2u(data.attribute("tilewidth").as_uint(), data.attribute("tileheight").as_uint());
 	map._size = sf::Vector2u(data.attribute("width").as_uint(), data.attribute("height").as_uint());
+	map._units = std::vector<std::vector<IUnit *>>(map._size.x);
+	iterUnits = map._units.begin();
+	while (iterUnits != map._units.end())
+	{
+		(*iterUnits) = std::vector<IUnit *>(map._size.y, nullptr);
+		++iterUnits;
+	}
 	data = doc.child("map").child("tileset").child("image");
 	tile = doc.child("map").child("tileset").child("tile");
 	while (tile)

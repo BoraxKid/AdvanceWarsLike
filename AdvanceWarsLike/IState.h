@@ -2,13 +2,14 @@
 #define ISATE_H_
 #pragma once
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <queue>
 
 class IState
 {
 public:
 	virtual ~IState() {}
+
 	virtual void pause() = 0;
 	virtual void resume() = 0;
 	virtual void handleEvents(std::queue<sf::Event> &events) = 0;

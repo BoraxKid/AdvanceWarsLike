@@ -2,12 +2,16 @@
 #define IUNIT_H_
 #pragma once
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
+
+#include "GraphicsComponent.h"
 
 class IUnit : public sf::Drawable, public sf::Transformable
 {
 public:
 	virtual ~IUnit() {}
+
+	virtual void setGraphicsComponent(GraphicsComponent *graphics) = 0;
 	virtual void update(const sf::Time &elapsedTime) = 0;
 
 protected:

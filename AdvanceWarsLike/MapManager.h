@@ -13,6 +13,7 @@ class MapManager
 public:
 	MapManager(ResourcesManager &resourcesManager);
 	virtual ~MapManager();
+
 	void loadMap(const char *fileName);
 	void draw(sf::RenderWindow &window) const;
 
