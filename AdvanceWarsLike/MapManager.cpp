@@ -16,6 +16,15 @@ void MapManager::loadMap(const char *fileName)
 		this->_activeMaps.pop_back();
 }
 
+bool MapManager::addUnit(IUnit *unit, sf::Vector2u position)
+{
+	if (!this->_activeMaps.empty())
+		return (this->_activeMaps.back().addUnit(unit, position));
+	else
+		return (false); // TODO: throw exception ?
+	return (false);
+}
+
 void MapManager::draw(sf::RenderWindow &window) const
 {
 	std::vector<Map>::const_iterator iter = this->_activeMaps.begin();

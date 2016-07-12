@@ -158,6 +158,7 @@
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="ResourcesManager.h" />
+    <ClInclude Include="StatisticsComponent.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>

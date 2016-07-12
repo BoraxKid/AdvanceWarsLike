@@ -101,6 +101,9 @@
     <ClInclude Include="GraphicsComponent.h">
       <Filter>Fichiers d%27en-tête\Components</Filter>
     </ClInclude>
+    <ClInclude Include="StatisticsComponent.h">
+      <Filter>Fichiers d%27en-tête\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="map.tmx" />

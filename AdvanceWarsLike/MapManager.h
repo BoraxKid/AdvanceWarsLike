@@ -15,6 +15,7 @@ public:
 	virtual ~MapManager();
 
 	void loadMap(const char *fileName);
+	bool addUnit(IUnit *unit, sf::Vector2u position);
 	void draw(sf::RenderWindow &window) const;
 
 private:

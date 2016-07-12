@@ -9,6 +9,16 @@ Map::~Map()
 {
 }
 
+bool Map::addUnit(IUnit *unit, sf::Vector2u position)
+{
+	if (position.x > this->_size.x && position.y > this->_size.y)
+		return (false); // TODO: throw error
+	if (this->_units.at(position.x).at(position.y) != nullptr)
+		return (false);
+	this->_units.at(position.x).at(position.y) = unit;
+	return (true);
+}
+
 void Map::dump() const
 {
 	std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iterMap = this->_tiles.begin();
@@ -67,6 +77,11 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 					AnimatedSprite &sprite = this->_resourcesManager.at(iter->second);
 					sprite.setPosition(sf::Vector2f(static_cast<float>(i * 16), static_cast<float>(j * 16)));
 					target.draw(sprite, states);
+				}
+				if (this->_units.at(i).at(j) != nullptr)
+				{
+					this->_units.at(i).at(j)->setPosition(sf::Vector2f(static_cast<float>(i * 16), static_cast<float>(j * 16)));
+					target.draw(*this->_units.at(i).at(j), states);
 				}
 				++j;
 			}

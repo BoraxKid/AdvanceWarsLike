@@ -18,6 +18,7 @@ public:
 	Map(ResourcesManager &resourcesManager);
 	virtual ~Map();
 
+	bool addUnit(IUnit *unit, sf::Vector2u position);
 	void dump() const;
 
 private:
