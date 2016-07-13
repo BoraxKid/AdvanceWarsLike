@@ -9,13 +9,12 @@ GameState::GameState(ResourcesManager &resourcesManager)
 	this->spawnUnit(this->_player, new Unit(), sf::Vector2u(12, 2));
 	if (!this->_font.loadFromFile("uni0553-webfont.ttf"))
 		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
-	const_cast<sf::Texture &>(this->_font.getTexture(12)).setSmooth(false);
 	this->_menu.addButton(this->_font, "button 1");
 	this->_menu.addButton(this->_font, "BUTTON 2");
 	this->_menu.addButton(this->_font, "button 3");
-	this->_menu.addButton(this->_font, "BUTTON 4");
-	this->_menu.addButton(this->_font, "button 5");
-	this->_menu.addButton(this->_font, "BUTTON FAR TOO LONG");
+	this->_menu.addButton(this->_font, "BUTTON 4 (FAR TOO LONG)");
+	this->_menu.addButton(this->_font, "BUTTON 5");
+	this->_menu.addButton(this->_font, "button 6");
 	this->_menu.setPosition(sf::Vector2f(30, 20));
 }
 

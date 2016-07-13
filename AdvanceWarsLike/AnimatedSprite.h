@@ -8,8 +8,6 @@ class AnimatedSprite : public sf::Drawable, public sf::Transformable
 {
 public:
 	AnimatedSprite(const sf::Time frameTime = sf::seconds(0.5f));
-	AnimatedSprite(const AnimatedSprite &cpy);
-	AnimatedSprite &operator=(const AnimatedSprite &cpy);
 	virtual ~AnimatedSprite();
 
 	void update(const sf::Time &elapsed);

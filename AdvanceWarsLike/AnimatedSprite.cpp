@@ -5,22 +5,6 @@ AnimatedSprite::AnimatedSprite(const sf::Time frameTime)
 {
 }
 
-AnimatedSprite::AnimatedSprite(const AnimatedSprite &cpy)
-	: _texture(cpy._texture), _frames(cpy._frames)
-{
-}
-
-AnimatedSprite &AnimatedSprite::operator=(const AnimatedSprite &cpy)
-{
-	if (this != &cpy)
-	{
-		this->_texture = cpy._texture;
-		this->_frames = cpy._frames;
-		this->_sprites = cpy._sprites;
-	}
-	return (*this);
-}
-
 AnimatedSprite::~AnimatedSprite()
 {
 	this->_frames.clear();

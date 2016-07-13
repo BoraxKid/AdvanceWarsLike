@@ -23,17 +23,17 @@ void Button::activate()
 
 void Button::init()
 {
-	this->_text.setCharacterSize(12);
+	this->_text.setCharacterSize(8);
 	this->_text.setColor(sf::Color::White);
-	sf::FloatRect bounds = this->_text.getLocalBounds();
-	if (bounds.width > this->_width)
-		this->_width = bounds.width + 6;
+	sf::Uint16 tmp = static_cast<sf::Uint16>(this->_text.getLocalBounds().width);
+	if (tmp > this->_width)
+		this->_width = tmp + 6;
 	this->_rect.setSize(sf::Vector2f(this->_width, this->_height));
 	this->_rect.setFillColor(sf::Color(102, 102, 102));
 	this->_rect.setOutlineColor(sf::Color(239, 239, 239));
 	this->_rect.setOutlineThickness(1.0f);
 	this->_rect.setPosition(sf::Vector2f(0.0f, 0.0f));
-	this->_text.setPosition(sf::Vector2f(2.0f, 0.0f));
+	this->_text.setPosition(sf::Vector2f(2.0f, this->_height - this->_text.getCharacterSize() - 4.0f));
 }
 
 void Button::setHovered(const bool &hovered)

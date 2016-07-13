@@ -1,7 +1,7 @@
 #include "Menu.h"
 
 Menu::Menu()
-	: _currentHeight(0), _buttonWidth(0)
+	: _currentHeight(0), _buttonWidth(100)
 {
 }
 
@@ -11,7 +11,7 @@ Menu::~Menu()
 
 void Menu::addButton(const sf::Font &font, const sf::String &text)
 {
-	this->_buttons.push_back(Button(font, text));
+	this->_buttons.push_back(Button(font, text, this->_buttonWidth));
 	this->_buttons.back().move(sf::Vector2f(0.0f, this->_currentHeight));
 	sf::Uint16 tmp = this->_buttons.back().getWidth();
 	if (this->_buttonWidth == 0)
