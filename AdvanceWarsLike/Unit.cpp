@@ -1,7 +1,7 @@
 #include "Unit.h"
 
-Unit::Unit(sf::Vector2u position)
-	: _position(position), _graphics(nullptr), _stats(nullptr)
+Unit::Unit()
+	: _position(0, 0), _graphics(nullptr), _stats(nullptr)
 {
 }
 

@@ -9,7 +9,18 @@
 #include "ResourcesManager.h"
 #include "IUnit.h"
 
-typedef int Tile;
+enum Tile
+	{
+		GROUND = 0,
+		WATER = 1,
+		FOREST = 2,
+		MOUNTAIN = 3,
+		TOWER_RED = 15,
+		TOWER_BLUE = 30,
+		TOWER_GREEN = 45,
+		TOWER_YELLOW = 60,
+		TOWER_BLACK = 75
+	};
 
 class Map : public sf::Drawable, public sf::Transformable
 {

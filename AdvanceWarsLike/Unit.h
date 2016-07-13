@@ -7,7 +7,7 @@
 class Unit : public IUnit
 {
 public:
-	Unit(sf::Vector2u position = sf::Vector2u(0, 0));
+	Unit();
 	virtual ~Unit();
 
 	virtual void setGraphicsComponent(GraphicsComponent *graphics);

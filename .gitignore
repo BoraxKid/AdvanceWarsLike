@@ -6,6 +6,7 @@ AdvanceWarsLike/lib/*
 AdvanceWarsLike/lib
 AdvanceWarsLike/include/*
 AdvanceWarsLike/include
+*.el
 
 # User-specific files
 *.suo

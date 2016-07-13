@@ -27,7 +27,7 @@ void Application::run()
 			else
 				events.push(e);
 		}
-		this->_states.back()->handleEvents(events);
+		this->_states.back()->handleEvents(this->_window, events);
 		this->_states.back()->update(clock.restart());
 		this->_window.clear(sf::Color::Cyan);
 		this->_states.back()->display(this->_window);

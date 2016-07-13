@@ -20,8 +20,6 @@ bool MapManager::addUnit(IUnit *unit, sf::Vector2u position)
 {
 	if (!this->_activeMaps.empty())
 		return (this->_activeMaps.back().addUnit(unit, position));
-	else
-		return (false); // TODO: throw exception ?
 	return (false);
 }
 

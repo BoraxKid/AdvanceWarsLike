@@ -12,7 +12,7 @@ Map::~Map()
 bool Map::addUnit(IUnit *unit, sf::Vector2u position)
 {
 	if (position.x > this->_size.x && position.y > this->_size.y)
-		return (false); // TODO: throw error
+		return (false);
 	if (this->_units.at(position.x).at(position.y) != nullptr)
 		return (false);
 	this->_units.at(position.x).at(position.y) = unit;

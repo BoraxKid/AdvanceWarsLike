@@ -26,8 +26,7 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 	unsigned int y = 0;
 	while (tile)
 	{
-		unsigned int lol = tile.first_attribute().as_uint() - 1;
-		(*iter2) = lol;
+		(*iter2) = static_cast<Tile>(tile.first_attribute().as_uint() - 1);
 		++iter;
 		if (iter == tiles.end())
 		{
@@ -66,7 +65,7 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 	tile = doc.child("map").child("tileset").child("tile");
 	while (tile)
 	{
-		map._tilesNames[tile.attribute("id").as_uint()] = sf::String(tile.child("properties").child("property").attribute("value").as_string());
+		map._tilesNames[static_cast<Tile>(tile.attribute("id").as_uint())] = sf::String(tile.child("properties").child("property").attribute("value").as_string());
 		tile = tile.next_sibling();
 	}
 	data = doc.child("map").child("layer");
@@ -79,7 +78,7 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 			iter = map._buildings.begin();
 			while (iter != map._buildings.end())
 			{
-				(*iter) = std::vector<Tile>(map._size.y, 0);
+				(*iter) = std::vector<Tile>(map._size.y, GROUND);
 				++iter;
 			}
 			this->loadLayer(data.child("data"), map._buildings, map._size);
@@ -90,7 +89,7 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 			iter = map._tiles[name].begin();
 			while (iter != map._tiles[name].end())
 			{
-				(*iter) = std::vector<Tile>(map._size.y, 0);
+				(*iter) = std::vector<Tile>(map._size.y, GROUND);
 				++iter;
 			}
 			this->loadLayer(data.child("data"), map._tiles[name], map._size);

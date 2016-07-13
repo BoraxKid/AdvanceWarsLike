@@ -15,12 +15,12 @@ public:
 
 	void pause();
 	void resume();
-	void handleEvents(std::queue<sf::Event> &events);
+	void handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &events);
 	void update(const sf::Time &time);
 	void display(sf::RenderWindow &window);
 
 private:
-	void spawnUnit(Player &player, IUnit *unit);
+	void spawnUnit(Player &player, IUnit *unit, sf::Vector2u position);
 
 	ResourcesManager &_resourcesManager;
 	MapManager _mapManager;
