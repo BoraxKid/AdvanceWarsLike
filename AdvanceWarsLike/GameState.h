@@ -6,6 +6,7 @@
 #include "ResourcesManager.h"
 #include "MapManager.h"
 #include "Player.h"
+#include "Menu.h"
 
 class GameState : public IState
 {
@@ -25,6 +26,9 @@ private:
 	ResourcesManager &_resourcesManager;
 	MapManager _mapManager;
 	Player _player;
+	sf::Vector2f _mousePosition;
+	sf::Font _font;
+	Menu _menu;
 };
 
 #endif // GAMESTATE_H_
