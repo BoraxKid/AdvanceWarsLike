@@ -14,6 +14,7 @@ public:
 
 	virtual void setGraphicsComponent(GraphicsComponent *graphics) = 0;
 	virtual void setStatisticsComponent(StatisticsComponent *stats) = 0;
+	virtual const sf::Uint8 getMovement() = 0;
 	virtual sf::Vector2u getTilePosition() const = 0;
 	virtual void update(const sf::Time &elapsedTime) = 0;
 	virtual void move(sf::Vector2u position) = 0;

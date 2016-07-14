@@ -22,13 +22,19 @@ public:
 
 private:
 	void spawnUnit(Player &player, IUnit *unit, sf::Vector2u position);
+	void resetMovementMap();
+	void calculateMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5);
+	void dump();
 
 	ResourcesManager &_resourcesManager;
 	MapManager _mapManager;
+	sf::Vector2u _mapSize;
 	Player _player;
 	sf::Vector2f _mousePosition;
 	sf::Font _font;
 	Menu _menu;
+	std::vector<std::vector<sf::Int32>> _movement;
+	IUnit *_selectedUnit;
 };
 
 #endif // GAMESTATE_H_

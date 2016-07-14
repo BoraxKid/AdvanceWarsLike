@@ -23,6 +23,18 @@ bool MapManager::addUnit(IUnit *unit, sf::Vector2u position)
 	return (false);
 }
 
+IUnit *MapManager::getUnit(sf::Vector2u position)
+{
+	if (this->_activeMaps.empty())
+		return (nullptr);
+	return (this->_activeMaps.back().getUnit(position));
+}
+
+sf::Vector2u MapManager::getMapSize() const
+{
+	return (this->_activeMaps.back().getMapSize());
+}
+
 void MapManager::draw(sf::RenderWindow &window) const
 {
 	std::vector<Map>::const_iterator iter = this->_activeMaps.begin();

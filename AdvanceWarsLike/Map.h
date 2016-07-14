@@ -30,6 +30,8 @@ public:
 	virtual ~Map();
 
 	bool addUnit(IUnit *unit, sf::Vector2u position);
+	IUnit *getUnit(sf::Vector2u position);
+	sf::Vector2u getMapSize() const;
 	void dump() const;
 
 private:

@@ -16,6 +16,8 @@ public:
 
 	void loadMap(const char *fileName);
 	bool addUnit(IUnit *unit, sf::Vector2u position);
+	IUnit *getUnit(sf::Vector2u position);
+	sf::Vector2u getMapSize() const;
 	void draw(sf::RenderWindow &window) const;
 
 private:

@@ -19,11 +19,11 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 	pugi::xml_node tile;
 	std::vector<std::vector<Tile>>::iterator iter;
 	std::vector<Tile>::iterator iter2;
+	sf::Uint32 y = 0;
 
 	tile = data.first_child();
 	iter = tiles.begin();
 	iter2 = (*iter).begin();
-	unsigned int y = 0;
 	while (tile)
 	{
 		(*iter2) = static_cast<Tile>(tile.first_attribute().as_uint() - 1);

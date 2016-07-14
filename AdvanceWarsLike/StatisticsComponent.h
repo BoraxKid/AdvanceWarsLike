@@ -7,17 +7,21 @@
 class StatisticsComponent : public IComponent
 {
 public:
-	StatisticsComponent(char move = 5, char vision = 4)
-		: _move(move), _vision(vision), _currentMove(_move)
+	StatisticsComponent(sf::Uint8 move = 5, sf::Uint8 vision = 4)
+		: _move(move), _vision(vision)
 	{}
 
 	virtual ~StatisticsComponent()
 	{}
 
+	const sf::Uint8 getMovement() const
+	{
+		return (this->_move);
+	}
+
 protected:
-	const char _move;
-	const char _vision;
-	char _currentMove;
+	const sf::Uint8 _move;
+	const sf::Uint8 _vision;
 };
 
 class TankStatisticsComponent : public StatisticsComponent

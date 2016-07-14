@@ -36,6 +36,13 @@ void Unit::move(sf::Vector2u position)
 	this->_position = position;
 }
 
+const sf::Uint8 Unit::getMovement()
+{
+	if (this->_stats != nullptr)
+		return (this->_stats->getMovement());
+	return (0);
+}
+
 sf::Vector2u Unit::getTilePosition() const
 {
 	return (this->_position);

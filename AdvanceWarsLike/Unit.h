@@ -14,6 +14,7 @@ public:
 	virtual void setStatisticsComponent(StatisticsComponent *stats);
 	virtual void update(const sf::Time &elapsedTime);
 	virtual void move(sf::Vector2u position);
+	virtual const sf::Uint8 getMovement();
 	virtual sf::Vector2u getTilePosition() const;
 
 private:

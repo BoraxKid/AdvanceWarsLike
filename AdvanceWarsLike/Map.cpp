@@ -19,6 +19,18 @@ bool Map::addUnit(IUnit *unit, sf::Vector2u position)
 	return (true);
 }
 
+IUnit *Map::getUnit(sf::Vector2u position)
+{
+	if (position.x > this->_size.x && position.y > this->_size.y)
+		return (nullptr);
+	return (this->_units.at(position.x).at(position.y));
+}
+
+sf::Vector2u Map::getMapSize() const
+{
+	return (this->_size);
+}
+
 void Map::dump() const
 {
 	std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iterMap = this->_tiles.begin();
@@ -45,10 +57,10 @@ void Map::dump() const
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-	std::size_t i;
-	std::size_t x = this->_size.x;
-	std::size_t j;
-	std::size_t y = this->_size.y;
+	sf::Uint32 i;
+	sf::Uint32 x = this->_size.x;
+	sf::Uint32 j;
+	sf::Uint32 y = this->_size.y;
 	std::map<Tile, sf::String>::const_iterator iter;
 	std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iterMap = this->_tiles.begin();
 
