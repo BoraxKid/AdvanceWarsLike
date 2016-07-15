@@ -7,22 +7,22 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-	std::vector<Button *>::iterator iter = this->_buttons.begin();
-	std::vector<Button *>::iterator iter2 = this->_buttons.end();
+	std::map<sf::String, GenericButton *>::iterator iter = this->_buttons.begin();
+	std::map<sf::String, GenericButton *>::iterator iter2 = this->_buttons.end();
 
 	while (iter != iter2)
 	{
-		delete (*iter);
+		delete (iter->second);
 		++iter;
 	}
 }
 
-void Menu::addButton(Button *button)//, const sf::Font &font, const sf::String &text)
+void Menu::addButton(const sf::String &id, GenericButton *button)
 {
-	this->_buttons.push_back(button);
-	//this->_buttons.push_back(Button(font, text, this->_buttonWidth));
-	this->_buttons.back()->move(sf::Vector2f(0.0f, this->_currentHeight));
-	sf::Uint16 tmp = this->_buttons.back()->getWidth();
+	this->_buttonIds.push_back(id);
+	this->_buttons[id] = button;
+	this->_buttons.at(id)->move(sf::Vector2f(0.0f, this->_currentHeight));
+	sf::Uint16 tmp = this->_buttons.at(id)->getWidth();
 	if (this->_buttonWidth == 0)
 		this->_buttonWidth = tmp;
 	else if (tmp > this->_buttonWidth)
@@ -30,8 +30,14 @@ void Menu::addButton(Button *button)//, const sf::Font &font, const sf::String &
 		this->_buttonWidth = tmp;
 		this->resizeButtons();
 	}
-	this->_currentHeight += this->_buttons.back()->getHeight();
-	this->_hoveredButton = this->_buttons.end();
+	this->_currentHeight += this->_buttons.at(id)->getHeight();
+	this->_hoveredButton = this->_buttonIds.end();
+}
+
+void Menu::setButtonPointer(const sf::String &id, void *ptr)
+{
+	if (this->_buttons.find(id) != this->_buttons.end())
+		this->_buttons.at(id)->setPointer(ptr);
 }
 
 bool Menu::contains(const sf::Vector2f &point)
@@ -41,48 +47,48 @@ bool Menu::contains(const sf::Vector2f &point)
 	if (point.x >= pos.x && point.x < pos.x + this->_buttonWidth &&
 		point.y >= pos.y && point.y < pos.y + this->_currentHeight)
 	{
-		if (this->_hoveredButton != this->_buttons.end())
-			(*this->_hoveredButton)->setHovered(false);
-		pos.y = (point.y - pos.y) / this->_buttons.back()->getHeight();
-		this->_buttons.at(static_cast<sf::Uint16>(pos.y))->setHovered(true);
-		this->_hoveredButton = this->_buttons.begin() + static_cast<sf::Uint16>(pos.y);
+		if (this->_hoveredButton != this->_buttonIds.end())
+			this->_buttons.at(*this->_hoveredButton)->setHovered(false);
+		pos.y = (point.y - pos.y) / this->_buttons.begin()->second->getHeight();
+		this->_buttons.at(this->_buttonIds.at(static_cast<sf::Uint16>(pos.y)))->setHovered(true);
+		this->_hoveredButton = this->_buttonIds.begin() + static_cast<sf::Uint16>(pos.y);
 		return (true);
 	}
-	if (this->_hoveredButton != this->_buttons.end())
+	if (this->_hoveredButton != this->_buttonIds.end())
 	{
-		(*this->_hoveredButton)->setHovered(false);
-		this->_hoveredButton = this->_buttons.end();
+		this->_buttons.at(*this->_hoveredButton)->setHovered(false);
+		this->_hoveredButton = this->_buttonIds.end();
 	}
 	return (false);
 }
 
 void Menu::click(const sf::Vector2f &point)
 {
-	if (this->_hoveredButton != this->_buttons.end())
-		(*this->_hoveredButton)->activate();
+	if (this->_hoveredButton != this->_buttonIds.end())
+		this->_buttons.at(*this->_hoveredButton)->activate();
 }
 
 void Menu::resizeButtons()
 {
-	std::vector<Button *>::iterator iter = this->_buttons.begin();
-	std::vector<Button *>::iterator iter2 = this->_buttons.end();
+	std::map<sf::String, GenericButton *>::iterator iter = this->_buttons.begin();
+	std::map<sf::String, GenericButton *>::iterator iter2 = this->_buttons.end();
 
 	while (iter != iter2)
 	{
-		(*iter)->setWidth(this->_buttonWidth);
+		iter->second->setWidth(this->_buttonWidth);
 		++iter;
 	}
 }
 
 void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-	std::vector<Button *>::const_iterator iter = this->_buttons.begin();
-	std::vector<Button *>::const_iterator iter2 = this->_buttons.end();
+	std::map<sf::String, GenericButton *>::const_iterator iter = this->_buttons.begin();
+	std::map<sf::String, GenericButton *>::const_iterator iter2 = this->_buttons.end();
 
 	states.transform *= this->getTransform();
 	while (iter != iter2)
 	{
-		target.draw(**iter, states);
+		target.draw(*(iter->second), states);
 		++iter;
 	}
 }

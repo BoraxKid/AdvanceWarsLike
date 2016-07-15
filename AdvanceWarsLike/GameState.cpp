@@ -60,7 +60,10 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 				{
 					this->_menuManager.reset();
 					if (this->_currentPlayer != this->_players.end())
-						(*this->_currentPlayer)->click(this->_mapManager, tilePos);
+					{
+						if ((*this->_currentPlayer)->click(tilePos))
+							this->_menuManager.openUnitActionMenu(*this->_currentPlayer, this->_mousePosition);
+					}
 				}
 			}
 		}
@@ -92,7 +95,7 @@ void GameState::changeTurn()
 
 void GameState::addPlayer()
 {
-	Player *player = new Player(this->_playersNumber);
+	Player *player = new Player(this->_playersNumber, this->_mapManager);
 	player->setMapSize(this->_mapSize);
 	if (this->_playersNumber == 0)
 	{

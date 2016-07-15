@@ -35,11 +35,17 @@ sf::Vector2u MapManager::getMapSize() const
 	return (this->_activeMaps.back().getMapSize());
 }
 
-bool MapManager::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
+bool MapManager::canMove(const sf::Vector2u & unitPosition, const sf::Vector2u & position)
 {
 	if (!this->_activeMaps.empty())
-		return (this->_activeMaps.back().move(unitPosition, position));
+		return (this->_activeMaps.back().canMove(unitPosition, position));
 	return (false);
+}
+
+void MapManager::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
+{
+	if (!this->_activeMaps.empty())
+		this->_activeMaps.back().move(unitPosition, position);
 }
 
 void MapManager::draw(sf::RenderWindow &window) const

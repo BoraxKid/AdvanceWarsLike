@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 
+class Player;
 class GameState;
 
 class MenuManager
@@ -16,6 +17,7 @@ public:
 	bool mouseMoved(const sf::Vector2f &mousePosition);
 	void click(const sf::Vector2f &mousePosition);
 	void reset();
+	void openUnitActionMenu(Player *player, sf::Vector2f pos);
 	void openStartMenu(sf::Vector2f pos);
 	void draw(sf::RenderWindow &window) const;
 

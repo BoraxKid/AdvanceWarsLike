@@ -31,7 +31,19 @@ sf::Vector2u Map::getMapSize() const
 	return (this->_size);
 }
 
-bool Map::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
+bool Map::canMove(const sf::Vector2u & unitPosition, const sf::Vector2u & position)
+{
+	if (unitPosition.x < this->_size.x && unitPosition.y < this->_size.y && position.x < this->_size.x && position.y < this->_size.y)
+	{
+		if (this->_units.at(unitPosition.x).at(unitPosition.y) != nullptr && this->_units.at(position.x).at(position.y) == nullptr)
+		{
+			return (true);
+		}
+	}
+	return (false);
+}
+
+void Map::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 {
 	if (unitPosition.x < this->_size.x && unitPosition.y < this->_size.y && position.x < this->_size.x && position.y < this->_size.y)
 	{
@@ -41,10 +53,8 @@ bool Map::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 			this->_units.at(unitPosition.x).at(unitPosition.y) = nullptr;
 			this->_units.at(position.x).at(position.y) = tmp;
 			tmp->move(position);
-			return (true);
 		}
 	}
-	return (false);
 }
 
 void Map::dump() const

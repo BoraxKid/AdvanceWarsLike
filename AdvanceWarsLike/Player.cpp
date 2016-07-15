@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(sf::Uint8 id)
-	: _id(id), _selectedUnit(_units.end())
+Player::Player(sf::Uint8 id, MapManager &mapManager)
+	: _id(id), _mapManager(mapManager), _selectedUnit(_units.end())
 {
 }
 
@@ -17,18 +17,42 @@ Player::~Player()
 	}
 }
 
-void Player::click(MapManager &mapManager, const sf::Vector2i &tilePos)
+void Player::moveUnit()
+{
+	this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
+	this->_selectedUnit = this->_units.end();
+}
+
+bool Player::click(const sf::Vector2i &tilePos)
 {
 	std::vector<IUnit *>::iterator iter;
 	std::vector<IUnit *>::iterator iter2;
-	IUnit *tmp = mapManager.getUnit(sf::Vector2u(tilePos.x, tilePos.y));
+	IUnit *tmp = this->_mapManager.getUnit(sf::Vector2u(tilePos.x, tilePos.y));
 
 	if (this->_selectedUnit != this->_units.end())
 	{
 		if (this->checkMovement(tilePos, (*this->_selectedUnit)->getMovement()))
 		{
-			if (mapManager.move((*this->_selectedUnit)->getTilePosition(), sf::Vector2u(tilePos.x, tilePos.y)))
-				this->_selectedUnit = this->_units.end();
+			if (this->_mapManager.canMove((*this->_selectedUnit)->getTilePosition(), sf::Vector2u(tilePos.x, tilePos.y)))
+			{
+				this->_aimedTile = sf::Vector2u(tilePos.x, tilePos.y);
+				return (true);
+			}
+			else if (*this->_selectedUnit != tmp)
+			{
+				iter = this->_units.begin();
+				iter2 = this->_units.end();
+				while (iter != iter2)
+				{
+					if (*iter == tmp)
+					{
+						this->resetMovementMap();
+						this->calculateMovement(tilePos);
+						this->_selectedUnit = iter;
+					}
+					++iter;
+				}
+			}
 		}
 		else
 			this->_selectedUnit = this->_units.end();
@@ -48,6 +72,7 @@ void Player::click(MapManager &mapManager, const sf::Vector2i &tilePos)
 			++iter;
 		}
 	}
+	return (false);
 }
 
 void Player::addUnit(IUnit *unit)

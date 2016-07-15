@@ -8,10 +8,11 @@
 class Player
 {
 public:
-	Player(sf::Uint8 id);
+	Player(sf::Uint8 id, MapManager &mapManager);
 	virtual ~Player();
 
-	void click(MapManager &mapManager, const sf::Vector2i &tilePos);
+	void moveUnit();
+	bool click(const sf::Vector2i &tilePos);
 	void addUnit(IUnit *unit);
 	const std::vector<IUnit *> &getUnits() const;
 	void setMapSize(const sf::Vector2u &mapSize);
@@ -23,9 +24,11 @@ private:
 	bool checkMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5) const;
 
 	const sf::Uint8 _id;
+	MapManager &_mapManager;
 	sf::Vector2u _mapSize;
 	std::vector<IUnit *> _units;
 	std::vector<IUnit *>::iterator _selectedUnit;
+	sf::Vector2u _aimedTile;
 	std::vector<std::vector<sf::Int32>> _movement;
 };
 

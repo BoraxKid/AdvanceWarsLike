@@ -3,7 +3,7 @@
 #pragma once
 
 #include <vector>
-#include "Button.h"
+#include "Buttons.h"
 
 class Menu : public sf::Drawable, public sf::Transformable
 {
@@ -11,7 +11,8 @@ public:
 	Menu();
 	virtual ~Menu();
 
-	void addButton(Button *button);//const sf::Font &font, const sf::String &text);
+	void addButton(const sf::String &id, GenericButton *button);
+	void setButtonPointer(const sf::String &id, void *ptr);
 	bool contains(const sf::Vector2f &point);
 	void click(const sf::Vector2f &point);
 
@@ -21,8 +22,10 @@ private:
 
 	sf::Uint16 _currentHeight;
 	sf::Uint16 _buttonWidth;
-	std::vector<Button *> _buttons;
-	std::vector<Button *>::iterator _hoveredButton;
+	std::vector<sf::String> _buttonIds;
+	std::vector<sf::String>::iterator _hoveredButton;
+	std::map<sf::String, GenericButton *> _buttons;
+	//std::map<sf::String, GenericButton *>::iterator _hoveredButton;
 };
 
 #endif // MENU_H_

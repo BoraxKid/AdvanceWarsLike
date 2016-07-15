@@ -132,7 +132,7 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -147,7 +147,7 @@
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Button.h" />
+    <ClInclude Include="Buttons.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsComponent.h" />
     <ClInclude Include="IBuilding.h" />
