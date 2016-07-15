@@ -3,6 +3,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 class Button : public sf::Drawable, public sf::Transformable
 {
@@ -11,7 +12,7 @@ public:
 	Button(const sf::Font &font, const sf::String &text, sf::Uint16 width = 100, sf::Uint16 height = 16);
 	virtual ~Button();
 
-	void activate();
+	virtual void activate();
 
 	void setHovered(const bool &hovered);
 	void setFont(const sf::Font &font);
@@ -21,7 +22,7 @@ public:
 	sf::Uint16 getHeight() const;
 	sf::Uint16 getWidth() const;
 
-private:
+protected:
 	void init();
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
@@ -31,6 +32,32 @@ private:
 	sf::RectangleShape _rect;
 	sf::Uint16 _width;
 	sf::Uint16 _height;
+};
+
+class GameState;
+
+class GameStateButton : public Button
+{
+public:
+	GameStateButton()
+		: Button()
+	{}
+	
+	GameStateButton(GameState *gameState, void (GameState::*ptr)(), const sf::Font &font, const sf::String &text, sf::Uint16 width = 100, sf::Uint16 height = 16)
+		: Button(font, text, width, height), _gameState(gameState), _ptr(ptr)
+	{}
+
+	virtual ~GameStateButton()
+	{}
+
+	virtual void activate()
+	{
+		(this->_gameState->*_ptr)();
+	}
+
+private:
+	GameState *_gameState;
+	void (GameState::*_ptr)();
 };
 
 #endif // BUTTON_H_

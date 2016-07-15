@@ -35,6 +35,13 @@ sf::Vector2u MapManager::getMapSize() const
 	return (this->_activeMaps.back().getMapSize());
 }
 
+bool MapManager::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
+{
+	if (!this->_activeMaps.empty())
+		return (this->_activeMaps.back().move(unitPosition, position));
+	return (false);
+}
+
 void MapManager::draw(sf::RenderWindow &window) const
 {
 	std::vector<Map>::const_iterator iter = this->_activeMaps.begin();

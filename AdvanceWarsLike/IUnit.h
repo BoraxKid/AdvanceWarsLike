@@ -18,6 +18,7 @@ public:
 	virtual sf::Vector2u getTilePosition() const = 0;
 	virtual void update(const sf::Time &elapsedTime) = 0;
 	virtual void move(sf::Vector2u position) = 0;
+	virtual void setPlayer(sf::Uint8 id) = 0;
 
 protected:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const = 0;

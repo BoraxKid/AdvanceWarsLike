@@ -11,9 +11,9 @@ public:
 	Menu();
 	virtual ~Menu();
 
-	void addButton(const sf::Font &font, const sf::String &text);
-	bool contains(sf::Vector2f point);
-	void click(sf::Vector2f point);
+	void addButton(Button *button);//const sf::Font &font, const sf::String &text);
+	bool contains(const sf::Vector2f &point);
+	void click(const sf::Vector2f &point);
 
 private:
 	void resizeButtons();
@@ -21,8 +21,8 @@ private:
 
 	sf::Uint16 _currentHeight;
 	sf::Uint16 _buttonWidth;
-	std::vector<Button> _buttons;
-	std::vector<Button>::iterator _hoveredButton;
+	std::vector<Button *> _buttons;
+	std::vector<Button *>::iterator _hoveredButton;
 };
 
 #endif // MENU_H_

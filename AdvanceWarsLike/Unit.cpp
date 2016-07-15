@@ -1,7 +1,7 @@
 #include "Unit.h"
 
 Unit::Unit()
-	: _position(0, 0), _graphics(nullptr), _stats(nullptr)
+	: _playerId(0), _position(0, 0), _graphics(nullptr), _stats(nullptr)
 {
 }
 
@@ -27,15 +27,6 @@ void Unit::setStatisticsComponent(StatisticsComponent *stats)
 	this->_stats = stats;
 }
 
-void Unit::update(const sf::Time &elapsedTime)
-{
-}
-
-void Unit::move(sf::Vector2u position)
-{
-	this->_position = position;
-}
-
 const sf::Uint8 Unit::getMovement()
 {
 	if (this->_stats != nullptr)
@@ -48,11 +39,29 @@ sf::Vector2u Unit::getTilePosition() const
 	return (this->_position);
 }
 
+void Unit::update(const sf::Time &elapsedTime)
+{
+}
+
+void Unit::move(sf::Vector2u position)
+{
+	this->_position = position;
+}
+
+void Unit::setPlayer(sf::Uint8 id)
+{
+	this->_playerId = id;
+	if (this->_playerId == 1)
+	{
+		this->_graphics->setColor(sf::Color::Blue);
+	}
+}
+
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	if (this->_graphics != nullptr)
 	{
 		states.transform *= this->getTransform();
-		this->_graphics->draw(target, states);
+		target.draw(*this->_graphics, states);
 	}
 }

@@ -18,6 +18,7 @@ public:
 	bool addUnit(IUnit *unit, sf::Vector2u position);
 	IUnit *getUnit(sf::Vector2u position);
 	sf::Vector2u getMapSize() const;
+	bool move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void draw(sf::RenderWindow &window) const;
 
 private:

@@ -21,7 +21,7 @@ bool Map::addUnit(IUnit *unit, sf::Vector2u position)
 
 IUnit *Map::getUnit(sf::Vector2u position)
 {
-	if (position.x > this->_size.x && position.y > this->_size.y)
+	if (position.x >= this->_size.x || position.y >= this->_size.y)
 		return (nullptr);
 	return (this->_units.at(position.x).at(position.y));
 }
@@ -29,6 +29,22 @@ IUnit *Map::getUnit(sf::Vector2u position)
 sf::Vector2u Map::getMapSize() const
 {
 	return (this->_size);
+}
+
+bool Map::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
+{
+	if (unitPosition.x < this->_size.x && unitPosition.y < this->_size.y && position.x < this->_size.x && position.y < this->_size.y)
+	{
+		if (this->_units.at(unitPosition.x).at(unitPosition.y) != nullptr && this->_units.at(position.x).at(position.y) == nullptr)
+		{
+			IUnit *tmp = this->_units.at(unitPosition.x).at(unitPosition.y);
+			this->_units.at(unitPosition.x).at(unitPosition.y) = nullptr;
+			this->_units.at(position.x).at(position.y) = tmp;
+			tmp->move(position);
+			return (true);
+		}
+	}
+	return (false);
 }
 
 void Map::dump() const

@@ -5,7 +5,7 @@
 #include "IComponent.h"
 #include "AnimatedSprite.h"
 
-class GraphicsComponent : public IComponent
+class GraphicsComponent : public IComponent, public sf::Drawable, public sf::Transformable
 {
 public:
 	GraphicsComponent(AnimatedSprite &sprite)
@@ -15,12 +15,17 @@ public:
 	virtual ~GraphicsComponent()
 	{}
 
-	void draw(sf::RenderTarget &target, sf::RenderStates &states) const
+	void setColor(sf::Color color)
 	{
-		target.draw(this->_sprite, states);
 	}
 
 private:
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
+	{
+		states.transform *= this->getTransform();
+		target.draw(this->_sprite, states);
+	}
+
 	AnimatedSprite &_sprite;
 };
 

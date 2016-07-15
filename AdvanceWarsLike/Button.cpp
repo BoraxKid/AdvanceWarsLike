@@ -23,6 +23,7 @@ void Button::activate()
 
 void Button::init()
 {
+	std::cout << "init: " << this->_text.getString().toAnsiString() << std::endl;
 	this->_text.setCharacterSize(8);
 	this->_text.setColor(sf::Color::White);
 	sf::Uint16 tmp = static_cast<sf::Uint16>(this->_text.getLocalBounds().width);

@@ -6,7 +6,7 @@
 #include "ResourcesManager.h"
 #include "MapManager.h"
 #include "Player.h"
-#include "Menu.h"
+#include "MenuManager.h"
 
 class GameState : public IState
 {
@@ -19,22 +19,21 @@ public:
 	void handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &events);
 	void update(const sf::Time &time);
 	void display(sf::RenderWindow &window);
+	void changeTurn();
 
 private:
-	void spawnUnit(Player &player, IUnit *unit, sf::Vector2u position);
-	void resetMovementMap();
-	void calculateMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5);
-	void dump();
+	void addPlayer();
+	void spawnUnit(Player *player, IUnit *unit, sf::Vector2u position);
 
 	ResourcesManager &_resourcesManager;
 	MapManager _mapManager;
+	MenuManager _menuManager;
 	sf::Vector2u _mapSize;
-	Player _player;
+	sf::Uint8 _playersNumber;
+	std::vector<Player *> _players;
+	std::vector<Player *>::iterator _currentPlayer;
 	sf::Vector2f _mousePosition;
 	sf::Font _font;
-	Menu _menu;
-	std::vector<std::vector<sf::Int32>> _movement;
-	IUnit *_selectedUnit;
 };
 
 #endif // GAMESTATE_H_
