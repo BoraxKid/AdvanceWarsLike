@@ -125,10 +125,12 @@ void GameState::display(sf::RenderWindow &window)
 
 void GameState::changeTurn()
 {
+	(*this->_currentPlayer)->endTurn();
 	if (this->_currentPlayer != this->_players.end() - 1)
 		++this->_currentPlayer;
 	else
 		this->_currentPlayer = this->_players.begin();
+	(*this->_currentPlayer)->startTurn();
 	std::cout << "Changing turn" << std::endl;
 }
 

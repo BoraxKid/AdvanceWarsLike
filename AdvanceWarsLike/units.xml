@@ -1,8 +1,16 @@
-<type id="0" texture="units.png">
+<type id="0" texture="units2.png">
+	<unit name="unit_tank">
+		<frame x="1" y="0" width="13" height="13" />
+		<frame x="21" y="0" width="13" height="13" />
+		<frame x="38" y="0" width="13" height="13" />
+		<frame x="57" y="0" width="13" height="13" />
+	</unit>
+</type>
+<!-- <type id="0" texture="units.png">
 	<unit name="unit_tank">
 		<frame x="452" y="287" width="13" height="13" />
 		<frame x="472" y="287" width="13" height="13" />
 		<frame x="489" y="287" width="13" height="13" />
 		<frame x="508" y="287" width="13" height="13" />
 	</unit>
-</type>
+</type> -->

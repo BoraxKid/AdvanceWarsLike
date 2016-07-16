@@ -1,7 +1,7 @@
 #include "Unit.h"
 
 Unit::Unit()
-	: _playerId(0), _position(0, 0), _graphics(nullptr), _stats(nullptr)
+	: _playerId(0), _position(0, 0), _acted(false), _graphics(nullptr), _stats(nullptr)
 {
 }
 
@@ -48,18 +48,30 @@ void Unit::update(const sf::Time &elapsedTime)
 {
 }
 
+void Unit::resetState()
+{
+	this->_acted = false;
+	this->_graphics->grayOut(false);
+}
+
 void Unit::move(sf::Vector2u position)
 {
 	this->_position = position;
+	this->_acted = true;
+	this->_graphics->grayOut(true);
 }
 
 void Unit::setPlayer(sf::Uint8 id)
 {
 	this->_playerId = id;
+	if (this->_playerId == 0)
+		this->_graphics->setColor(sf::Color::Red);
 	if (this->_playerId == 1)
-	{
 		this->_graphics->setColor(sf::Color::Blue);
-	}
+	if (this->_playerId == 2)
+		this->_graphics->setColor(sf::Color::Green);
+	if (this->_playerId == 2)
+		this->_graphics->setColor(sf::Color::Yellow);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const

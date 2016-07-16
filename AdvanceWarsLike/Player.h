@@ -11,6 +11,8 @@ public:
 	Player(sf::Uint8 id, MapManager &mapManager);
 	virtual ~Player();
 
+	void endTurn();
+	void startTurn();
 	void moveUnit();
 	bool click(const sf::Vector2i &tilePos);
 	void destroyUnit(IUnit *unit);

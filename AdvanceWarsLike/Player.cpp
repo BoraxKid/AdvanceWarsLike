@@ -17,6 +17,24 @@ Player::~Player()
 	}
 }
 
+void Player::endTurn()
+{
+	std::vector<IUnit *>::iterator iter = this->_units.begin();
+	std::vector<IUnit *>::iterator iter2 = this->_units.end();
+
+	while (iter != iter2)
+	{
+		(*iter)->resetState();
+		++iter;
+	}
+	this->_selectedUnit = this->_units.end();
+}
+
+void Player::startTurn()
+{
+	this->_selectedUnit = this->_units.end();
+}
+
 void Player::moveUnit()
 {
 	this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
@@ -91,12 +109,12 @@ void Player::destroyUnit(IUnit *unit)
 		}
 		++iter;
 	}
+	this->_selectedUnit = this->_units.end();
 }
 
 void Player::addUnit(IUnit *unit)
 {
-	if (this->_id != 0)
-		unit->setPlayer(this->_id);
+	unit->setPlayer(this->_id);
 	this->_units.push_back(unit);
 	this->_selectedUnit = this->_units.end();
 }

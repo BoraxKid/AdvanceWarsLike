@@ -18,6 +18,7 @@ public:
 	virtual sf::Vector2u getTilePosition() const;
 	virtual const sf::Uint8 &getPlayerId() const;
 	virtual void update(const sf::Time &elapsedTime);
+	virtual void resetState();
 	virtual void move(sf::Vector2u position);
 	virtual void setPlayer(sf::Uint8 id);
 
@@ -26,6 +27,8 @@ private:
 
 	sf::Uint8 _playerId;
 	sf::Vector2u _position;
+	bool _acted;
+
 	GraphicsComponent *_graphics;
 	StatisticsComponent *_stats;
 };

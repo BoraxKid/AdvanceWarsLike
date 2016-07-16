@@ -147,6 +147,7 @@
   <ItemGroup>
     <None Include="map.tmx" />
     <None Include="packages.config" />
+    <None Include="shader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="tiles.png">
