@@ -15,8 +15,9 @@ public:
 	virtual ~MapManager();
 
 	void loadMap(const char *fileName);
+	void removeUnit(const sf::Vector2u &position);
 	bool addUnit(IUnit *unit, sf::Vector2u position);
-	IUnit *getUnit(sf::Vector2u position);
+	IUnit *getUnit(const sf::Vector2u &position);
 	sf::Vector2u getMapSize() const;
 	bool canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);

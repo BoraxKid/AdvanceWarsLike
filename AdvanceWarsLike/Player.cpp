@@ -75,6 +75,24 @@ bool Player::click(const sf::Vector2i &tilePos)
 	return (false);
 }
 
+void Player::destroyUnit(IUnit *unit)
+{
+	std::vector<IUnit *>::iterator iter = this->_units.begin();
+	std::vector<IUnit *>::iterator iter2 = this->_units.end();
+
+	while (iter != iter2)
+	{
+		if ((*iter) == unit)
+		{
+			delete ((*iter));
+			(*iter) = nullptr;
+			this->_units.erase(iter);
+			return;
+		}
+		++iter;
+	}
+}
+
 void Player::addUnit(IUnit *unit)
 {
 	if (this->_id != 0)
@@ -86,6 +104,16 @@ void Player::addUnit(IUnit *unit)
 const std::vector<IUnit *> &Player::getUnits() const
 {
 	return (this->_units);
+}
+
+const sf::Vector2u &Player::getAimedTile() const
+{
+	return (this->_aimedTile);
+}
+
+const sf::Uint8 &Player::getId() const
+{
+	return (this->_id);
 }
 
 void Player::setMapSize(const sf::Vector2u &mapSize)

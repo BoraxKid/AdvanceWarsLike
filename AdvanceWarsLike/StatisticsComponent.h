@@ -14,7 +14,7 @@ public:
 	virtual ~StatisticsComponent()
 	{}
 
-	const sf::Uint8 getMovement() const
+	const sf::Uint8 &getMovement() const
 	{
 		return (this->_move);
 	}

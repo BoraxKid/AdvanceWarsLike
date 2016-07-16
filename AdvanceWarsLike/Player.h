@@ -13,8 +13,11 @@ public:
 
 	void moveUnit();
 	bool click(const sf::Vector2i &tilePos);
+	void destroyUnit(IUnit *unit);
 	void addUnit(IUnit *unit);
 	const std::vector<IUnit *> &getUnits() const;
+	const sf::Vector2u &getAimedTile() const;
+	const sf::Uint8 &getId() const;
 	void setMapSize(const sf::Vector2u &mapSize);
 	void drawMovement(sf::RenderWindow &window);
 

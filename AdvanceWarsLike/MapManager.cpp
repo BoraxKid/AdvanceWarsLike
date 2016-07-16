@@ -16,6 +16,12 @@ void MapManager::loadMap(const char *fileName)
 		this->_activeMaps.pop_back();
 }
 
+void MapManager::removeUnit(const sf::Vector2u &position)
+{
+	if (!this->_activeMaps.empty())
+		this->_activeMaps.back().removeUnit(position);
+}
+
 bool MapManager::addUnit(IUnit *unit, sf::Vector2u position)
 {
 	if (!this->_activeMaps.empty())
@@ -23,7 +29,7 @@ bool MapManager::addUnit(IUnit *unit, sf::Vector2u position)
 	return (false);
 }
 
-IUnit *MapManager::getUnit(sf::Vector2u position)
+IUnit *MapManager::getUnit(const sf::Vector2u &position)
 {
 	if (this->_activeMaps.empty())
 		return (nullptr);

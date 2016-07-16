@@ -27,7 +27,7 @@ void Unit::setStatisticsComponent(StatisticsComponent *stats)
 	this->_stats = stats;
 }
 
-const sf::Uint8 Unit::getMovement()
+const sf::Uint8 &Unit::getMovement() const
 {
 	if (this->_stats != nullptr)
 		return (this->_stats->getMovement());
@@ -37,6 +37,11 @@ const sf::Uint8 Unit::getMovement()
 sf::Vector2u Unit::getTilePosition() const
 {
 	return (this->_position);
+}
+
+const sf::Uint8 &Unit::getPlayerId() const
+{
+	return (this->_playerId);
 }
 
 void Unit::update(const sf::Time &elapsedTime)
