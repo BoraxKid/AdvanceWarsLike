@@ -172,6 +172,7 @@
   <ItemGroup>
     <Image Include="tiles.png" />
     <Image Include="units.png" />
+    <Image Include="units2.png" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="tiles.xml" />

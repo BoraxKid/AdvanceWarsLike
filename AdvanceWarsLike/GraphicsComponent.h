@@ -11,7 +11,7 @@ class GraphicsComponent : public IComponent, public sf::Drawable, public sf::Tra
 {
 public:
 	GraphicsComponent(AnimatedSprite &sprite)
-		: _sprite(sprite), _color(sf::Color::White), _gray(false), _first(true)
+		: _sprite(sprite), _color(sf::Color::White), _gray(false)
 	{
 		if (!this->_shader.loadFromFile("shader.glsl", sf::Shader::Fragment))
 			std::cerr << "Can't load shader" << std::endl;
@@ -25,21 +25,17 @@ public:
 	void setColor(sf::Color color)
 	{
 		this->_color = color;
+		this->_color * color;
 		this->_shader.setParameter(std::string("color"), this->_color);
 	}
 
 	void grayOut(bool gray)
 	{
-		if (!this->_first)
-		{
-			if (!gray)
-				this->_shader.setParameter(std::string("color"), this->_color);
-			else
-				this->_shader.setParameter(std::string("color"), sf::Color(80, 80, 80));
-			this->_gray = gray;
-		}
+		if (!gray)
+			this->_shader.setParameter(std::string("color"), this->_color);
 		else
-			this->_first = false;
+			this->_shader.setParameter(std::string("color"), sf::Color(80, 80, 80));
+		this->_gray = gray;
 	}
 
 private:
@@ -54,7 +50,6 @@ private:
 	sf::Shader _shader;
 	sf::Color _color;
 	bool _gray;
-	bool _first;
 };
 
 #endif // GRAPHICSCOMPONENT_H_

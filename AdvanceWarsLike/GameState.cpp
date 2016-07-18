@@ -87,6 +87,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 								this->_mapManager.removeUnit(uTilePos);
 								this->_players.at((*iter)->getPlayerId())->destroyUnit(*iter);
 								this->_targets.clear();
+								(*this->_currentPlayer)->endAttack();
 								this->_gameMode = NORMAL;
 								break;
 							}
@@ -108,7 +109,7 @@ void GameState::update(const sf::Time &time)
 void GameState::display(sf::RenderWindow &window)
 {
 	this->_mapManager.draw(window);
-	if (this->_currentPlayer != this->_players.end())
+	if (this->_currentPlayer != this->_players.end() && this->_gameMode != BATTLE)
 		(*this->_currentPlayer)->drawMovement(window);
 	std::vector<IUnit *>::const_iterator iter = this->_targets.begin();
 	std::vector<IUnit *>::const_iterator iter2 = this->_targets.end();
@@ -162,7 +163,7 @@ void GameState::findTargets()
 	}
 	if (!this->_targets.empty())
 	{
-		(*this->_currentPlayer)->moveUnit();
+		(*this->_currentPlayer)->prepareAttackUnit();
 		this->_gameMode = BATTLE;
 	}
 }
@@ -189,7 +190,7 @@ void GameState::spawnUnit(Player *player, IUnit *unit, sf::Vector2u position)
 {
 	unit->setGraphicsComponent(new GraphicsComponent(this->_resourcesManager.at("unit_tank")));
 	unit->setStatisticsComponent(new TankStatisticsComponent());
-	unit->move(position);
+	unit->setTilePosition(position);
 	player->addUnit(unit);
 	this->_mapManager.addUnit(unit, unit->getTilePosition());
 }

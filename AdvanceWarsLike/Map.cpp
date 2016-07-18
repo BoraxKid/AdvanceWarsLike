@@ -58,7 +58,7 @@ void Map::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 			IUnit *tmp = this->_units.at(unitPosition.x).at(unitPosition.y);
 			this->_units.at(unitPosition.x).at(unitPosition.y) = nullptr;
 			this->_units.at(position.x).at(position.y) = tmp;
-			tmp->move(position);
+			tmp->setTilePosition(position);
 		}
 	}
 }

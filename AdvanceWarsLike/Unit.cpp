@@ -34,31 +34,14 @@ const sf::Uint8 &Unit::getMovement() const
 	return (0);
 }
 
+void Unit::setTilePosition(const sf::Vector2u &position)
+{
+	this->_position = position;
+}
+
 sf::Vector2u Unit::getTilePosition() const
 {
 	return (this->_position);
-}
-
-const sf::Uint8 &Unit::getPlayerId() const
-{
-	return (this->_playerId);
-}
-
-void Unit::update(const sf::Time &elapsedTime)
-{
-}
-
-void Unit::resetState()
-{
-	this->_acted = false;
-	this->_graphics->grayOut(false);
-}
-
-void Unit::move(sf::Vector2u position)
-{
-	this->_position = position;
-	this->_acted = true;
-	this->_graphics->grayOut(true);
 }
 
 void Unit::setPlayer(sf::Uint8 id)
@@ -72,6 +55,32 @@ void Unit::setPlayer(sf::Uint8 id)
 		this->_graphics->setColor(sf::Color::Green);
 	if (this->_playerId == 2)
 		this->_graphics->setColor(sf::Color::Yellow);
+}
+
+const sf::Uint8 &Unit::getPlayerId() const
+{
+	return (this->_playerId);
+}
+
+void Unit::acted()
+{
+	this->_acted = true;
+	this->_graphics->grayOut(true);
+}
+
+bool Unit::hasActed() const
+{
+	return (this->_acted);
+}
+
+void Unit::update(const sf::Time &elapsedTime)
+{
+}
+
+void Unit::resetState()
+{
+	this->_acted = false;
+	this->_graphics->grayOut(false);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const

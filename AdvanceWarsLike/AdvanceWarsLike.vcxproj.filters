@@ -147,13 +147,18 @@
   <ItemGroup>
     <None Include="map.tmx" />
     <None Include="packages.config" />
-    <None Include="shader.glsl" />
+    <None Include="shader.glsl">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="tiles.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
     <Image Include="units.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="units2.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
   </ItemGroup>

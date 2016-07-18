@@ -14,6 +14,8 @@ public:
 	void endTurn();
 	void startTurn();
 	void moveUnit();
+	void prepareAttackUnit();
+	void endAttack();
 	bool click(const sf::Vector2i &tilePos);
 	void destroyUnit(IUnit *unit);
 	void addUnit(IUnit *unit);

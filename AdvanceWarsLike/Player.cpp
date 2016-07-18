@@ -38,7 +38,18 @@ void Player::startTurn()
 void Player::moveUnit()
 {
 	this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
+	(*this->_selectedUnit)->acted();
 	this->_selectedUnit = this->_units.end();
+}
+
+void Player::prepareAttackUnit()
+{
+	this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
+}
+
+void Player::endAttack()
+{
+	(*this->_selectedUnit)->acted();
 }
 
 bool Player::click(const sf::Vector2i &tilePos)
@@ -81,7 +92,7 @@ bool Player::click(const sf::Vector2i &tilePos)
 		iter2 = this->_units.end();
 		while (iter != iter2)
 		{
-			if (*iter == tmp)
+			if (*iter == tmp && (*iter)->hasActed() == false)
 			{
 				this->resetMovementMap();
 				this->calculateMovement(tilePos);
@@ -142,7 +153,7 @@ void Player::setMapSize(const sf::Vector2u &mapSize)
 
 void Player::drawMovement(sf::RenderWindow &window)
 {
-	if (this->_selectedUnit != this->_units.end())
+	if (this->_selectedUnit != this->_units.end() && !(*this->_selectedUnit)->hasActed())
 	{
 		const sf::Uint8 move = (*this->_selectedUnit)->getMovement();
 		sf::Vector2u tmp;

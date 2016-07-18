@@ -15,12 +15,14 @@ public:
 	virtual void setGraphicsComponent(GraphicsComponent *graphics);
 	virtual void setStatisticsComponent(StatisticsComponent *stats);
 	virtual const sf::Uint8 &getMovement() const;
+	virtual void setTilePosition(const sf::Vector2u &position);
 	virtual sf::Vector2u getTilePosition() const;
+	virtual void setPlayer(sf::Uint8 id);
 	virtual const sf::Uint8 &getPlayerId() const;
+	virtual void acted();
+	virtual bool hasActed() const;
 	virtual void update(const sf::Time &elapsedTime);
 	virtual void resetState();
-	virtual void move(sf::Vector2u position);
-	virtual void setPlayer(sf::Uint8 id);
 
 private:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
