@@ -15,6 +15,7 @@ public:
 
 	bool printError(pugi::xml_parse_result &result) const;
 	bool loadLayer(const pugi::xml_node data, std::vector<std::vector<Tile>> &tiles, const sf::Vector2u &size) const;
+	bool loadBuildings(const pugi::xml_node data, std::vector<std::vector<IBuilding *>> &tiles, const sf::Vector2u &size, std::map<Tile, sf::String> &tilesNames) const;
 	bool loadMap(Map &map, const char *fileName) const;
 };
 #endif // MAPLOADER_H_

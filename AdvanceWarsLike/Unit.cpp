@@ -45,13 +45,13 @@ sf::Vector2u Unit::getTilePosition() const
 void Unit::setPlayer(sf::Uint8 id)
 {
 	this->_playerId = id;
-	if (this->_playerId == 0)
-		this->_graphics->setColor(sf::Color::Red);
 	if (this->_playerId == 1)
+		this->_graphics->setColor(sf::Color::Red);
+	if (this->_playerId == 2)
 		this->_graphics->setColor(sf::Color::Blue);
-	if (this->_playerId == 2)
+	if (this->_playerId == 3)
 		this->_graphics->setColor(sf::Color::Green);
-	if (this->_playerId == 2)
+	if (this->_playerId == 4)
 		this->_graphics->setColor(sf::Color::Yellow);
 }
 

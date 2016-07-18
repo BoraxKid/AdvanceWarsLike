@@ -28,6 +28,8 @@ public:
 private:
 	void addPlayer();
 	void spawnUnit(Player *player, IUnit *unit, sf::Vector2u position);
+	void setupBuildings(const std::vector<std::vector<IBuilding *>> &buildings);
+	void setupTeams();
 
 	GameMode _gameMode;
 	ResourcesManager &_resourcesManager;
@@ -37,8 +39,11 @@ private:
 	sf::Vector2u _tileSize;
 	sf::Vector2f _realMapSize;
 	sf::Uint8 _playersNumber;
-	std::vector<Player *> _players;
-	std::vector<Player *>::iterator _currentPlayer;
+	std::vector<sf::String> _availablePlayersTeams;
+	std::vector<sf::String> _playersTeams;
+	std::vector<sf::String>::iterator _currentPlayer;
+	std::map<sf::String, Player *> _players;
+	//std::map<sf::String, Player *>::iterator _currentPlayer;
 	sf::Vector2f _mousePosition;
 	sf::Font _font;
 	std::vector<IUnit *> _targets;

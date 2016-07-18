@@ -42,6 +42,11 @@ sf::Vector2u Map::getTileSize() const
 	return (this->_tileSize);
 }
 
+const std::vector<std::vector<IBuilding*>> &Map::getBuildings() const
+{
+	return (this->_buildings);
+}
+
 bool Map::canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 {
 	if (unitPosition.x < this->_size.x && unitPosition.y < this->_size.y && position.x < this->_size.x && position.y < this->_size.y)
@@ -100,6 +105,9 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 	sf::Uint32 y = this->_size.y;
 	std::map<Tile, sf::String>::const_iterator iter;
 	std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iterMap = this->_tiles.begin();
+	IBuilding *building;
+	IUnit *unit;
+	sf::Vector2f pos;
 
 	states.transform *= this->getTransform();
 	while (iterMap != this->_tiles.end())
@@ -110,27 +118,24 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 			j = 0;
 			while (j < y)
 			{
-				if (iterMap->first == "layer 1")
-				{
-					iter = this->_tilesNames.find(this->_buildings.at(i).at(j));
-					if (iter != this->_tilesNames.end())
-					{
-						AnimatedSprite &sprite = this->_resourcesManager.at(iter->second);
-						sprite.setPosition(sf::Vector2f(static_cast<float>(i * 16), static_cast<float>(j * 16)));
-						target.draw(sprite, states);
-					}
-				}
+				pos.x = static_cast<float>(i * 16);
+				pos.y = static_cast<float>(j * 16);
 				iter = this->_tilesNames.find(iterMap->second.at(i).at(j)); 
 				if (iter != this->_tilesNames.end())
 				{
 					AnimatedSprite &sprite = this->_resourcesManager.at(iter->second);
-					sprite.setPosition(sf::Vector2f(static_cast<float>(i * 16), static_cast<float>(j * 16)));
+					sprite.setPosition(pos);
 					target.draw(sprite, states);
 				}
-				if (this->_units.at(i).at(j) != nullptr)
+				if ((building = this->_buildings.at(i).at(j)) != nullptr)
 				{
-					this->_units.at(i).at(j)->setPosition(sf::Vector2f(static_cast<float>(i * 16), static_cast<float>(j * 16)));
-					target.draw(*this->_units.at(i).at(j), states);
+					building->setPosition(pos);
+					target.draw(*building, states);
+				}
+				if ((unit = this->_units.at(i).at(j)) != nullptr)
+				{
+					unit->setPosition(pos);
+					target.draw(*unit, states);
 				}
 				++j;
 			}

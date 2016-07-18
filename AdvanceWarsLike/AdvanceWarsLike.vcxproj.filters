@@ -46,6 +46,12 @@
     <Filter Include="Fichiers sources\Resources">
       <UniqueIdentifier>{7acb0d0c-903f-44cb-9847-b16be5d3660c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Buildings">
+      <UniqueIdentifier>{216891c1-af74-42b1-b82e-9dc868e86c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Buildings">
+      <UniqueIdentifier>{2ff0486d-2280-448c-91e1-b6f0808990e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -87,12 +93,12 @@
     <ClCompile Include="Buttons.cpp">
       <Filter>Fichiers sources\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Fichiers sources\Buildings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="IBuilding.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -142,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="Buttons.h">
       <Filter>Fichiers d%27en-tête\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IBuilding.h">
+      <Filter>Fichiers d%27en-tête\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Fichiers d%27en-tête\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

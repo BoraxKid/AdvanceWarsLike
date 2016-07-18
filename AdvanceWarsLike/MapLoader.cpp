@@ -1,4 +1,5 @@
 #include "MapLoader.h"
+#include "Building.h"
 
 MapLoader::MapLoader()
 {
@@ -27,6 +28,36 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 	while (tile)
 	{
 		(*iter2) = static_cast<Tile>(tile.first_attribute().as_uint() - 1);
+		++iter;
+		if (iter == tiles.end())
+		{
+			iter = tiles.begin();
+			++y;
+		}
+		iter2 = (*iter).begin() + y;
+		tile = tile.next_sibling();
+	}
+	return (false);
+}
+
+bool MapLoader::loadBuildings(const pugi::xml_node data, std::vector<std::vector<IBuilding *>> &tiles, const sf::Vector2u &size, std::map<Tile, sf::String> &tilesNames) const
+{
+	pugi::xml_node tile;
+	std::vector<std::vector<IBuilding *>>::iterator iter;
+	std::vector<IBuilding *>::iterator iter2;
+	sf::Uint32 y = 0;
+
+	tile = data.first_child();
+	iter = tiles.begin();
+	iter2 = (*iter).begin();
+	while (tile)
+	{
+		if (tile.first_attribute().as_uint() != 0)
+		{
+			std::map<Tile, sf::String>::iterator tmp = tilesNames.find(static_cast<Tile>(tile.first_attribute().as_uint() - 1));
+			if (tmp != tilesNames.end())
+				(*iter2) = new Building(tmp->second);
+		}
 		++iter;
 		if (iter == tiles.end())
 		{
@@ -74,14 +105,14 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 		sf::String name = data.attribute("name").as_string();
 		if (name == "buildings")
 		{
-			map._buildings = std::vector<std::vector<Tile>>(map._size.x);
-			iter = map._buildings.begin();
-			while (iter != map._buildings.end())
+			map._buildings = std::vector<std::vector<IBuilding *>>(map._size.x);
+			std::vector<std::vector<IBuilding *>>::iterator iterBuilding = map._buildings.begin();
+			while (iterBuilding != map._buildings.end())
 			{
-				(*iter) = std::vector<Tile>(map._size.y, GROUND);
-				++iter;
+				(*iterBuilding) = std::vector<IBuilding *>(map._size.y, nullptr);
+				++iterBuilding;
 			}
-			this->loadLayer(data.child("data"), map._buildings, map._size);
+			this->loadBuildings(data.child("data"), map._buildings, map._size, map._tilesNames);
 		}
 		else
 		{

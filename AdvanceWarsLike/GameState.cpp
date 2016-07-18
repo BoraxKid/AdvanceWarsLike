@@ -8,9 +8,8 @@ GameState::GameState(ResourcesManager &resourcesManager)
 	this->_mapSize = this->_mapManager.getMapSize();
 	this->_tileSize = this->_mapManager.getTileSize();
 	this->_realMapSize = sf::Vector2f(static_cast<float>(this->_mapSize.x * this->_tileSize.x), static_cast<float>(this->_mapSize.y * this->_tileSize.y));
-	this->addPlayer();
-	this->addPlayer();
-	this->_currentPlayer = this->_players.begin();
+	this->setupTeams();
+	this->setupBuildings(this->_mapManager.getBuildings());
 	if (!this->_font.loadFromFile("uni0553-webfont.ttf"))
 		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
 	this->_menuManager.createMenus(this);
@@ -18,12 +17,12 @@ GameState::GameState(ResourcesManager &resourcesManager)
 
 GameState::~GameState()
 {
-	std::vector<Player *>::iterator iter = this->_players.begin();
-	std::vector<Player *>::iterator iter2 = this->_players.end();
+	std::map<sf::String, Player *>::iterator iter = this->_players.begin();
+	std::map<sf::String, Player *>::iterator iter2 = this->_players.end();
 
 	while (iter != iter2)
 	{
-		delete (*iter);
+		delete (iter->second);
 		++iter;
 	}
 }
@@ -63,10 +62,10 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 					else
 					{
 						this->_menuManager.reset();
-						if (this->_currentPlayer != this->_players.end())
+						if (this->_currentPlayer != this->_playersTeams.end())
 						{
-							if ((*this->_currentPlayer)->click(tilePos))
-								this->_menuManager.openUnitActionMenu(*this->_currentPlayer, this->_mousePosition, this->_realMapSize);
+							if (this->_players.at(*this->_currentPlayer)->click(tilePos))
+								this->_menuManager.openUnitActionMenu(this->_players.at(*this->_currentPlayer), this->_mousePosition, this->_realMapSize);
 						}
 					}
 				}
@@ -87,9 +86,9 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 							{
 								// TODO: calculate damages output
 								this->_mapManager.removeUnit(uTilePos);
-								this->_players.at((*iter)->getPlayerId())->destroyUnit(*iter);
+								this->_players.at(this->_playersTeams.at((*iter)->getPlayerId() - 1))->destroyUnit(*iter);
 								this->_targets.clear();
-								(*this->_currentPlayer)->endAttack();
+								this->_players.at(*this->_currentPlayer)->endAttack();
 								this->_gameMode = NORMAL;
 								break;
 							}
@@ -111,8 +110,8 @@ void GameState::update(const sf::Time &time)
 void GameState::display(sf::RenderWindow &window)
 {
 	this->_mapManager.draw(window);
-	if (this->_currentPlayer != this->_players.end() && this->_gameMode != BATTLE)
-		(*this->_currentPlayer)->drawMovement(window);
+	if (this->_currentPlayer != this->_playersTeams.end() && this->_gameMode != BATTLE)
+		this->_players.at(*this->_currentPlayer)->drawMovement(window);
 	std::vector<IUnit *>::const_iterator iter = this->_targets.begin();
 	std::vector<IUnit *>::const_iterator iter2 = this->_targets.end();
 	sf::RectangleShape rect(sf::Vector2f(16, 16));
@@ -133,64 +132,63 @@ sf::Vector2f GameState::getViewSize() const
 
 void GameState::changeTurn()
 {
-	(*this->_currentPlayer)->endTurn();
-	if (this->_currentPlayer != this->_players.end() - 1)
-		++this->_currentPlayer;
-	else
-		this->_currentPlayer = this->_players.begin();
-	(*this->_currentPlayer)->startTurn();
+	this->_players.at(*this->_currentPlayer)->endTurn();
+	++this->_currentPlayer;
+	if (this->_currentPlayer == this->_playersTeams.end())
+		this->_currentPlayer = this->_playersTeams.begin();
+	this->_players.at(*this->_currentPlayer)->startTurn();
 	std::cout << "Changing turn" << std::endl;
 }
 
 void GameState::findTargets()
 {
-	const sf::Vector2u &unitPosition = (*this->_currentPlayer)->getAimedTile();
+	const sf::Vector2u &unitPosition = this->_players.at(*this->_currentPlayer)->getAimedTile();
 	IUnit *tmp;
 	this->_targets.clear();
 
 	if (unitPosition.x > 0)
 	{
-		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x - 1, unitPosition.y))) != nullptr && tmp->getPlayerId() != (*this->_currentPlayer)->getId())
+		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x - 1, unitPosition.y))) != nullptr && tmp->getPlayerId() != this->_players.at(*this->_currentPlayer)->getId())
 			this->_targets.push_back(tmp);
 	}
 	if (unitPosition.y > 0)
 	{
-		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x, unitPosition.y - 1))) != nullptr && tmp->getPlayerId() != (*this->_currentPlayer)->getId())
+		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x, unitPosition.y - 1))) != nullptr && tmp->getPlayerId() != this->_players.at(*this->_currentPlayer)->getId())
 			this->_targets.push_back(tmp);
 	}
 	if (unitPosition.x + 1 < this->_mapSize.x)
 	{
-		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x + 1, unitPosition.y))) != nullptr && tmp->getPlayerId() != (*this->_currentPlayer)->getId())
+		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x + 1, unitPosition.y))) != nullptr && tmp->getPlayerId() != this->_players.at(*this->_currentPlayer)->getId())
 			this->_targets.push_back(tmp);
 	}
 	if (unitPosition.y + 1 < this->_mapSize.y)
 	{
-		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x, unitPosition.y + 1))) != nullptr && tmp->getPlayerId() != (*this->_currentPlayer)->getId())
+		if ((tmp = this->_mapManager.getUnit(sf::Vector2u(unitPosition.x, unitPosition.y + 1))) != nullptr && tmp->getPlayerId() != this->_players.at(*this->_currentPlayer)->getId())
 			this->_targets.push_back(tmp);
 	}
 	if (!this->_targets.empty())
 	{
-		(*this->_currentPlayer)->prepareAttackUnit();
+		this->_players.at(*this->_currentPlayer)->prepareAttackUnit();
 		this->_gameMode = BATTLE;
 	}
 }
 
 void GameState::addPlayer()
 {
-	Player *player = new Player(this->_playersNumber, this->_mapManager);
+	Player *player = new Player(++this->_playersNumber, this->_mapManager);
+	this->_playersTeams.push_back(this->_availablePlayersTeams.at(this->_playersNumber));
 	player->setMapSize(this->_mapSize);
-	if (this->_playersNumber == 0)
+	if (this->_playersNumber == 1)
 	{
 		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 4));
 		this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
 	}
-	else if (this->_playersNumber == 1)
+	else if (this->_playersNumber == 2)
 	{
 		this->spawnUnit(player, new Unit(), sf::Vector2u(4, 2));
 		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 12));
 	}
-	this->_players.push_back(player);
-	++this->_playersNumber;
+	this->_players[this->_playersTeams.at(this->_playersNumber - 1)] = player;
 }
 
 void GameState::spawnUnit(Player *player, IUnit *unit, sf::Vector2u position)
@@ -200,4 +198,50 @@ void GameState::spawnUnit(Player *player, IUnit *unit, sf::Vector2u position)
 	unit->setTilePosition(position);
 	player->addUnit(unit);
 	this->_mapManager.addUnit(unit, unit->getTilePosition());
+}
+
+void GameState::setupBuildings(const std::vector<std::vector<IBuilding *>> &buildings)
+{
+	std::vector<std::vector<IBuilding *>>::const_iterator iter = buildings.begin();
+	std::vector<std::vector<IBuilding *>>::const_iterator iter2 = buildings.end();
+	std::vector<IBuilding *>::const_iterator iter3;
+	std::vector<IBuilding *>::const_iterator iter4;
+	std::vector<sf::String>::const_iterator iter5;
+	std::vector<sf::String>::const_iterator iter6 = this->_playersTeams.end();
+
+	while (iter != iter2)
+	{
+		iter3 = iter->begin();
+		iter4 = iter->end();
+		while (iter3 != iter4)
+		{
+			if ((*iter3) != nullptr)
+			{
+				const sf::String &type = (*iter3)->getType();
+				iter5 = this->_playersTeams.begin();
+				while (iter5 != iter6)
+				{
+					if (type.find(*iter5) != std::string::npos)
+						this->_players.at(*iter5)->addBuilding(*iter3);
+					++iter5;
+				}
+				(*iter3)->setGraphicsComponent(new BuildingGraphicsComponent(this->_resourcesManager.at(type)));
+			}
+			++iter3;
+		}
+		++iter;
+	}
+}
+
+void GameState::setupTeams()
+{
+	this->_availablePlayersTeams.push_back("neutral");
+	this->_availablePlayersTeams.push_back("red");
+	this->_availablePlayersTeams.push_back("blue");
+	this->_availablePlayersTeams.push_back("green");
+	this->_availablePlayersTeams.push_back("yellow");
+	this->_availablePlayersTeams.push_back("black");
+	this->addPlayer();
+	this->addPlayer();
+	this->_currentPlayer = this->_playersTeams.begin();
 }

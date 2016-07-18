@@ -50,6 +50,11 @@ sf::Vector2u MapManager::getTileSize() const
 	return (sf::Vector2u(0, 0));
 }
 
+const std::vector<std::vector<IBuilding *>> &MapManager::getBuildings() const
+{
+	return (this->_activeMaps.back().getBuildings());
+}
+
 bool MapManager::canMove(const sf::Vector2u & unitPosition, const sf::Vector2u & position)
 {
 	if (!this->_activeMaps.empty())

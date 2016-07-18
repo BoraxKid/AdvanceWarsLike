@@ -38,7 +38,7 @@ public:
 		this->_gray = gray;
 	}
 
-private:
+protected:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
 	{
 		states.shader = &this->_shader;
@@ -50,6 +50,24 @@ private:
 	sf::Shader _shader;
 	sf::Color _color;
 	bool _gray;
+};
+
+class BuildingGraphicsComponent : public GraphicsComponent
+{
+public:
+	BuildingGraphicsComponent(AnimatedSprite &sprite)
+		: GraphicsComponent(sprite)
+	{}
+
+	virtual ~BuildingGraphicsComponent()
+	{}
+
+private:
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
+	{
+		states.transform *= this->getTransform();
+		target.draw(this->_sprite, states);
+	}
 };
 
 #endif // GRAPHICSCOMPONENT_H_

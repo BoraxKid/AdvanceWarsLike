@@ -116,6 +116,7 @@ void Player::destroyUnit(IUnit *unit)
 			delete ((*iter));
 			(*iter) = nullptr;
 			this->_units.erase(iter);
+			this->_selectedUnit = this->_units.end();
 			return;
 		}
 		++iter;
@@ -128,6 +129,28 @@ void Player::addUnit(IUnit *unit)
 	unit->setPlayer(this->_id);
 	this->_units.push_back(unit);
 	this->_selectedUnit = this->_units.end();
+}
+
+void Player::removeBuilding(IBuilding *building)
+{
+	std::vector<IBuilding *>::iterator iter = this->_buildings.begin();
+	std::vector<IBuilding *>::iterator iter2 = this->_buildings.end();
+
+	while (iter != iter2)
+	{
+		if ((*iter) == building)
+		{
+			(*iter) = nullptr;
+			this->_buildings.erase(iter);
+			return;
+		}
+		++iter;
+	}
+}
+
+void Player::addBuilding(IBuilding *building)
+{
+	this->_buildings.push_back(building);
 }
 
 const std::vector<IUnit *> &Player::getUnits() const

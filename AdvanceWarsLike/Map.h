@@ -8,6 +8,7 @@
 
 #include "ResourcesManager.h"
 #include "IUnit.h"
+#include "IBuilding.h"
 
 enum Tile
 	{
@@ -34,6 +35,7 @@ public:
 	IUnit *getUnit(const sf::Vector2u &position);
 	sf::Vector2u getMapSize() const;
 	sf::Vector2u getTileSize() const;
+	const std::vector<std::vector<IBuilding *>> &getBuildings() const;
 	bool canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void dump() const;
@@ -43,7 +45,7 @@ private:
 
 	ResourcesManager &_resourcesManager;
 	std::map<sf::String, std::vector<std::vector<Tile>>> _tiles;
-	std::vector<std::vector<Tile>> _buildings;
+	std::vector<std::vector<IBuilding *>> _buildings;
 	std::vector<std::vector<IUnit *>> _units;
 	std::map<Tile, sf::String> _tilesNames;
 	sf::Vector2u _tileSize;
