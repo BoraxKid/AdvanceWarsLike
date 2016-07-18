@@ -22,6 +22,11 @@ public:
 	virtual ~GraphicsComponent()
 	{}
 
+	sf::Uint32 getHeight() const
+	{
+		return (this->_sprite.getHeight());
+	}
+
 	void setColor(sf::Color color)
 	{
 		this->_color = color;

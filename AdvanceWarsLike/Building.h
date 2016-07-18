@@ -12,6 +12,7 @@ public:
 
 	virtual void setGraphicsComponent(GraphicsComponent *graphics);
 	virtual const sf::String &getType() const;
+	virtual sf::Uint32 getHeight() const;
 
 private:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;

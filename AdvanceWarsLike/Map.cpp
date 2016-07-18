@@ -118,8 +118,8 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 			j = 0;
 			while (j < y)
 			{
-				pos.x = static_cast<float>(i * 16);
-				pos.y = static_cast<float>(j * 16);
+				pos.x = static_cast<float>(i * this->_tileSize.x);
+				pos.y = static_cast<float>(j * this->_tileSize.y);
 				iter = this->_tilesNames.find(iterMap->second.at(i).at(j)); 
 				if (iter != this->_tilesNames.end())
 				{
@@ -129,12 +129,12 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 				}
 				if ((building = this->_buildings.at(i).at(j)) != nullptr)
 				{
-					building->setPosition(pos);
+					building->setPosition(pos.x, pos.y + this->_tileSize.y - building->getHeight());
 					target.draw(*building, states);
 				}
 				if ((unit = this->_units.at(i).at(j)) != nullptr)
 				{
-					unit->setPosition(pos);
+					unit->setPosition(pos.x, pos.y + this->_tileSize.y - unit->getHeight());
 					target.draw(*unit, states);
 				}
 				++j;

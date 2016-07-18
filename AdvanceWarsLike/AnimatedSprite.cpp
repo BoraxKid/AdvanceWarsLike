@@ -49,6 +49,13 @@ void AnimatedSprite::addFrame(sf::IntRect rect)
 	this->_currentFrame = this->_sprites.end() - 1;
 }
 
+sf::Uint32 AnimatedSprite::getHeight() const
+{
+	if (this->_currentFrame != this->_sprites.end())
+		return (this->_currentFrame->getLocalBounds().height);
+	return (0);
+}
+
 void AnimatedSprite::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	states.transform *= this->getTransform();

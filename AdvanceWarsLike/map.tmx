@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="15" tilewidth="16" tileheight="16" nextobjectid="1">
- <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" margin="1" tilecount="225">
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" margin="1" tilecount="225" columns="15">
   <image source="tiles.png" width="256" height="256"/>
   <tile id="0">
    <properties>
@@ -30,6 +30,26 @@
   <tile id="30">
    <properties>
     <property name="tile" value="map_tower_blue"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="tile" value="map_gfactory_red"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="tile" value="map_gfactory_blue"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="tile" value="map_gfactory_green"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="tile" value="map_gfactory_yellow"/>
    </properties>
   </tile>
   <tile id="45">
@@ -611,8 +631,8 @@
    <tile gid="46"/>
    <tile gid="61"/>
    <tile gid="76"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="36"/>
+   <tile gid="37"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>

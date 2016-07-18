@@ -22,6 +22,13 @@ const sf::String &Building::getType() const
 	return (this->_type);
 }
 
+sf::Uint32 Building::getHeight() const
+{
+	if (this->_graphics != nullptr)
+		return (this->_graphics->getHeight());
+	return (0);
+}
+
 void Building::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	if (this->_graphics != nullptr)

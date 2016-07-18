@@ -27,6 +27,13 @@ void Unit::setStatisticsComponent(StatisticsComponent *stats)
 	this->_stats = stats;
 }
 
+sf::Uint32 Unit::getHeight() const
+{
+	if (this->_graphics != nullptr)
+		return (this->_graphics->getHeight());
+	return (0);
+}
+
 const sf::Uint8 &Unit::getMovement() const
 {
 	return (this->_stats->getMovement());

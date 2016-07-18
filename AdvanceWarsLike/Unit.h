@@ -14,6 +14,7 @@ public:
 
 	virtual void setGraphicsComponent(GraphicsComponent *graphics);
 	virtual void setStatisticsComponent(StatisticsComponent *stats);
+	virtual sf::Uint32 getHeight() const;
 	virtual const sf::Uint8 &getMovement() const;
 	virtual void setTilePosition(const sf::Vector2u &position);
 	virtual sf::Vector2u getTilePosition() const;
