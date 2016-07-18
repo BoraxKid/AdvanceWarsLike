@@ -24,8 +24,10 @@ public:
 
 	void changeTurn();
 	void findTargets();
+	void buyUnit();
 
 private:
+	void battle(const sf::Vector2i &tilePos);
 	void addPlayer();
 	void spawnUnit(Player *player, IUnit *unit, sf::Vector2u position);
 	void setupBuildings(const std::vector<std::vector<IBuilding *>> &buildings);
@@ -43,8 +45,8 @@ private:
 	std::vector<sf::String> _playersTeams;
 	std::vector<sf::String>::iterator _currentPlayer;
 	std::map<sf::String, Player *> _players;
-	//std::map<sf::String, Player *>::iterator _currentPlayer;
 	sf::Vector2f _mousePosition;
+	sf::Vector2u _tilePosition;
 	sf::Font _font;
 	std::vector<IUnit *> _targets;
 };

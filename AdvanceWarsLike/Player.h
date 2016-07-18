@@ -9,6 +9,7 @@
 class Player
 {
 public:
+	enum Click { NotInRange, Aimed, Selected, Acted };
 	Player(sf::Uint8 id, MapManager &mapManager);
 	virtual ~Player();
 
@@ -17,7 +18,7 @@ public:
 	void moveUnit();
 	void prepareAttackUnit();
 	void endAttack();
-	bool click(const sf::Vector2i &tilePos);
+	Click click(const sf::Vector2i &tilePos);
 	void destroyUnit(IUnit *unit);
 	void addUnit(IUnit *unit);
 	void removeBuilding(IBuilding *building);

@@ -19,6 +19,7 @@ public:
 	void reset();
 	void openUnitActionMenu(Player *player, sf::Vector2f pos, sf::Vector2f maxSize);
 	void openStartMenu(sf::Vector2f pos, sf::Vector2f maxSize);
+	void openGFactoryMenu(sf::Vector2f pos, sf::Vector2f maxSize);
 	void draw(sf::RenderWindow &window) const;
 
 private:

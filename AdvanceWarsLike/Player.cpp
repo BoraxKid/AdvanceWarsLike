@@ -52,11 +52,12 @@ void Player::endAttack()
 	(*this->_selectedUnit)->acted();
 }
 
-bool Player::click(const sf::Vector2i &tilePos)
+Player::Click Player::click(const sf::Vector2i &tilePos)
 {
 	std::vector<IUnit *>::iterator iter;
 	std::vector<IUnit *>::iterator iter2;
 	IUnit *tmp = this->_mapManager.getUnit(sf::Vector2u(tilePos.x, tilePos.y));
+	bool actedUnit = false;
 
 	if (this->_selectedUnit != this->_units.end())
 	{
@@ -65,7 +66,7 @@ bool Player::click(const sf::Vector2i &tilePos)
 			if (this->_mapManager.canMove((*this->_selectedUnit)->getTilePosition(), sf::Vector2u(tilePos.x, tilePos.y)))
 			{
 				this->_aimedTile = sf::Vector2u(tilePos.x, tilePos.y);
-				return (true);
+				return (Aimed);
 			}
 			else if (*this->_selectedUnit != tmp)
 			{
@@ -73,12 +74,15 @@ bool Player::click(const sf::Vector2i &tilePos)
 				iter2 = this->_units.end();
 				while (iter != iter2)
 				{
-					if (*iter == tmp)
+					if (*iter == tmp && (*iter)->hasActed() == false)
 					{
 						this->resetMovementMap();
 						this->calculateMovement(tilePos);
 						this->_selectedUnit = iter;
+						return (Selected);
 					}
+					else if (*iter == tmp && (*iter)->hasActed() == true)
+						actedUnit = true;
 					++iter;
 				}
 			}
@@ -97,11 +101,16 @@ bool Player::click(const sf::Vector2i &tilePos)
 				this->resetMovementMap();
 				this->calculateMovement(tilePos);
 				this->_selectedUnit = iter;
+				return (Selected);
 			}
+			else if (*iter == tmp && (*iter)->hasActed() == true)
+				actedUnit = true;
 			++iter;
 		}
 	}
-	return (false);
+	if (actedUnit)
+		return (Acted);
+	return (NotInRange);
 }
 
 void Player::destroyUnit(IUnit *unit)
@@ -150,6 +159,7 @@ void Player::removeBuilding(IBuilding *building)
 
 void Player::addBuilding(IBuilding *building)
 {
+	building->setPlayer(this->_id);
 	this->_buildings.push_back(building);
 }
 

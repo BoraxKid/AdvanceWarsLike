@@ -50,8 +50,8 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 		}
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
-			tilePos = sf::Vector2i(static_cast<sf::Int32>(this->_mousePosition.x) / 16, static_cast<sf::Int32>(this->_mousePosition.y) / 16);
-			if (this->_gameMode == NORMAL)
+			tilePos = sf::Vector2i(static_cast<sf::Int32>(this->_mousePosition.x) / this->_tileSize.x, static_cast<sf::Int32>(this->_mousePosition.y) / this->_tileSize.y);
+			if (this->_gameMode == NORMAL && this->_currentPlayer != this->_playersTeams.end())
 			{
 				if (event.mouseButton.button == sf::Mouse::Right)
 					this->_menuManager.openStartMenu(this->_mousePosition, this->_realMapSize);
@@ -62,10 +62,24 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 					else
 					{
 						this->_menuManager.reset();
-						if (this->_currentPlayer != this->_playersTeams.end())
+						Player::Click click = this->_players.at(*this->_currentPlayer)->click(tilePos);
+						if (click == Player::Click::Aimed)
+							this->_menuManager.openUnitActionMenu(this->_players.at(*this->_currentPlayer), this->_mousePosition, this->_realMapSize);
+						else if (click == Player::Click::NotInRange)
 						{
-							if (this->_players.at(*this->_currentPlayer)->click(tilePos))
-								this->_menuManager.openUnitActionMenu(this->_players.at(*this->_currentPlayer), this->_mousePosition, this->_realMapSize);
+							const std::vector<std::vector<IBuilding *>> &buildings = this->_mapManager.getBuildings();
+							if (tilePos.x >= 0 && static_cast<sf::Uint32>(tilePos.x) < this->_mapSize.x && tilePos.y >= 0 && static_cast<sf::Uint32>(tilePos.y) < this->_mapSize.y)
+							{
+								IBuilding *tmp = buildings.at(tilePos.x).at(tilePos.y);
+								if (tmp != nullptr)
+								{
+									if (tmp->getPlayerId() != 255 && this->_playersTeams.at(tmp->getPlayerId()) == *this->_currentPlayer && this->_mapManager.getUnit(sf::Vector2u(tilePos)) == nullptr)
+									{
+										this->_tilePosition = sf::Vector2u(tilePos);
+										this->_menuManager.openGFactoryMenu(this->_mousePosition, this->_realMapSize);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -74,27 +88,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					std::vector<IUnit *>::iterator iter = this->_targets.begin();
-					std::vector<IUnit *>::iterator iter2 = this->_targets.end();
-					sf::Vector2u uTilePos = sf::Vector2u(tilePos);
-
-					if (tilePos.x >= 0 && tilePos.y >= 0)
-					{
-						while (iter != iter2)
-						{
-							if ((*iter)->getTilePosition() == uTilePos)
-							{
-								// TODO: calculate damages output
-								this->_mapManager.removeUnit(uTilePos);
-								this->_players.at(this->_playersTeams.at((*iter)->getPlayerId() - 1))->destroyUnit(*iter);
-								this->_targets.clear();
-								this->_players.at(*this->_currentPlayer)->endAttack();
-								this->_gameMode = NORMAL;
-								break;
-							}
-							++iter;
-						}
-					}
+					this->battle(tilePos);
 				}
 			}
 		}
@@ -114,11 +108,11 @@ void GameState::display(sf::RenderWindow &window)
 		this->_players.at(*this->_currentPlayer)->drawMovement(window);
 	std::vector<IUnit *>::const_iterator iter = this->_targets.begin();
 	std::vector<IUnit *>::const_iterator iter2 = this->_targets.end();
-	sf::RectangleShape rect(sf::Vector2f(16, 16));
+	sf::RectangleShape rect(sf::Vector2f(static_cast<float>(this->_tileSize.x), static_cast<float>(this->_tileSize.y)));
 	rect.setFillColor(sf::Color(255, 0, 0, 127));
 	while (iter != iter2)
 	{
-		rect.setPosition(sf::Vector2f(static_cast<float>((*iter)->getTilePosition().x * 16), static_cast<float>((*iter)->getTilePosition().y * 16)));
+		rect.setPosition(sf::Vector2f(static_cast<float>((*iter)->getTilePosition().x * this->_tileSize.x), static_cast<float>((*iter)->getTilePosition().y * this->_tileSize.y)));
 		window.draw(rect);
 		++iter;
 	}
@@ -173,6 +167,38 @@ void GameState::findTargets()
 	}
 }
 
+void GameState::buyUnit()
+{
+	IUnit *unit = new Unit();
+	this->spawnUnit(this->_players.at(*this->_currentPlayer), unit, this->_tilePosition);
+	unit->acted();
+}
+
+void GameState::battle(const sf::Vector2i &tilePos)
+{
+	std::vector<IUnit *>::iterator iter = this->_targets.begin();
+	std::vector<IUnit *>::iterator iter2 = this->_targets.end();
+	sf::Vector2u uTilePos = sf::Vector2u(tilePos);
+
+	if (tilePos.x >= 0 && tilePos.y >= 0)
+	{
+		while (iter != iter2)
+		{
+			if ((*iter)->getTilePosition() == uTilePos)
+			{
+				// TODO: calculate damages output and win if enemy has no more units
+				this->_mapManager.removeUnit(uTilePos);
+				this->_players.at(this->_playersTeams.at((*iter)->getPlayerId() - 1))->destroyUnit(*iter);
+				this->_targets.clear();
+				this->_players.at(*this->_currentPlayer)->endAttack();
+				this->_gameMode = NORMAL;
+				break;
+			}
+			++iter;
+		}
+	}
+}
+
 void GameState::addPlayer()
 {
 	Player *player = new Player(++this->_playersNumber, this->_mapManager);
@@ -222,7 +248,10 @@ void GameState::setupBuildings(const std::vector<std::vector<IBuilding *>> &buil
 				while (iter5 != iter6)
 				{
 					if (type.find(*iter5) != std::string::npos)
+					{
 						this->_players.at(*iter5)->addBuilding(*iter3);
+						(*iter3)->setPlayer(iter5 - this->_playersTeams.begin());
+					}
 					++iter5;
 				}
 				(*iter3)->setGraphicsComponent(new BuildingGraphicsComponent(this->_resourcesManager.at(type)));

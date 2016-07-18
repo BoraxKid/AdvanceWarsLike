@@ -18,6 +18,10 @@ void MenuManager::createMenus(GameState *gameState)
 	this->_menus.at("unit_action").addButton("attack", new Button<GameState>(gameState, &GameState::findTargets, this->_font, "Attack"));
 	this->_menus["player_start"] = Menu();
 	this->_menus.at("player_start").addButton("end_turn", new Button<GameState>(gameState, &GameState::changeTurn, this->_font, "End turn"));
+	this->_menus["enemy_building"] = Menu();
+	this->_menus.at("enemy_building").addButton("capture", new GenericButton(this->_font, "Capture"));
+	this->_menus["gfactory"] = Menu();
+	this->_menus.at("gfactory").addButton("tank", new Button<GameState>(gameState, &GameState::buyUnit, this->_font, "Create tank"));
 }
 
 bool MenuManager::mouseMoved(const sf::Vector2f &mousePosition)
@@ -59,6 +63,15 @@ void MenuManager::openStartMenu(sf::Vector2f pos, sf::Vector2f maxSize)
 	if (this->_displayedMenu == "")
 	{
 		this->_displayedMenu = "player_start";
+		this->_menus.at(this->_displayedMenu).setPosition(pos);
+	}
+}
+
+void MenuManager::openGFactoryMenu(sf::Vector2f pos, sf::Vector2f maxSize)
+{
+	if (this->_displayedMenu == "")
+	{
+		this->_displayedMenu = "gfactory";
 		this->_menus.at(this->_displayedMenu).setPosition(pos);
 	}
 }
