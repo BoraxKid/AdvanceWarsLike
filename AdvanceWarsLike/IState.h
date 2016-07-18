@@ -15,6 +15,7 @@ public:
 	virtual void handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &events) = 0;
 	virtual void update(const sf::Time &time) = 0;
 	virtual void display(sf::RenderWindow &window) = 0;
+	virtual sf::Vector2f getViewSize() const = 0;
 };
 
 #endif // ISATE_H_

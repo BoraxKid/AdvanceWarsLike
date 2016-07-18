@@ -39,17 +39,22 @@ void MenuManager::reset()
 	this->_displayedMenu = "";
 }
 
-void MenuManager::openUnitActionMenu(Player *player, sf::Vector2f pos)
+void MenuManager::openUnitActionMenu(Player *player, sf::Vector2f pos, sf::Vector2f maxSize)
 {
 	if (this->_displayedMenu == "")
 	{
 		this->_displayedMenu = "unit_action";
 		this->_menus.at(this->_displayedMenu).setButtonPointer("move", player);
+		sf::Vector2<sf::Uint16> size = this->_menus.at(this->_displayedMenu).getSize();
+		if (pos.x + size.x > maxSize.x)
+			pos.x -= size.x;
+		if (pos.y + size.y > maxSize.y)
+			pos.y -= size.y;
 		this->_menus.at(this->_displayedMenu).setPosition(pos);
 	}
 }
 
-void MenuManager::openStartMenu(sf::Vector2f pos)
+void MenuManager::openStartMenu(sf::Vector2f pos, sf::Vector2f maxSize)
 {
 	if (this->_displayedMenu == "")
 	{

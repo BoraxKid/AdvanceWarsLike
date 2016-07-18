@@ -37,6 +37,11 @@ sf::Vector2u Map::getMapSize() const
 	return (this->_size);
 }
 
+sf::Vector2u Map::getTileSize() const
+{
+	return (this->_tileSize);
+}
+
 bool Map::canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 {
 	if (unitPosition.x < this->_size.x && unitPosition.y < this->_size.y && position.x < this->_size.x && position.y < this->_size.y)

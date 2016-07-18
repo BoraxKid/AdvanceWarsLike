@@ -15,6 +15,7 @@ public:
 	void setButtonPointer(const sf::String &id, void *ptr);
 	bool contains(const sf::Vector2f &point);
 	void click(const sf::Vector2f &point);
+	sf::Vector2<sf::Uint16> getSize() const;
 
 private:
 	void resizeButtons();

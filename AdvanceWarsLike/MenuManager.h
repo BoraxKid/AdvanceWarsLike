@@ -17,8 +17,8 @@ public:
 	bool mouseMoved(const sf::Vector2f &mousePosition);
 	void click(const sf::Vector2f &mousePosition);
 	void reset();
-	void openUnitActionMenu(Player *player, sf::Vector2f pos);
-	void openStartMenu(sf::Vector2f pos);
+	void openUnitActionMenu(Player *player, sf::Vector2f pos, sf::Vector2f maxSize);
+	void openStartMenu(sf::Vector2f pos, sf::Vector2f maxSize);
 	void draw(sf::RenderWindow &window) const;
 
 private:

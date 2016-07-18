@@ -6,6 +6,8 @@ GameState::GameState(ResourcesManager &resourcesManager)
 {
 	this->_mapManager.loadMap("map.tmx");
 	this->_mapSize = this->_mapManager.getMapSize();
+	this->_tileSize = this->_mapManager.getTileSize();
+	this->_realMapSize = sf::Vector2f(static_cast<float>(this->_mapSize.x * this->_tileSize.x), static_cast<float>(this->_mapSize.y * this->_tileSize.y));
 	this->addPlayer();
 	this->addPlayer();
 	this->_currentPlayer = this->_players.begin();
@@ -49,11 +51,11 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 		}
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
-			tilePos = sf::Vector2i(static_cast<sf::Int32>(this->_mousePosition.x / 16), static_cast<sf::Int32>(this->_mousePosition.y / 16));
+			tilePos = sf::Vector2i(static_cast<sf::Int32>(this->_mousePosition.x) / 16, static_cast<sf::Int32>(this->_mousePosition.y) / 16);
 			if (this->_gameMode == NORMAL)
 			{
 				if (event.mouseButton.button == sf::Mouse::Right)
-					this->_menuManager.openStartMenu(this->_mousePosition);
+					this->_menuManager.openStartMenu(this->_mousePosition, this->_realMapSize);
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
 					if (this->_menuManager.mouseMoved(this->_mousePosition))
@@ -64,7 +66,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 						if (this->_currentPlayer != this->_players.end())
 						{
 							if ((*this->_currentPlayer)->click(tilePos))
-								this->_menuManager.openUnitActionMenu(*this->_currentPlayer, this->_mousePosition);
+								this->_menuManager.openUnitActionMenu(*this->_currentPlayer, this->_mousePosition, this->_realMapSize);
 						}
 					}
 				}
@@ -117,11 +119,16 @@ void GameState::display(sf::RenderWindow &window)
 	rect.setFillColor(sf::Color(255, 0, 0, 127));
 	while (iter != iter2)
 	{
-		rect.setPosition(sf::Vector2f((*iter)->getTilePosition().x * 16, (*iter)->getTilePosition().y * 16));
+		rect.setPosition(sf::Vector2f(static_cast<float>((*iter)->getTilePosition().x * 16), static_cast<float>((*iter)->getTilePosition().y * 16)));
 		window.draw(rect);
 		++iter;
 	}
 	this->_menuManager.draw(window);
+}
+
+sf::Vector2f GameState::getViewSize() const
+{
+	return (this->_realMapSize);
 }
 
 void GameState::changeTurn()

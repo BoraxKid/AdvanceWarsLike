@@ -68,6 +68,11 @@ void Menu::click(const sf::Vector2f &point)
 		this->_buttons.at(*this->_hoveredButton)->activate();
 }
 
+sf::Vector2<sf::Uint16> Menu::getSize() const
+{
+	return (sf::Vector2<sf::Uint16>(this->_buttonWidth, this->_currentHeight));
+}
+
 void Menu::resizeButtons()
 {
 	std::map<sf::String, GenericButton *>::iterator iter = this->_buttons.begin();

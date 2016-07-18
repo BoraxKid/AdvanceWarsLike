@@ -38,7 +38,16 @@ IUnit *MapManager::getUnit(const sf::Vector2u &position)
 
 sf::Vector2u MapManager::getMapSize() const
 {
-	return (this->_activeMaps.back().getMapSize());
+	if (!this->_activeMaps.empty())
+		return (this->_activeMaps.back().getMapSize());
+	return (sf::Vector2u(0, 0));
+}
+
+sf::Vector2u MapManager::getTileSize() const
+{
+	if (!this->_activeMaps.empty())
+		return (this->_activeMaps.back().getTileSize());
+	return (sf::Vector2u(0, 0));
 }
 
 bool MapManager::canMove(const sf::Vector2u & unitPosition, const sf::Vector2u & position)

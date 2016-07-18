@@ -20,6 +20,7 @@ public:
 	virtual void handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &events);
 	virtual void update(const sf::Time &time);
 	virtual void display(sf::RenderWindow &window);
+	virtual sf::Vector2f getViewSize() const;
 
 	void changeTurn();
 	void findTargets();
@@ -33,6 +34,8 @@ private:
 	MapManager _mapManager;
 	MenuManager _menuManager;
 	sf::Vector2u _mapSize;
+	sf::Vector2u _tileSize;
+	sf::Vector2f _realMapSize;
 	sf::Uint8 _playersNumber;
 	std::vector<Player *> _players;
 	std::vector<Player *>::iterator _currentPlayer;

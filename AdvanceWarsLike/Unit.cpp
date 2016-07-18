@@ -29,9 +29,7 @@ void Unit::setStatisticsComponent(StatisticsComponent *stats)
 
 const sf::Uint8 &Unit::getMovement() const
 {
-	if (this->_stats != nullptr)
-		return (this->_stats->getMovement());
-	return (0);
+	return (this->_stats->getMovement());
 }
 
 void Unit::setTilePosition(const sf::Vector2u &position)

@@ -13,13 +13,16 @@
 class Application
 {
 public:
-	Application();
+	Application(sf::Vector2u winSize = sf::Vector2u(256, 256));
 	virtual ~Application();
 
 	void run();
 
 private:
+	void resize(sf::Vector2f winSize, sf::Vector2f viewSize);
+
 	sf::RenderWindow _window;
+	sf::View _view;
 	std::vector<IState *> _states;
 	ResourcesManager _resourcesManager;
 };
