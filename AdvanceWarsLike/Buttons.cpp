@@ -3,13 +3,11 @@
 GenericButton::GenericButton()
 	: _hovered(false), _text(sf::Text()), _width(100), _height(16)
 {
-	this->init();
 }
 
 GenericButton::GenericButton(const sf::Font &font, const sf::String &text, sf::Uint16 width, sf::Uint16 height)
 	: _hovered(false), _text(text, font), _width(width), _height(16)
 {
-	this->init();
 }
 
 GenericButton::~GenericButton()

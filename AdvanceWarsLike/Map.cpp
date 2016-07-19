@@ -124,17 +124,17 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 				if (iter != this->_tilesNames.end())
 				{
 					AnimatedSprite &sprite = this->_resourcesManager.at(iter->second);
-					sprite.setPosition(pos);
+					sprite.setPosition(pos.x, pos.y + this->_tileSize.y - sprite.getHeight());
 					target.draw(sprite, states);
 				}
 				if ((building = this->_buildings.at(i).at(j)) != nullptr)
 				{
-					building->setPosition(pos.x, pos.y + this->_tileSize.y - building->getHeight());
+					building->setPosition(sf::Vector2f(pos.x, pos.y + this->_tileSize.y - building->getHeight()));
 					target.draw(*building, states);
 				}
 				if ((unit = this->_units.at(i).at(j)) != nullptr)
 				{
-					unit->setPosition(pos.x, pos.y + this->_tileSize.y - unit->getHeight());
+					unit->setSpritePosition(sf::Vector2f(pos.x, pos.y + this->_tileSize.y - unit->getHeight()));
 					target.draw(*unit, states);
 				}
 				++j;

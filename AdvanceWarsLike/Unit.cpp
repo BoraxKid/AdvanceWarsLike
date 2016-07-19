@@ -49,6 +49,11 @@ sf::Vector2u Unit::getTilePosition() const
 	return (this->_position);
 }
 
+void Unit::setSpritePosition(const sf::Vector2f &position)
+{
+	this->_graphics->setSpritePosition(position);
+}
+
 void Unit::setPlayer(sf::Uint8 id)
 {
 	this->_playerId = id;

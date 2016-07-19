@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Menu.h"
+#include "ResourcesManager.h"
 
 class Player;
 class GameState;
@@ -13,7 +14,7 @@ public:
 	MenuManager(const sf::Font &font);
 	virtual ~MenuManager();
 
-	void createMenus(GameState *gameState);
+	void createMenus(GameState *gameState, ResourcesManager &resourcesManager);
 	bool mouseMoved(const sf::Vector2f &mousePosition);
 	void click(const sf::Vector2f &mousePosition);
 	void reset();
@@ -23,6 +24,7 @@ public:
 	void draw(sf::RenderWindow &window) const;
 
 private:
+	void setupMenu(sf::Vector2f pos, sf::Vector2f maxSize);
 
 	const sf::Font &_font;
 	std::map<sf::String, Menu> _menus;

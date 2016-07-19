@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(sf::Uint8 id, MapManager &mapManager)
-	: _id(id), _mapManager(mapManager), _selectedUnit(_units.end())
+	: _id(id), _mapManager(mapManager), _money(0), _selectedUnit(_units.end()), _towers(0)
 {
 }
 
@@ -33,6 +33,8 @@ void Player::endTurn()
 void Player::startTurn()
 {
 	this->_selectedUnit = this->_units.end();
+	this->checkBuildings();
+	this->_money += this->_towers * 1000;
 }
 
 void Player::moveUnit()
@@ -155,12 +157,14 @@ void Player::removeBuilding(IBuilding *building)
 		}
 		++iter;
 	}
+	this->checkBuildings();
 }
 
 void Player::addBuilding(IBuilding *building)
 {
 	building->setPlayer(this->_id);
 	this->_buildings.push_back(building);
+	this->checkBuildings();
 }
 
 const std::vector<IUnit *> &Player::getUnits() const
@@ -207,6 +211,21 @@ void Player::drawMovement(sf::RenderWindow &window)
 			++tmp.y;
 		}
 	}
+}
+
+const sf::Uint32 &Player::currentBalance() const
+{
+	return (this->_money);
+}
+
+bool Player::buy(const sf::Uint32 &cost)
+{
+	if (this->_money >= cost)
+	{
+		this->_money -= cost;
+		return (true);
+	}
+	return (false);
 }
 
 void Player::resetMovementMap()
@@ -270,4 +289,9 @@ bool Player::checkMovement(const sf::Vector2i & tilePos, sf::Uint8 movement) con
 	if ((tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < static_cast<sf::Int32>(this->_mapSize.x) && tilePos.y < static_cast<sf::Int32>(this->_mapSize.y)) && this->_movement.at(tilePos.x).at(tilePos.y) <= movement)
 		return (true);
 	return (false);
+}
+
+void Player::checkBuildings()
+{
+	this->_towers = this->_buildings.size();
 }

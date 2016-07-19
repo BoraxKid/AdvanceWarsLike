@@ -18,6 +18,7 @@ public:
 	virtual const sf::Uint8 &getMovement() const = 0;
 	virtual void setTilePosition(const sf::Vector2u &position) = 0;
 	virtual sf::Vector2u getTilePosition() const = 0;
+	virtual void setSpritePosition(const sf::Vector2f &position) = 0;
 	virtual void setPlayer(sf::Uint8 id) = 0;
 	virtual const sf::Uint8 &getPlayerId() const = 0;
 	virtual void acted() = 0;

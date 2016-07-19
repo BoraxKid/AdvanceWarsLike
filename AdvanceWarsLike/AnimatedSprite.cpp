@@ -46,14 +46,14 @@ void AnimatedSprite::addFrame(sf::IntRect rect)
 			this->_sprites.back().setTexture(*this->_texture);
 	}
 	this->_sprites.back().setTextureRect(rect);
-	this->_currentFrame = this->_sprites.end() - 1;
+	this->_currentFrame = this->_sprites.begin();
 }
 
 sf::Uint32 AnimatedSprite::getHeight() const
 {
 	if (this->_currentFrame != this->_sprites.end())
-		return (this->_currentFrame->getLocalBounds().height);
-	return (0);
+		return (static_cast<sf::Uint32>(this->_currentFrame->getLocalBounds().height));
+	return (sf::Uint32(0));
 }
 
 void AnimatedSprite::draw(sf::RenderTarget &target, sf::RenderStates states) const

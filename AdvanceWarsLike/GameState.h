@@ -24,7 +24,7 @@ public:
 
 	void changeTurn();
 	void findTargets();
-	void buyUnit();
+	void buyUnit(sf::Uint32 cost);
 
 private:
 	void battle(const sf::Vector2i &tilePos);

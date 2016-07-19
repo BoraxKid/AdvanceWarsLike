@@ -22,6 +22,11 @@ public:
 	virtual ~GraphicsComponent()
 	{}
 
+	void setSpritePosition(const sf::Vector2f &position)
+	{
+		this->_sprite.setPosition(position);
+	}
+
 	sf::Uint32 getHeight() const
 	{
 		return (this->_sprite.getHeight());

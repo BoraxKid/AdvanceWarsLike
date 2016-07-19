@@ -28,20 +28,25 @@ public:
 	const sf::Uint8 &getId() const;
 	void setMapSize(const sf::Vector2u &mapSize);
 	void drawMovement(sf::RenderWindow &window);
+	const sf::Uint32 &currentBalance() const;
+	bool buy(const sf::Uint32 &cost);
 
 private:
 	void resetMovementMap();
 	void calculateMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5);
 	bool checkMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5) const;
+	void checkBuildings();
 
 	const sf::Uint8 _id;
 	MapManager &_mapManager;
 	sf::Vector2u _mapSize;
+	sf::Uint32 _money;
 	std::vector<IUnit *> _units;
 	std::vector<IUnit *>::iterator _selectedUnit;
 	std::vector<IBuilding *> _buildings;
 	sf::Vector2u _aimedTile;
 	std::vector<std::vector<sf::Int32>> _movement;
+	sf::Uint32 _towers;
 };
 
 #endif // PLAYER_H_

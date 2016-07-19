@@ -10,9 +10,11 @@ GameState::GameState(ResourcesManager &resourcesManager)
 	this->_realMapSize = sf::Vector2f(static_cast<float>(this->_mapSize.x * this->_tileSize.x), static_cast<float>(this->_mapSize.y * this->_tileSize.y));
 	this->setupTeams();
 	this->setupBuildings(this->_mapManager.getBuildings());
+	this->_players.at(*this->_currentPlayer)->startTurn();
 	if (!this->_font.loadFromFile("uni0553-webfont.ttf"))
 		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
-	this->_menuManager.createMenus(this);
+	const_cast<sf::Texture &>(this->_font.getTexture(8)).setSmooth(false);
+	this->_menuManager.createMenus(this, this->_resourcesManager);
 }
 
 GameState::~GameState()
@@ -73,7 +75,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 								IBuilding *tmp = buildings.at(tilePos.x).at(tilePos.y);
 								if (tmp != nullptr)
 								{
-									if (tmp->getPlayerId() != 255 && this->_playersTeams.at(tmp->getPlayerId()) == *this->_currentPlayer && this->_mapManager.getUnit(sf::Vector2u(tilePos)) == nullptr)
+									if (tmp->getPlayerId() != 255 && this->_playersTeams.at(tmp->getPlayerId()) == *this->_currentPlayer && this->_mapManager.getUnit(sf::Vector2u(tilePos)) == nullptr && tmp->getType().find("factory") != std::string::npos)
 									{
 										this->_tilePosition = sf::Vector2u(tilePos);
 										this->_menuManager.openGFactoryMenu(this->_mousePosition, this->_realMapSize);
@@ -131,7 +133,6 @@ void GameState::changeTurn()
 	if (this->_currentPlayer == this->_playersTeams.end())
 		this->_currentPlayer = this->_playersTeams.begin();
 	this->_players.at(*this->_currentPlayer)->startTurn();
-	std::cout << "Changing turn" << std::endl;
 }
 
 void GameState::findTargets()
@@ -167,11 +168,14 @@ void GameState::findTargets()
 	}
 }
 
-void GameState::buyUnit()
+void GameState::buyUnit(sf::Uint32 cost)
 {
-	IUnit *unit = new Unit();
-	this->spawnUnit(this->_players.at(*this->_currentPlayer), unit, this->_tilePosition);
-	unit->acted();
+	if (this->_players.at(*this->_currentPlayer)->buy(cost))
+	{
+		IUnit *unit = new Unit();
+		this->spawnUnit(this->_players.at(*this->_currentPlayer), unit, this->_tilePosition);
+		unit->acted();
+	}
 }
 
 void GameState::battle(const sf::Vector2i &tilePos)
