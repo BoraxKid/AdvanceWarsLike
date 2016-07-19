@@ -2,7 +2,7 @@
 #include "Unit.h"
 
 GameState::GameState(ResourcesManager &resourcesManager)
-	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager), _menuManager(_font), _playersNumber(0), _mousePosition(0.0f, 0.0f)
+	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager), _menuManager(_font), _animationManager(_resourcesManager, _mapManager, _font, _realMapSize), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1)
 {
 	this->_mapManager.loadMap("map.tmx");
 	this->_mapSize = this->_mapManager.getMapSize();
@@ -100,6 +100,11 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 void GameState::update(const sf::Time &time)
 {
 	this->_resourcesManager.update(time);
+	if (this->_gameMode == ANIMATION)
+	{
+		if (!this->_animationManager.update(time))
+			this->_gameMode = NORMAL;
+	}
 }
 
 void GameState::display(sf::RenderWindow &window)
@@ -118,6 +123,8 @@ void GameState::display(sf::RenderWindow &window)
 		++iter;
 	}
 	this->_menuManager.draw(window);
+	if (this->_gameMode == ANIMATION)
+		this->_animationManager.draw(window);
 }
 
 sf::Vector2f GameState::getViewSize() const
@@ -125,13 +132,25 @@ sf::Vector2f GameState::getViewSize() const
 	return (this->_realMapSize);
 }
 
+void GameState::movePlayerUnit()
+{
+	this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::MOVEUNIT, this->_players.at(*this->_currentPlayer), &Player::moveUnit));
+	this->_gameMode = ANIMATION;
+	//this->_players.at(*this->_currentPlayer)->moveUnit();
+}
+
 void GameState::changeTurn()
 {
 	this->_players.at(*this->_currentPlayer)->endTurn();
 	++this->_currentPlayer;
 	if (this->_currentPlayer == this->_playersTeams.end())
+	{
 		this->_currentPlayer = this->_playersTeams.begin();
+		++this->_turns;
+	}
 	this->_players.at(*this->_currentPlayer)->startTurn();
+	this->_gameMode = ANIMATION;
+	this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::NEWTURN, *this->_currentPlayer, this->_turns));
 }
 
 void GameState::findTargets()
@@ -210,12 +229,12 @@ void GameState::addPlayer()
 	if (this->_playersNumber == 1)
 	{
 		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 4));
-		this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
+		//this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
 	}
 	else if (this->_playersNumber == 2)
 	{
-		this->spawnUnit(player, new Unit(), sf::Vector2u(4, 2));
-		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 12));
+		//this->spawnUnit(player, new Unit(), sf::Vector2u(4, 2));
+		//this->spawnUnit(player, new Unit(), sf::Vector2u(2, 12));
 	}
 	this->_players[this->_playersTeams.at(this->_playersNumber - 1)] = player;
 }

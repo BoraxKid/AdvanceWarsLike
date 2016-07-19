@@ -66,7 +66,7 @@ public:
 	virtual void activate()
 	{
 		if (this->_obj != nullptr && this->_ptr != nullptr)
-			(this->_obj->*_ptr)();
+			(this->_obj->*this->_ptr)();
 	}
 
 protected:
@@ -129,7 +129,7 @@ public:
 	virtual void activate()
 	{
 		if (this->_obj != nullptr && this->_ptr != nullptr)
-			(this->_obj->*_ptr)(this->_cost);
+			(this->_obj->*this->_ptr)(this->_cost);
 	}
 
 private:

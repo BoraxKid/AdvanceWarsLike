@@ -5,13 +5,14 @@
 #include "IState.h"
 #include "ResourcesManager.h"
 #include "MapManager.h"
-#include "Player.h"
 #include "MenuManager.h"
+#include "AnimationManager.h"
+#include "Player.h"
 
 class GameState : public IState
 {
 public:
-	enum GameMode { NORMAL, BATTLE };
+	enum GameMode { NORMAL, BATTLE, ANIMATION };
 	GameState(ResourcesManager &resourcesManager);
 	virtual ~GameState();
 
@@ -22,6 +23,7 @@ public:
 	virtual void display(sf::RenderWindow &window);
 	virtual sf::Vector2f getViewSize() const;
 
+	void movePlayerUnit();
 	void changeTurn();
 	void findTargets();
 	void buyUnit(sf::Uint32 cost);
@@ -37,6 +39,7 @@ private:
 	ResourcesManager &_resourcesManager;
 	MapManager _mapManager;
 	MenuManager _menuManager;
+	AnimationManager _animationManager;
 	sf::Vector2u _mapSize;
 	sf::Vector2u _tileSize;
 	sf::Vector2f _realMapSize;
@@ -49,6 +52,7 @@ private:
 	sf::Vector2u _tilePosition;
 	sf::Font _font;
 	std::vector<IUnit *> _targets;
+	sf::Uint32 _turns;
 };
 
 #endif // GAMESTATE_H_

@@ -39,7 +39,7 @@ void Player::startTurn()
 
 void Player::moveUnit()
 {
-	this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
+	//this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
 	(*this->_selectedUnit)->acted();
 	this->_selectedUnit = this->_units.end();
 }
@@ -238,6 +238,72 @@ bool Player::buy(const sf::Uint32 &cost)
 		return (true);
 	}
 	return (false);
+}
+
+std::vector<sf::Vector2u> Player::findPath()
+{
+	sf::Vector2u unitPos = (*this->_selectedUnit)->getTilePosition();
+	sf::Vector2u tilePos = this->_aimedTile;
+	sf::Vector2u tmp;
+	sf::Int32 cost;
+	std::stack<sf::Vector2u> revPath;
+	std::vector<sf::Vector2u> path;
+
+	while (tilePos != unitPos)
+	{
+		if (tilePos.x > 0)
+		{
+			tmp = sf::Vector2u(tilePos.x - 1, tilePos.y);
+			cost = this->_movement.at(tmp.x).at(tmp.y);
+			if (cost < this->_movement.at(tilePos.x).at(tilePos.y) && cost >= 0)
+			{
+				revPath.push(tilePos);
+				tilePos = tmp;
+				continue;
+			}
+		}
+		if (tilePos.y > 0)
+		{
+			tmp = sf::Vector2u(tilePos.x, tilePos.y - 1);
+			cost = this->_movement.at(tmp.x).at(tmp.y);
+			if (cost < this->_movement.at(tilePos.x).at(tilePos.y) && cost >= 0)
+			{
+				revPath.push(tilePos);
+				tilePos = tmp;
+				continue;
+			}
+		}
+		if (tilePos.x + 1 < this->_mapSize.x)
+		{
+			tmp = sf::Vector2u(tilePos.x + 1, tilePos.y);
+			cost = this->_movement.at(tmp.x).at(tmp.y);
+			if (cost < this->_movement.at(tilePos.x).at(tilePos.y) && cost >= 0)
+			{
+				revPath.push(tilePos);
+				tilePos = tmp;
+				continue;
+			}
+		}
+		if (tilePos.y + 1 < this->_mapSize.y)
+		{
+			tmp = sf::Vector2u(tilePos.x, tilePos.y + 1);
+			cost = this->_movement.at(tmp.x).at(tmp.y);
+			if (cost < this->_movement.at(tilePos.x).at(tilePos.y) && cost >= 0)
+			{
+				revPath.push(tilePos);
+				tilePos = tmp;
+				continue;
+			}
+		}
+	}
+	revPath.push(unitPos);
+	while (!revPath.empty())
+	{
+		path.push_back(revPath.top());
+		std::cout << "x: " << path.back().x << " y: " << path.back().y << std::endl;
+		revPath.pop();
+	}
+	return (path);
 }
 
 void Player::resetMovementMap()

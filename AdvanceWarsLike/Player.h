@@ -2,6 +2,8 @@
 #define PLAYER_H_
 #pragma once
 
+#include <stack>
+
 #include "IUnit.h"
 #include "IBuilding.h"
 #include "MapManager.h"
@@ -30,6 +32,7 @@ public:
 	void drawMovement(sf::RenderWindow &window);
 	const sf::Uint32 &currentBalance() const;
 	bool buy(const sf::Uint32 &cost);
+	std::vector<sf::Vector2u> findPath();
 
 private:
 	void resetMovementMap();

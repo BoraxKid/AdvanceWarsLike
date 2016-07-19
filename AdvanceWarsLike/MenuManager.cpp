@@ -14,7 +14,7 @@ MenuManager::~MenuManager()
 void MenuManager::createMenus(GameState *gameState, ResourcesManager &resourcesManager)
 {
 	this->_menus["unit_action"] = Menu();
-	this->_menus.at("unit_action").addButton("move", new Button<Player>(nullptr, &Player::moveUnit, this->_font, "Move"));
+	this->_menus.at("unit_action").addButton("move", new Button<GameState>(gameState, &GameState::movePlayerUnit, this->_font, "Move"));
 	this->_menus.at("unit_action").addButton("attack", new Button<GameState>(gameState, &GameState::findTargets, this->_font, "Attack"));
 	this->_menus["player_start"] = Menu();
 	this->_menus.at("player_start").addButton("end_turn", new Button<GameState>(gameState, &GameState::changeTurn, this->_font, "End turn"));
@@ -48,7 +48,6 @@ void MenuManager::openUnitActionMenu(Player *player, sf::Vector2f pos, sf::Vecto
 	if (this->_displayedMenu == "")
 	{
 		this->_displayedMenu = "unit_action";
-		this->_menus.at(this->_displayedMenu).setButtonPointer("move", player);
 		this->setupMenu(pos, maxSize);
 	}
 }
