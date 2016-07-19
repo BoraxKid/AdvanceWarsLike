@@ -20,6 +20,8 @@ public:
 	IUnit *getUnit(const sf::Vector2u &position);
 	sf::Vector2u getMapSize() const;
 	sf::Vector2u getTileSize() const;
+	sf::Uint8 getTileMovement(Tile tile) const;
+	Tile getTile(sf::Vector2i pos) const;
 	const std::vector<std::vector<IBuilding *>> &getBuildings() const;
 	bool canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);

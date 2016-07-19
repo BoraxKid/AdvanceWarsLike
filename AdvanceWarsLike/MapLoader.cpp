@@ -27,7 +27,7 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 	iter2 = (*iter).begin();
 	while (tile)
 	{
-		(*iter2) = static_cast<Tile>(tile.first_attribute().as_uint() - 1);
+		(*iter2) = static_cast<Tile>(tile.first_attribute().as_uint());
 		++iter;
 		if (iter == tiles.end())
 		{
@@ -54,7 +54,7 @@ bool MapLoader::loadBuildings(const pugi::xml_node data, std::vector<std::vector
 	{
 		if (tile.first_attribute().as_uint() != 0)
 		{
-			std::map<Tile, sf::String>::iterator tmp = tilesNames.find(static_cast<Tile>(tile.first_attribute().as_uint() - 1));
+			std::map<Tile, sf::String>::iterator tmp = tilesNames.find(static_cast<Tile>(tile.first_attribute().as_uint()));
 			if (tmp != tilesNames.end())
 				(*iter2) = new Building(tmp->second);
 		}
@@ -94,9 +94,10 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 	}
 	data = doc.child("map").child("tileset").child("image");
 	tile = doc.child("map").child("tileset").child("tile");
+	map._tilesNames[NONE] = "invalid";
 	while (tile)
 	{
-		map._tilesNames[static_cast<Tile>(tile.attribute("id").as_uint())] = sf::String(tile.child("properties").child("property").attribute("value").as_string());
+		map._tilesNames[static_cast<Tile>(tile.attribute("id").as_uint() + 1)] = sf::String(tile.child("properties").child("property").attribute("value").as_string());
 		tile = tile.next_sibling();
 	}
 	data = doc.child("map").child("layer");

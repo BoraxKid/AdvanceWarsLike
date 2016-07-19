@@ -1,4 +1,7 @@
 <type id="0" texture="tiles.png">
+  <tile name="invalid">
+    <frame x="86" y="1" width="16" height="16" />
+  </tile>
 	<tile name="map_water">
 		<frame x="18" y="1" width="16" height="16" />
 	</tile>

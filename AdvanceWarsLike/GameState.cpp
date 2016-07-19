@@ -63,13 +63,15 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 						this->_menuManager.click(this->_mousePosition);
 					else
 					{
+						const std::vector<std::vector<IBuilding *>> &buildings = this->_mapManager.getBuildings();
+						Tile tile = this->_mapManager.getTile(tilePos);
+						// TODO: display tiles stats
 						this->_menuManager.reset();
-						Player::Click click = this->_players.at(*this->_currentPlayer)->click(tilePos);
+						Player::Click click = this->_players.at(*this->_currentPlayer)->click(tilePos, this->_mapManager);
 						if (click == Player::Click::Aimed)
 							this->_menuManager.openUnitActionMenu(this->_players.at(*this->_currentPlayer), this->_mousePosition, this->_realMapSize);
 						else if (click == Player::Click::NotInRange)
 						{
-							const std::vector<std::vector<IBuilding *>> &buildings = this->_mapManager.getBuildings();
 							if (tilePos.x >= 0 && static_cast<sf::Uint32>(tilePos.x) < this->_mapSize.x && tilePos.y >= 0 && static_cast<sf::Uint32>(tilePos.y) < this->_mapSize.y)
 							{
 								IBuilding *tmp = buildings.at(tilePos.x).at(tilePos.y);

@@ -42,9 +42,57 @@ sf::Vector2u Map::getTileSize() const
 	return (this->_tileSize);
 }
 
-const std::vector<std::vector<IBuilding*>> &Map::getBuildings() const
+sf::Uint8 Map::getTileMovement(Tile tile) const
+{
+	switch (tile)
+	{
+	case NONE:
+		return (sf::Uint8(0));
+		break;
+	case GROUND:
+		return (sf::Uint8(0));
+		break;
+	case WATER:
+		return (sf::Uint8(0));
+		break;
+	case FOREST:
+		return (sf::Uint8(1));
+		break;
+	case MOUNTAIN:
+		return (sf::Uint8(0));
+		break;
+	case BUILDING:
+		return (sf::Uint8(1));
+		break;
+	default:
+		break;
+	}
+	return (sf::Uint8(0));
+}
+
+const std::vector<std::vector<IBuilding *>> &Map::getBuildings() const
 {
 	return (this->_buildings);
+}
+
+Tile Map::getTile(sf::Vector2i pos) const
+{
+	Tile tmp = NONE;
+	if (pos.x >= 0 && static_cast<sf::Uint32>(pos.x) < this->_size.x && pos.y >= 0 && static_cast<sf::Uint32>(pos.y) < this->_size.y)
+	{
+		if (this->_buildings.at(pos.x).at(pos.y) != nullptr)
+			return (BUILDING);
+		std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iter = this->_tiles.begin();
+		std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iter2 = this->_tiles.end();
+
+		while (iter != iter2)
+		{
+			if (iter->second.at(pos.x).at(pos.y) != NONE)
+				tmp = iter->second.at(pos.x).at(pos.y);
+			++iter;
+		}
+	}
+	return (tmp);
 }
 
 bool Map::canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position)

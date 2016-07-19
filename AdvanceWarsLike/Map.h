@@ -11,17 +11,14 @@
 #include "IBuilding.h"
 
 enum Tile
-	{
-		GROUND = 0,
-		WATER = 1,
-		FOREST = 2,
-		MOUNTAIN = 3,
-		TOWER_RED = 15,
-		TOWER_BLUE = 30,
-		TOWER_GREEN = 45,
-		TOWER_YELLOW = 60,
-		TOWER_BLACK = 75
-	};
+{
+	NONE = 0,
+	GROUND = 1,
+	WATER = 2,
+	FOREST = 3,
+	MOUNTAIN = 4,
+	BUILDING = 5
+};
 
 class Map : public sf::Drawable, public sf::Transformable
 {
@@ -35,7 +32,9 @@ public:
 	IUnit *getUnit(const sf::Vector2u &position);
 	sf::Vector2u getMapSize() const;
 	sf::Vector2u getTileSize() const;
+	sf::Uint8 getTileMovement(Tile tile) const;
 	const std::vector<std::vector<IBuilding *>> &getBuildings() const;
+	Tile getTile(sf::Vector2i pos) const;
 	bool canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void dump() const;

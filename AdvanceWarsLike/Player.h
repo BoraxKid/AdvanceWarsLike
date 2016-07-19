@@ -18,7 +18,7 @@ public:
 	void moveUnit();
 	void prepareAttackUnit();
 	void endAttack();
-	Click click(const sf::Vector2i &tilePos);
+	Click click(const sf::Vector2i &tilePos, MapManager &mapManager);
 	void destroyUnit(IUnit *unit);
 	void addUnit(IUnit *unit);
 	void removeBuilding(IBuilding *building);
@@ -33,7 +33,7 @@ public:
 
 private:
 	void resetMovementMap();
-	void calculateMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5);
+	void calculateMovement(MapManager &mapManager, const sf::Vector2i &tilePos, sf::Uint8 movement = 5);
 	bool checkMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5) const;
 	void checkBuildings();
 

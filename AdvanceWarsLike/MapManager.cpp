@@ -50,12 +50,26 @@ sf::Vector2u MapManager::getTileSize() const
 	return (sf::Vector2u(0, 0));
 }
 
+sf::Uint8 MapManager::getTileMovement(Tile tile) const
+{
+	if (!this->_activeMaps.empty())
+		return (this->_activeMaps.back().getTileMovement(tile));
+	return (sf::Uint8(0));
+}
+
+Tile MapManager::getTile(sf::Vector2i pos) const
+{
+	if (!this->_activeMaps.empty())
+		return (this->_activeMaps.back().getTile(pos));
+	return (NONE);
+}
+
 const std::vector<std::vector<IBuilding *>> &MapManager::getBuildings() const
 {
 	return (this->_activeMaps.back().getBuildings());
 }
 
-bool MapManager::canMove(const sf::Vector2u & unitPosition, const sf::Vector2u & position)
+bool MapManager::canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 {
 	if (!this->_activeMaps.empty())
 		return (this->_activeMaps.back().canMove(unitPosition, position));
