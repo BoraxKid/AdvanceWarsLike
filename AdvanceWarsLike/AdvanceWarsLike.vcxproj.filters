@@ -52,15 +52,18 @@
     <Filter Include="Fichiers sources\Buildings">
       <UniqueIdentifier>{2ff0486d-2280-448c-91e1-b6f0808990e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Player">
+      <UniqueIdentifier>{bf75e50b-7dd9-426b-b5e3-395023643898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Player">
+      <UniqueIdentifier>{c8b486b2-6c07-4083-97b0-10cc9d7fcb8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
@@ -96,12 +99,12 @@
     <ClCompile Include="Building.cpp">
       <Filter>Fichiers sources\Buildings</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Fichiers sources\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="IComponent.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>Fichiers d%27en-tête\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Fichiers d%27en-tête\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

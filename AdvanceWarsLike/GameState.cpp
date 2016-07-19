@@ -75,13 +75,10 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 							if (tilePos.x >= 0 && static_cast<sf::Uint32>(tilePos.x) < this->_mapSize.x && tilePos.y >= 0 && static_cast<sf::Uint32>(tilePos.y) < this->_mapSize.y)
 							{
 								IBuilding *tmp = buildings.at(tilePos.x).at(tilePos.y);
-								if (tmp != nullptr)
+								if (tmp != nullptr && tmp->getPlayerId() != 255 && this->_playersTeams.at(tmp->getPlayerId()) == *this->_currentPlayer && this->_mapManager.getUnit(sf::Vector2u(tilePos)) == nullptr && tmp->getType().find("factory") != std::string::npos)
 								{
-									if (tmp->getPlayerId() != 255 && this->_playersTeams.at(tmp->getPlayerId()) == *this->_currentPlayer && this->_mapManager.getUnit(sf::Vector2u(tilePos)) == nullptr && tmp->getType().find("factory") != std::string::npos)
-									{
-										this->_tilePosition = sf::Vector2u(tilePos);
-										this->_menuManager.openGFactoryMenu(this->_mousePosition, this->_realMapSize);
-									}
+									this->_tilePosition = sf::Vector2u(tilePos);
+									this->_menuManager.openGFactoryMenu(this->_mousePosition, this->_realMapSize);
 								}
 							}
 						}

@@ -6,7 +6,7 @@
 #include "IBuilding.h"
 #include "MapManager.h"
 
-class Player
+class Player : public sf::Drawable, public sf::Transformable
 {
 public:
 	enum Click { NotInRange, Aimed, Selected, Acted };
@@ -34,11 +34,14 @@ public:
 private:
 	void resetMovementMap();
 	void calculateMovement(MapManager &mapManager, const sf::Vector2i &tilePos, sf::Uint8 movement = 5);
+	void checkTile(MapManager &mapManager, std::vector<sf::Vector2i> &q, sf::Vector2i pos, sf::Vector2i pos2);
 	bool checkMovement(const sf::Vector2i &tilePos, sf::Uint8 movement = 5) const;
 	void checkBuildings();
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
 	const sf::Uint8 _id;
 	MapManager &_mapManager;
+	//PlayerGraphicsComponent _graphics;
 	sf::Vector2u _mapSize;
 	sf::Uint32 _money;
 	std::vector<IUnit *> _units;

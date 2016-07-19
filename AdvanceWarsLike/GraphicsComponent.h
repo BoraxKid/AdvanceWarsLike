@@ -80,4 +80,27 @@ private:
 	}
 };
 
+class Player;
+
+class PlayerGraphicsComponent : public GraphicsComponent
+{
+public:
+	PlayerGraphicsComponent(Player *player, AnimatedSprite &sprite)
+		: GraphicsComponent(sprite)
+	{}
+
+	virtual ~PlayerGraphicsComponent()
+	{}
+
+private:
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
+	{
+		states.transform *= this->getTransform();
+		target.draw(this->_sprite, states);
+	}
+
+	sf::RenderTexture _texture;
+	Player *_player;
+};
+
 #endif // GRAPHICSCOMPONENT_H_

@@ -59,7 +59,7 @@ sf::Uint8 Map::getTileMovement(Tile tile) const
 		return (sf::Uint8(1));
 		break;
 	case MOUNTAIN:
-		return (sf::Uint8(0));
+		return (sf::Uint8(2));
 		break;
 	case BUILDING:
 		return (sf::Uint8(1));

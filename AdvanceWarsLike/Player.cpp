@@ -196,16 +196,28 @@ void Player::drawMovement(sf::RenderWindow &window)
 		sf::Vector2u tmp;
 		sf::RectangleShape rect(sf::Vector2f(16, 16));
 		rect.setFillColor(sf::Color(0, 0, 255, 127));
+#ifdef _DEBUG
+		sf::Font font;
+		font.loadFromFile("uni0553-webfont.ttf");
+		const_cast<sf::Texture &>(font.getTexture(8)).setSmooth(false);
+		sf::Text text("", font, 8);
+		text.setColor(sf::Color::Black);
+#endif
 		while (tmp.y < this->_mapSize.y)
 		{
 			tmp.x = 0;
 			while (tmp.x < this->_mapSize.x)
 			{
-				if (this->_movement.at(tmp.x).at(tmp.y) <= move)
+				if (this->_movement.at(tmp.x).at(tmp.y) >= 0 && this->_movement.at(tmp.x).at(tmp.y) <= move)
 				{
 					rect.setPosition(sf::Vector2f(static_cast<float>(16 * tmp.x), static_cast<float>(16 * tmp.y)));
 					window.draw(rect);
 				}
+#ifdef _DEBUG
+				text.setString(std::to_string(this->_movement.at(tmp.x).at(tmp.y)));
+				text.setPosition(sf::Vector2f(static_cast<float>(16 * tmp.x), static_cast<float>(16 * tmp.y)));
+				window.draw(text);
+#endif
 				++tmp.x;
 			}
 			++tmp.y;
@@ -246,65 +258,36 @@ void Player::calculateMovement(MapManager &mapManager, const sf::Vector2i &tileP
 	std::vector<sf::Vector2i> q;
 	q.push_back(sf::Vector2i(tilePos.x, tilePos.y));
 	sf::Vector2i tmp = tilePos;
-	sf::Vector2i tmp2;
-	Tile tile;
-	sf::Uint8 move;
 	this->_movement.at(tmp.x).at(tmp.y) = 0;
 
 	while (!q.empty())
 	{
 		tmp = q.front();
 		q.erase(q.begin());
-		if (tmp.x - 1 >= 0)
-			if (this->_movement.at(tmp.x - 1).at(tmp.y) == -1)
-			{
-				tmp2 = sf::Vector2i(tmp.x - 1, tmp.y);
-				tile = mapManager.getTile(tmp2);
-				move = 100;
-				if (tile != WATER && tile != MOUNTAIN)
-					move = 1 + mapManager.getTileMovement(tile);
-				this->_movement.at(tmp2.x).at(tmp2.y) = this->_movement.at(tmp.x).at(tmp.y) + move;
-				q.push_back(tmp2);
-			}
-		if (tmp.y - 1 >= 0)
-			if (this->_movement.at(tmp.x).at(tmp.y - 1) == -1)
-			{
-				tmp2 = sf::Vector2i(tmp.x, tmp.y - 1);
-				tile = mapManager.getTile(tmp2);
-				move = 100;
-				if (tile != WATER && tile != MOUNTAIN)
-					move = 1 + mapManager.getTileMovement(tile);
-				this->_movement.at(tmp2.x).at(tmp2.y) = this->_movement.at(tmp.x).at(tmp.y) + move;
-				q.push_back(tmp2);
-			}
-		if (tmp.x + 1 < static_cast<sf::Int32>(this->_mapSize.x))
-			if (this->_movement.at(tmp.x + 1).at(tmp.y) == -1)
-			{
-				tmp2 = sf::Vector2i(tmp.x + 1, tmp.y);
-				tile = mapManager.getTile(tmp2);
-				move = 100;
-				if (tile != WATER && tile != MOUNTAIN)
-					move = 1 + mapManager.getTileMovement(tile);
-				this->_movement.at(tmp2.x).at(tmp2.y) = this->_movement.at(tmp.x).at(tmp.y) + move;
-				q.push_back(tmp2);
-			}
-		if (tmp.y + 1 < static_cast<sf::Int32>(this->_mapSize.y))
-			if (this->_movement.at(tmp.x).at(tmp.y + 1) == -1)
-			{
-				tmp2 = sf::Vector2i(tmp.x, tmp.y + 1);
-				tile = mapManager.getTile(tmp2);
-				move = 100;
-				if (tile != WATER && tile != MOUNTAIN)
-					move = 1 + mapManager.getTileMovement(tile);
-				this->_movement.at(tmp2.x).at(tmp2.y) = this->_movement.at(tmp.x).at(tmp.y) + move;
-				q.push_back(tmp2);
-			}
+		if (tmp.x - 1 >= 0 && this->_movement.at(tmp.x - 1).at(tmp.y) == -1)
+			this->checkTile(mapManager, q, tmp, sf::Vector2i(tmp.x - 1, tmp.y));
+		if (tmp.y - 1 >= 0 && this->_movement.at(tmp.x).at(tmp.y - 1) == -1)
+			this->checkTile(mapManager, q, tmp, sf::Vector2i(tmp.x, tmp.y - 1));
+		if (tmp.x + 1 < static_cast<sf::Int32>(this->_mapSize.x) && this->_movement.at(tmp.x + 1).at(tmp.y) == -1)
+			this->checkTile(mapManager, q, tmp, sf::Vector2i(tmp.x + 1, tmp.y));
+		if (tmp.y + 1 < static_cast<sf::Int32>(this->_mapSize.y) && this->_movement.at(tmp.x).at(tmp.y + 1) == -1)
+			this->checkTile(mapManager, q, tmp, sf::Vector2i(tmp.x, tmp.y + 1));
+	}
+}
+
+void Player::checkTile(MapManager &mapManager, std::vector<sf::Vector2i> &q, sf::Vector2i pos, sf::Vector2i pos2)
+{
+	Tile tile = mapManager.getTile(pos2);
+	if (tile != WATER && tile != MOUNTAIN)
+	{
+		this->_movement.at(pos2.x).at(pos2.y) = this->_movement.at(pos.x).at(pos.y) + 1 + mapManager.getTileMovement(tile);
+		q.push_back(pos2);
 	}
 }
 
 bool Player::checkMovement(const sf::Vector2i &tilePos, sf::Uint8 movement) const
 {
-	if ((tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < static_cast<sf::Int32>(this->_mapSize.x) && tilePos.y < static_cast<sf::Int32>(this->_mapSize.y)) && this->_movement.at(tilePos.x).at(tilePos.y) <= movement)
+	if ((tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < static_cast<sf::Int32>(this->_mapSize.x) && tilePos.y < static_cast<sf::Int32>(this->_mapSize.y)) && this->_movement.at(tilePos.x).at(tilePos.y) >= 0 && this->_movement.at(tilePos.x).at(tilePos.y) <= movement)
 		return (true);
 	return (false);
 }
@@ -312,4 +295,8 @@ bool Player::checkMovement(const sf::Vector2i &tilePos, sf::Uint8 movement) cons
 void Player::checkBuildings()
 {
 	this->_towers = this->_buildings.size();
+}
+
+void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
 }
