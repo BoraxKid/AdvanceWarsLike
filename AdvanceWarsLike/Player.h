@@ -11,7 +11,7 @@
 class Player : public sf::Drawable, public sf::Transformable
 {
 public:
-	enum Click { NotInRange, Aimed, Selected, Acted };
+	enum Click { NOTINRANGE, AIMED, SELECTED, ACTED };
 	Player(sf::Uint8 id, MapManager &mapManager);
 	virtual ~Player();
 
@@ -33,6 +33,7 @@ public:
 	const sf::Uint32 &currentBalance() const;
 	bool buy(const sf::Uint32 &cost);
 	std::vector<sf::Vector2u> findPath();
+	void unselect();
 
 private:
 	void resetMovementMap();
@@ -53,6 +54,7 @@ private:
 	sf::Vector2u _aimedTile;
 	std::vector<std::vector<sf::Int32>> _movement;
 	sf::Uint32 _towers;
+	bool _moving;
 };
 
 #endif // PLAYER_H_

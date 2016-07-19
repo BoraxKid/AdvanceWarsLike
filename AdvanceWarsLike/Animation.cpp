@@ -65,8 +65,8 @@ void NewTurnAnimation::draw(sf::RenderTarget &target, sf::RenderStates states) c
 	target.draw(this->_player, states);
 }
 
-MovementAnimation::MovementAnimation(MapManager &mapManager, const sf::Time animationTime)
-	: _mapManager(mapManager), _unit(nullptr), _player(nullptr), _movePtr(nullptr), _animationTime(animationTime)
+MovementAnimation::MovementAnimation(ResourcesManager &resourcesManager, MapManager &mapManager, const sf::Time animationTime)
+	: _resourcesManager(resourcesManager), _mapManager(mapManager), _unit(nullptr), _player(nullptr), _animationTime(animationTime)
 {
 	this->_currentPosition = this->_positions.end();
 }
@@ -80,43 +80,67 @@ bool MovementAnimation::update(const sf::Time &elapsedTime)
 	this->_elapsedTime += elapsedTime;
 	if (this->_currentPosition == this->_positions.end() || this->_unit == nullptr)
 	{
+		this->_unit->changeSprite("stand");
 		this->_elapsedTime = sf::Time();
-		if (this->_player != nullptr && this->_movePtr != nullptr)
-		{
-			(this->_player->*this->_movePtr)();
-			this->_mapManager.addUnit(this->_unit, (*(this->_positions.end() - 1)));
-		}
+		this->_unit->setTilePosition(*(this->_positions.end() - 1));
+		if (this->_player != nullptr)
+			this->_player->moveUnit();
+		this->_unit = nullptr;
 		return (false);
 	}
-	this->_unit->setTilePosition(*this->_currentPosition);
-	this->_unitPos = this->_unit->getPosition();
 	if (this->_elapsedTime >= this->_animationTime)
 	{
-		std::cout << "change pos x: " << this->_currentPosition->x << " y: " << this->_currentPosition->y << std::endl;
 		++this->_currentPosition;
 		this->_elapsedTime -= this->_animationTime;
+	}
+	if (this->_currentPosition != this->_positions.end())
+	{
+		this->_unit->setTilePosition(*this->_currentPosition);
+		this->_unitPos = sf::Vector2f(static_cast<float>(this->_currentPosition->x * this->_mapManager.getTileSize().x), static_cast<float>((this->_currentPosition->y + 1) * this->_mapManager.getTileSize().y - this->_unit->getHeight()));
+		if ((this->_currentPosition + 1) != this->_positions.end())
+		{
+			sf::Vector2u tmp = (*(this->_currentPosition + 1));
+			if (tmp.x > this->_currentPosition->x)
+			{
+				this->_unit->changeSprite("move_right");
+				this->_unitPos.x = (this->_currentPosition->x * this->_mapManager.getTileSize().x) + (tmp.x - this->_currentPosition->x) * (this->_elapsedTime / this->_animationTime) * this->_mapManager.getTileSize().x;
+			}
+			if (tmp.x < this->_currentPosition->x)
+			{
+				this->_unit->changeSprite("move_left");
+				this->_unitPos.x = (this->_currentPosition->x * this->_mapManager.getTileSize().x) + ((int)tmp.x - (int)this->_currentPosition->x) * (this->_elapsedTime / this->_animationTime) * this->_mapManager.getTileSize().x;
+			}
+			if (tmp.y < this->_currentPosition->y)
+			{
+				this->_unit->changeSprite("move_up");
+				this->_unitPos.y = ((this->_currentPosition->y + 1) * this->_mapManager.getTileSize().y) + ((int)tmp.y - (int)this->_currentPosition->y) * (this->_elapsedTime / this->_animationTime) * this->_mapManager.getTileSize().y - this->_unit->getHeight();
+			}
+			if (tmp.y > this->_currentPosition->y)
+			{
+				this->_unit->changeSprite("move_down");
+				this->_unitPos.y = ((this->_currentPosition->y + 1) * this->_mapManager.getTileSize().y) + (tmp.y - this->_currentPosition->y) * (this->_elapsedTime / this->_animationTime) * this->_mapManager.getTileSize().y - this->_unit->getHeight();
+			}
+		}
 	}
 	return (true);
 }
 
-void MovementAnimation::changePath(Player *player, void (Player::*movePtr)())
+void MovementAnimation::changePath(Player *player)
 {
 	this->_player = player;
-	this->_movePtr = movePtr;
+	this->_player->unselect();
 	this->_positions = player->findPath();
 	this->_currentPosition = this->_positions.begin();
 	this->_unit = this->_mapManager.getUnit(this->_positions.at(0));
 	this->_mapManager.removeUnit(this->_positions.at(0));
-	std::cout << this->_mapManager.getUnit(this->_positions.at(0)) << std::endl;
 }
 
 void MovementAnimation::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	states.transform *= this->getTransform();
-	if (this->_unit != nullptr)
+	if (this->_unit != nullptr && this->_currentPosition != this->_positions.end())
 	{
-		//std::cout << "draw" << std::endl;
-		this->_unit->setTilePosition(sf::Vector2u(this->_unitPos));
+		this->_unit->setSpritePosition(this->_unitPos);
 		target.draw(*this->_unit, states);
 	}
 }

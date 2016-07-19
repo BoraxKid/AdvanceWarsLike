@@ -1,10 +1,33 @@
 <type id="0" texture="units2.png">
-	<unit name="unit_tank">
+  <unit name="unit_tank">
     <frame x="1" y="0" width="13" height="13" />
-		<frame x="21" y="1" width="13" height="12" />
-		<frame x="38" y="1" width="13" height="12" />
-		<frame x="57" y="1" width="13" height="12" />
-	</unit>
+    <frame x="21" y="1" width="13" height="12" />
+    <frame x="38" y="1" width="13" height="12" />
+    <frame x="57" y="1" width="13" height="12" />
+  </unit>
+  <unit name="unit_tank_move_right">
+    <frame x="86" y="0" width="13" height="13" />
+    <frame x="107" y="0" width="13" height="13" />
+    <frame x="127" y="0" width="13" height="13" />
+  </unit>
+  <unit name="unit_tank_move_left">
+    <frame x="86" y="0" width="13" height="13" />
+    <frame x="107" y="0" width="13" height="13" />
+    <frame x="127" y="0" width="13" height="13" />
+  </unit>
+  <unit name="unit_tank_move_up">
+    <frame x="0" y="24" width="11" height="15" />
+    <frame x="20" y="24" width="11" height="15" />
+    <frame x="39" y="24" width="11" height="15" />
+  </unit>
+  <unit name="unit_tank_move_down">
+    <frame x="82" y="25" width="11" height="14" />
+    <frame x="100" y="25" width="11" height="14" />
+    <frame x="118" y="25" width="11" height="14" />
+  </unit>
+  <unit name="unit_tank_afk">
+    <frame x="165" y="26" width="13" height="13" />
+  </unit>
 </type>
 <!-- <type id="0" texture="units.png">
 	<unit name="unit_tank">

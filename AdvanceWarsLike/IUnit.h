@@ -12,8 +12,9 @@ class IUnit : public sf::Drawable, public sf::Transformable
 public:
 	virtual ~IUnit() {}
 
-	virtual void setGraphicsComponent(GraphicsComponent *graphics) = 0;
+	virtual void setGraphicsComponent(const sf::String &sprite, GraphicsComponent *graphics) = 0;
 	virtual void setStatisticsComponent(StatisticsComponent *stats) = 0;
+	virtual void changeSprite(const sf::String &sprite) = 0;
 	virtual sf::Uint32 getHeight() const = 0;
 	virtual const sf::Uint8 &getMovement() const = 0;
 	virtual void setTilePosition(const sf::Vector2u &position) = 0;

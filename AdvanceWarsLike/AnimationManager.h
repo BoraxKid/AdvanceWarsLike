@@ -18,14 +18,13 @@ public:
 		Infos(AnimationManager::Type ctype, const sf::String &cplayer, const sf::Uint32 &cturns)
 			: type(ctype), player(cplayer), turns(cturns)
 		{}
-		Infos(AnimationManager::Type ctype, Player *cplayerPtr, void (Player::*cmovePtr)())
-			: type(ctype), playerPtr(cplayerPtr), movePtr(cmovePtr)
+		Infos(AnimationManager::Type ctype, Player *cplayerPtr)
+			: type(ctype), playerPtr(cplayerPtr)
 		{}
 		AnimationManager::Type type = NEWTURN;
 		const sf::String &player = "";
 		const sf::Uint32 &turns = 0;
 		Player *playerPtr = nullptr;
-		void (Player::*movePtr)() = nullptr;
 	};
 	AnimationManager(ResourcesManager &resourcesManager, MapManager &mapManager, const sf::Font &font, const sf::Vector2f &size);
 	virtual ~AnimationManager();

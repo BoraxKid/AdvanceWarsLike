@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(sf::Uint8 id, MapManager &mapManager)
-	: _id(id), _mapManager(mapManager), _money(0), _selectedUnit(_units.end()), _towers(0)
+	: _id(id), _mapManager(mapManager), _money(0), _selectedUnit(_units.end()), _towers(0), _moving(false)
 {
 }
 
@@ -39,7 +39,8 @@ void Player::startTurn()
 
 void Player::moveUnit()
 {
-	//this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
+	this->_moving = false;
+	this->_mapManager.addUnit(*this->_selectedUnit, this->_aimedTile);
 	(*this->_selectedUnit)->acted();
 	this->_selectedUnit = this->_units.end();
 }
@@ -68,7 +69,7 @@ Player::Click Player::click(const sf::Vector2i &tilePos, MapManager &mapManager)
 			if (this->_mapManager.canMove((*this->_selectedUnit)->getTilePosition(), sf::Vector2u(tilePos.x, tilePos.y)))
 			{
 				this->_aimedTile = sf::Vector2u(tilePos.x, tilePos.y);
-				return (Aimed);
+				return (AIMED);
 			}
 			else if (*this->_selectedUnit != tmp)
 			{
@@ -81,7 +82,7 @@ Player::Click Player::click(const sf::Vector2i &tilePos, MapManager &mapManager)
 						this->resetMovementMap();
 						this->calculateMovement(mapManager, tilePos);
 						this->_selectedUnit = iter;
-						return (Selected);
+						return (SELECTED);
 					}
 					else if (*iter == tmp && (*iter)->hasActed() == true)
 						actedUnit = true;
@@ -103,7 +104,7 @@ Player::Click Player::click(const sf::Vector2i &tilePos, MapManager &mapManager)
 				this->resetMovementMap();
 				this->calculateMovement(mapManager, tilePos);
 				this->_selectedUnit = iter;
-				return (Selected);
+				return (SELECTED);
 			}
 			else if (*iter == tmp && (*iter)->hasActed() == true)
 				actedUnit = true;
@@ -111,8 +112,8 @@ Player::Click Player::click(const sf::Vector2i &tilePos, MapManager &mapManager)
 		}
 	}
 	if (actedUnit)
-		return (Acted);
-	return (NotInRange);
+		return (ACTED);
+	return (NOTINRANGE);
 }
 
 void Player::destroyUnit(IUnit *unit)
@@ -190,7 +191,7 @@ void Player::setMapSize(const sf::Vector2u &mapSize)
 
 void Player::drawMovement(sf::RenderWindow &window)
 {
-	if (this->_selectedUnit != this->_units.end() && !(*this->_selectedUnit)->hasActed())
+	if (this->_selectedUnit != this->_units.end() && !(*this->_selectedUnit)->hasActed() && !this->_moving)
 	{
 		const sf::Uint8 move = (*this->_selectedUnit)->getMovement();
 		sf::Vector2u tmp;
@@ -300,10 +301,14 @@ std::vector<sf::Vector2u> Player::findPath()
 	while (!revPath.empty())
 	{
 		path.push_back(revPath.top());
-		std::cout << "x: " << path.back().x << " y: " << path.back().y << std::endl;
 		revPath.pop();
 	}
 	return (path);
+}
+
+void Player::unselect()
+{
+	this->_moving = true;
 }
 
 void Player::resetMovementMap()

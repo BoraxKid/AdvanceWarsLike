@@ -13,8 +13,9 @@ ResourcesManager::~ResourcesManager()
 void ResourcesManager::update(const sf::Time &elapsed)
 {
 	std::map<sf::String, AnimatedSprite>::iterator iter = this->_sprites.begin();
+	std::map<sf::String, AnimatedSprite>::iterator iter2 = this->_sprites.end();
 
-	while (iter != this->_sprites.end())
+	while (iter != iter2)
 	{
 		iter->second.update(elapsed);
 		++iter;
@@ -53,6 +54,11 @@ void ResourcesManager::loadSprites(const char *file)
 			while (elem)
 			{
 				this->_sprites[spriteName].addFrame(sf::IntRect(elem.attribute("x").as_uint(), elem.attribute("y").as_uint(), elem.attribute("width").as_uint(), elem.attribute("height").as_uint()));
+				if (spriteName.find("left") != sf::String::InvalidPos)
+				{
+					this->_sprites.at(spriteName).setScale(static_cast<float>(-1), static_cast<float>(1));
+					this->_sprites.at(spriteName).setOrigin(static_cast<float>(elem.attribute("width").as_uint()), static_cast<float>(0));
+				}
 				elem = elem.next_sibling();
 			}
 			data = data.next_sibling();

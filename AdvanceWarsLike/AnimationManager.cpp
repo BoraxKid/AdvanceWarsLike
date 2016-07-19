@@ -4,7 +4,7 @@ AnimationManager::AnimationManager(ResourcesManager &resourcesManager, MapManage
 	: _resourcesManager(resourcesManager), _font(font)
 {
 	this->_animations.push_back(new NewTurnAnimation(font, "invalid", 0, size));
-	this->_animations.push_back(new MovementAnimation(mapManager));
+	this->_animations.push_back(new MovementAnimation(resourcesManager, mapManager));
 	this->_currentAnimation = this->_animations.end();
 }
 
@@ -27,7 +27,7 @@ void AnimationManager::play(AnimationManager::Infos infos)
 	if (infos.type == NEWTURN)
 		reinterpret_cast<NewTurnAnimation *>((*this->_currentAnimation))->changeText(infos.player, infos.turns);
 	if (infos.type == MOVEUNIT)
-		reinterpret_cast<MovementAnimation *>((*this->_currentAnimation))->changePath(infos.playerPtr, infos.movePtr);
+		reinterpret_cast<MovementAnimation *>((*this->_currentAnimation))->changePath(infos.playerPtr);
 }
 
 bool AnimationManager::update(const sf::Time &elapsedTime)

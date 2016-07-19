@@ -191,6 +191,9 @@
     <Image Include="units2.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
+    <Image Include="bot.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="tiles.xml" />

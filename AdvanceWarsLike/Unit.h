@@ -12,8 +12,9 @@ public:
 	Unit();
 	virtual ~Unit();
 
-	virtual void setGraphicsComponent(GraphicsComponent *graphics);
+	virtual void setGraphicsComponent(const sf::String &sprite, GraphicsComponent *graphics);
 	virtual void setStatisticsComponent(StatisticsComponent *stats);
+	virtual void changeSprite(const sf::String &sprite);
 	virtual sf::Uint32 getHeight() const;
 	virtual const sf::Uint8 &getMovement() const;
 	virtual void setTilePosition(const sf::Vector2u &position);
@@ -32,8 +33,9 @@ private:
 	sf::Uint8 _playerId;
 	sf::Vector2u _position;
 	bool _acted;
-
-	GraphicsComponent *_graphics;
+	sf::Color _color;
+	std::map<sf::String, GraphicsComponent *> _graphics;
+	sf::String _currentGraphics;
 	StatisticsComponent *_stats;
 };
 

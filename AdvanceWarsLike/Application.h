@@ -13,7 +13,7 @@
 class Application
 {
 public:
-	Application(sf::Vector2u winSize = sf::Vector2u(256, 256));
+	Application(sf::Vector2u winSize = sf::Vector2u(256, 240));
 	virtual ~Application();
 
 	void run();

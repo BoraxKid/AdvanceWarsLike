@@ -176,6 +176,7 @@
     <None Include="shader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bot.png" />
     <Image Include="tiles.png" />
     <Image Include="units.png" />
     <Image Include="units2.png" />

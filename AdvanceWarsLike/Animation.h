@@ -21,7 +21,7 @@ protected:
 class NewTurnAnimation : public IAnimation
 {
 public:
-	NewTurnAnimation(const sf::Font &font, const sf::String &player, const sf::Uint32 &turns, const sf::Vector2f &size, const sf::Time animationTime = sf::seconds(2));
+	NewTurnAnimation(const sf::Font &font, const sf::String &player, const sf::Uint32 &turns, const sf::Vector2f &size, const sf::Time animationTime = sf::seconds(1.5f));
 	virtual ~NewTurnAnimation();
 
 	virtual bool update(const sf::Time &elapsedTime);
@@ -40,19 +40,19 @@ private:
 class MovementAnimation : public IAnimation
 {
 public:
-	MovementAnimation(MapManager &mapManager, const sf::Time animationTime = sf::seconds(0.3f));
+	MovementAnimation(ResourcesManager &resourcesManager, MapManager &mapManager, const sf::Time animationTime = sf::seconds(0.1f));
 	virtual ~MovementAnimation();
 
 	virtual bool update(const sf::Time &elapsedTime);
-	void changePath(Player *player, void (Player::*movePtr)());
+	void changePath(Player *player);
 
 private:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
+	ResourcesManager &_resourcesManager;
 	MapManager &_mapManager;
 	IUnit *_unit;
 	Player *_player;
-	void (Player::*_movePtr)();
 	std::vector<sf::Vector2u> _positions;
 	std::vector<sf::Vector2u>::iterator _currentPosition;
 	sf::Vector2f _unitPos;

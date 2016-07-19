@@ -1,23 +1,33 @@
 #include "Unit.h"
 
 Unit::Unit()
-	: _playerId(0), _position(0, 0), _acted(false), _graphics(nullptr), _stats(nullptr)
+	: _playerId(0), _position(0, 0), _acted(false), _currentGraphics(""), _stats(nullptr)
 {
 }
 
 Unit::~Unit()
 {
-	if (this->_graphics != nullptr)
-		delete (this->_graphics);
+	std::map<sf::String, GraphicsComponent *>::iterator iter = this->_graphics.begin();
+	std::map<sf::String, GraphicsComponent *>::iterator iter2 = this->_graphics.end();
+
+	while (iter != iter2)
+	{
+		delete (iter->second);
+		++iter;
+	}
 	if (this->_stats != nullptr)
 		delete (this->_stats);
 }
 
-void Unit::setGraphicsComponent(GraphicsComponent *graphics)
+void Unit::setGraphicsComponent(const sf::String &sprite, GraphicsComponent *graphics)
 {
-	if (this->_graphics != nullptr)
-		delete (this->_graphics);
-	this->_graphics = graphics;
+	if (this->_graphics.find(sprite) != this->_graphics.end())
+	{
+		delete (this->_graphics.at(sprite));
+		this->_graphics.erase(sprite);
+	}
+	this->_graphics[sprite] = graphics;
+	this->_currentGraphics = sprite;
 }
 
 void Unit::setStatisticsComponent(StatisticsComponent *stats)
@@ -27,10 +37,19 @@ void Unit::setStatisticsComponent(StatisticsComponent *stats)
 	this->_stats = stats;
 }
 
+void Unit::changeSprite(const sf::String &sprite)
+{
+	if (this->_graphics.find(sprite) != this->_graphics.end())
+	{
+		this->_currentGraphics = sprite;
+		this->_graphics.at(this->_currentGraphics)->setColor(this->_color);
+	}
+}
+
 sf::Uint32 Unit::getHeight() const
 {
-	if (this->_graphics != nullptr)
-		return (this->_graphics->getHeight());
+	if (this->_currentGraphics != "")
+		return (this->_graphics.at(this->_currentGraphics)->getHeight());
 	return (0);
 }
 
@@ -51,20 +70,23 @@ sf::Vector2u Unit::getTilePosition() const
 
 void Unit::setSpritePosition(const sf::Vector2f &position)
 {
-	this->_graphics->setSpritePosition(position);
+	if (this->_currentGraphics != "")
+		this->_graphics.at(this->_currentGraphics)->setSpritePosition(position);
 }
 
 void Unit::setPlayer(sf::Uint8 id)
 {
 	this->_playerId = id;
 	if (this->_playerId == 1)
-		this->_graphics->setColor(sf::Color::Red);
+		this->_color = sf::Color(192, 64, 64);
 	if (this->_playerId == 2)
-		this->_graphics->setColor(sf::Color::Blue);
-	if (this->_playerId == 3)
-		this->_graphics->setColor(sf::Color::Green);
-	if (this->_playerId == 4)
-		this->_graphics->setColor(sf::Color::Yellow);
+		this->_color = sf::Color(65, 65, 255);
+	if (this->_playerId == 1)
+		this->_color = sf::Color::Green;
+	if (this->_playerId == 2)
+		this->_color = sf::Color(219, 169, 0);
+	if (this->_currentGraphics != "")
+		this->_graphics.at(this->_currentGraphics)->setColor(this->_color);
 }
 
 const sf::Uint8 &Unit::getPlayerId() const
@@ -75,7 +97,7 @@ const sf::Uint8 &Unit::getPlayerId() const
 void Unit::acted()
 {
 	this->_acted = true;
-	this->_graphics->grayOut(true);
+	this->changeSprite("afk");
 }
 
 bool Unit::hasActed() const
@@ -90,14 +112,14 @@ void Unit::update(const sf::Time &elapsedTime)
 void Unit::resetState()
 {
 	this->_acted = false;
-	this->_graphics->grayOut(false);
+	this->changeSprite("stand");
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-	if (this->_graphics != nullptr)
+	if (this->_currentGraphics != "")
 	{
 		states.transform *= this->getTransform();
-		target.draw(*this->_graphics, states);
+		target.draw(*this->_graphics.at(this->_currentGraphics), states);
 	}
 }

@@ -68,9 +68,9 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 						// TODO: display tiles stats
 						this->_menuManager.reset();
 						Player::Click click = this->_players.at(*this->_currentPlayer)->click(tilePos, this->_mapManager);
-						if (click == Player::Click::Aimed)
+						if (click == Player::Click::AIMED)
 							this->_menuManager.openUnitActionMenu(this->_players.at(*this->_currentPlayer), this->_mousePosition, this->_realMapSize);
-						else if (click == Player::Click::NotInRange)
+						else if (click == Player::Click::NOTINRANGE)
 						{
 							if (tilePos.x >= 0 && static_cast<sf::Uint32>(tilePos.x) < this->_mapSize.x && tilePos.y >= 0 && static_cast<sf::Uint32>(tilePos.y) < this->_mapSize.y)
 							{
@@ -134,7 +134,7 @@ sf::Vector2f GameState::getViewSize() const
 
 void GameState::movePlayerUnit()
 {
-	this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::MOVEUNIT, this->_players.at(*this->_currentPlayer), &Player::moveUnit));
+	this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::MOVEUNIT, this->_players.at(*this->_currentPlayer)));
 	this->_gameMode = ANIMATION;
 	//this->_players.at(*this->_currentPlayer)->moveUnit();
 }
@@ -229,19 +229,25 @@ void GameState::addPlayer()
 	if (this->_playersNumber == 1)
 	{
 		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 4));
-		//this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
+		this->spawnUnit(player, new Unit(), sf::Vector2u(1, 1));
+		this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
 	}
 	else if (this->_playersNumber == 2)
 	{
-		//this->spawnUnit(player, new Unit(), sf::Vector2u(4, 2));
-		//this->spawnUnit(player, new Unit(), sf::Vector2u(2, 12));
+		this->spawnUnit(player, new Unit(), sf::Vector2u(4, 2));
+		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 12));
 	}
 	this->_players[this->_playersTeams.at(this->_playersNumber - 1)] = player;
 }
 
 void GameState::spawnUnit(Player *player, IUnit *unit, sf::Vector2u position)
 {
-	unit->setGraphicsComponent(new GraphicsComponent(this->_resourcesManager.at("unit_tank")));
+	unit->setGraphicsComponent("move_right", new GraphicsComponent(this->_resourcesManager.at("unit_tank_move_right")));
+	unit->setGraphicsComponent("move_left", new GraphicsComponent(this->_resourcesManager.at("unit_tank_move_left")));
+	unit->setGraphicsComponent("move_up", new GraphicsComponent(this->_resourcesManager.at("unit_tank_move_up")));
+	unit->setGraphicsComponent("move_down", new GraphicsComponent(this->_resourcesManager.at("unit_tank_move_down")));
+	unit->setGraphicsComponent("afk", new GraphicsComponent(this->_resourcesManager.at("unit_tank_afk")));
+	unit->setGraphicsComponent("stand", new GraphicsComponent(this->_resourcesManager.at("unit_tank")));
 	unit->setStatisticsComponent(new TankStatisticsComponent());
 	unit->setTilePosition(position);
 	player->addUnit(unit);
