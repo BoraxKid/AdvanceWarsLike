@@ -1,42 +1,26 @@
 #include "GameState.h"
 #include "Unit.h"
 
-//#include <Windows.h>
-
-GameState::GameState(ResourcesManager &resourcesManager)
-	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager, _font), _menuManager(_font), _animationManager(_resourcesManager, _mapManager, this, _font, _realMapSize), _paused(false), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1)
+GameState::GameState(ResourcesManager &resourcesManager, const sf::Font &font, sf::String map)
+	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _font(font), _mapManager(_resourcesManager, _font), _menuManager(_font, _realMapSize), _animationManager(_resourcesManager, _mapManager, this, _font, _realMapSize), _paused(false), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1), _hp("", _font, 8)
 {
-	//std::vector<std::string> names;
-	//std::string search_path = "./maps/*.*";
-	//WIN32_FIND_DATA fd;
-	//HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
-	//if (hFind != INVALID_HANDLE_VALUE) {
-	//	do {
-	//		// read all (real) files in current folder
-	//		// , delete '!' read other 2 default folder . and ..
-	//		if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-	//			std::cout << fd.cFileName << std::endl;
-	//			names.push_back(fd.cFileName);
-	//		}
-	//	} while (::FindNextFile(hFind, &fd));
-	//	::FindClose(hFind);
-	//}
-	this->_mapManager.loadMap("map.tmx");
-	this->_mapSize = this->_mapManager.getMapSize();
-	this->_tileSize = this->_mapManager.getTileSize();
-	this->_realMapSize = sf::Vector2f(static_cast<float>(this->_mapSize.x * this->_tileSize.x), static_cast<float>(this->_mapSize.y * this->_tileSize.y));
-	this->setupTeams();
-	this->setupBuildings(this->_mapManager.getBuildings());
-	this->_players.at(*this->_currentPlayer)->startTurn();
-	if (!this->_font.loadFromFile("uni0553-webfont.ttf"))
-		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
-	const_cast<sf::Texture &>(this->_font.getTexture(8)).setSmooth(false);
-	const_cast<sf::Texture &>(this->_font.getTexture(10)).setSmooth(false);
-	const_cast<sf::Texture &>(this->_font.getTexture(16)).setSmooth(false);
-	const_cast<sf::Texture &>(this->_font.getTexture(24)).setSmooth(false);
-	this->_hp = sf::Text("", this->_font, 8);
-	this->_hp.setColor(sf::Color::White);
-	this->_menuManager.createMenus(this, this->_resourcesManager);
+	if (!this->_mapManager.loadMap(map.toAnsiString().c_str()))
+	{
+		this->_finished = true;
+		this->_gameMode = INVALID;
+	}
+	else
+	{
+		this->_mapSize = this->_mapManager.getMapSize();
+		this->_tileSize = this->_mapManager.getTileSize();
+		this->_realMapSize = sf::Vector2f(static_cast<float>(this->_mapSize.x * this->_tileSize.x), static_cast<float>(this->_mapSize.y * this->_tileSize.y));
+		this->setupTeams();
+		this->setupBuildings(this->_mapManager.getBuildings());
+		this->_players.at(*this->_currentPlayer)->startTurn();
+		this->_hp.setColor(sf::Color::White);
+		this->_hp.setOutlineColor(sf::Color::Black);
+		this->_menuManager.createMenusGameState(this, this->_resourcesManager);
+	}
 }
 
 GameState::~GameState()
@@ -66,7 +50,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 	sf::Event event;
 	sf::Vector2i tilePos;
 
-	while (!events.empty() && !this->_paused)
+	while (!events.empty() && !this->_paused && this->_gameMode != INVALID)
 	{
 		event = events.front();
 		if (event.type == sf::Event::MouseMoved)
@@ -126,7 +110,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 void GameState::update(const sf::Time &time)
 {
 	this->_resourcesManager.update(time);
-	if (!this->_paused)
+	if (!this->_paused && this->_gameMode != INVALID)
 		if (this->_gameMode == ANIMATION)
 		{
 			if (!this->_animationManager.update(time) && this->_gameMode == ANIMATION)
@@ -136,55 +120,56 @@ void GameState::update(const sf::Time &time)
 
 void GameState::display(sf::RenderWindow &window)
 {
-	this->_mapManager.draw(window);
-	if (this->_currentPlayer != this->_playersTeams.end() && this->_gameMode != BATTLE)
-		this->_players.at(*this->_currentPlayer)->drawMovement(window);
-	std::vector<IUnit *>::const_iterator iter = this->_targets.begin();
-	std::vector<IUnit *>::const_iterator iter2 = this->_targets.end();
-	sf::RectangleShape rect(sf::Vector2f(static_cast<float>(this->_tileSize.x), static_cast<float>(this->_tileSize.y)));
-	rect.setFillColor(sf::Color(255, 0, 0, 127));
-	while (iter != iter2)
+	if (this->_gameMode != INVALID)
 	{
-		rect.setPosition(sf::Vector2f(static_cast<float>((*iter)->getTilePosition().x * this->_tileSize.x), static_cast<float>((*iter)->getTilePosition().y * this->_tileSize.y)));
-		window.draw(rect);
-		++iter;
-	}
-	const std::vector<std::vector<IUnit *>> &units = this->_mapManager.getUnits();
-	std::vector<std::vector<IUnit *>>::const_iterator iter3 = units.begin();
-	std::vector<std::vector<IUnit *>>::const_iterator iter4 = units.end();
-	sf::Vector2u pos;
-	while (iter3 != iter4)
-	{
-		iter = iter3->begin();
-		iter2 = iter3->end();
+		this->_mapManager.draw(window);
+		if (this->_currentPlayer != this->_playersTeams.end() && this->_gameMode != BATTLE)
+			this->_players.at(*this->_currentPlayer)->drawMovement(window);
+		std::vector<IUnit *>::const_iterator iter = this->_targets.begin();
+		std::vector<IUnit *>::const_iterator iter2 = this->_targets.end();
+		sf::RectangleShape rect(sf::Vector2f(static_cast<float>(this->_tileSize.x), static_cast<float>(this->_tileSize.y)));
+		rect.setFillColor(sf::Color(255, 0, 0, 127));
 		while (iter != iter2)
 		{
-			if ((*iter) != nullptr)
-			{
-				pos = (*iter)->getTilePosition();
-				this->_hp.setCharacterSize(10);
-				this->_hp.setColor(sf::Color::Black);
-				this->_hp.setString(std::to_string((*iter)->getLife()));
-				this->_hp.setPosition(static_cast<float>((pos.x + 1) * this->_tileSize.x - 10), static_cast<float>((pos.y + 1) * this->_tileSize.y - 8));
-				window.draw(this->_hp);
-				this->_hp.setCharacterSize(8);
-				this->_hp.setColor(sf::Color::White);
-				this->_hp.setString(std::to_string((*iter)->getLife()));
-				this->_hp.setPosition(static_cast<float>((pos.x + 1) * this->_tileSize.x - 10), static_cast<float>((pos.y + 1) * this->_tileSize.y - 7));
-				window.draw(this->_hp);
-			}
+			rect.setPosition(sf::Vector2f(static_cast<float>((*iter)->getTilePosition().x * this->_tileSize.x), static_cast<float>((*iter)->getTilePosition().y * this->_tileSize.y)));
+			window.draw(rect);
 			++iter;
 		}
-		++iter3;
+		const std::vector<std::vector<IUnit *>> &units = this->_mapManager.getUnits();
+		std::vector<std::vector<IUnit *>>::const_iterator iter3 = units.begin();
+		std::vector<std::vector<IUnit *>>::const_iterator iter4 = units.end();
+		sf::Vector2u pos;
+		while (iter3 != iter4)
+		{
+			iter = iter3->begin();
+			iter2 = iter3->end();
+			while (iter != iter2)
+			{
+				if ((*iter) != nullptr)
+				{
+					pos = (*iter)->getTilePosition();
+					this->_hp.setString(std::to_string((*iter)->getLife()));
+					this->_hp.setTextPosition(static_cast<float>((pos.x + 1) * this->_tileSize.x - 10), static_cast<float>((pos.y + 1) * this->_tileSize.y - 7));
+					window.draw(this->_hp);
+				}
+				++iter;
+			}
+			++iter3;
+		}
+		this->_menuManager.draw(window);
+		if (this->_gameMode == ANIMATION || this->_gameMode == ENDED)
+			this->_animationManager.draw(window);
 	}
-	this->_menuManager.draw(window);
-	if (this->_gameMode == ANIMATION || this->_gameMode == ENDED)
-		this->_animationManager.draw(window);
 }
 
 bool GameState::ended() const
 {
 	return (this->_finished);
+}
+
+IState *GameState::newState() const
+{
+	return (nullptr);
 }
 
 sf::Vector2f GameState::getViewSize() const

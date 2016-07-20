@@ -16,6 +16,7 @@ public:
 	virtual void update(const sf::Time &time) = 0;
 	virtual void display(sf::RenderWindow &window) = 0;
 	virtual bool ended() const = 0;
+	virtual IState *newState() const = 0;
 	virtual sf::Vector2f getViewSize() const = 0;
 };
 

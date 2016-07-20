@@ -7,7 +7,7 @@
 #include <queue>
 
 #include "IState.h"
-#include "GameState.h"
+#include "MainMenuState.h"
 #include "ResourcesManager.h"
 
 class Application
@@ -20,9 +20,13 @@ public:
 
 private:
 	void resize(sf::Vector2f winSize, sf::Vector2f viewSize);
+	void pushState(IState *state);
+	void popState();
 
 	sf::RenderWindow _window;
+	sf::Font _font;
 	sf::View _view;
+	sf::Vector2f _winSize;
 	std::vector<IState *> _states;
 	ResourcesManager _resourcesManager;
 };

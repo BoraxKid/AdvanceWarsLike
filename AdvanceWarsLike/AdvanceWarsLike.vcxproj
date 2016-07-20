@@ -138,6 +138,7 @@
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapLoader.cpp" />
     <ClCompile Include="MapManager.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IUnit.h" />
     <ClInclude Include="IState.h" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapLoader.h" />
     <ClInclude Include="MapManager.h" />
@@ -172,10 +174,9 @@
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="map.tmx" />
+    <None Include="maps\map_2p.tmx" />
     <None Include="packages.config" />
     <None Include="shader.glsl" />
-    <None Include="shaderStroke.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="bot.png" />

@@ -1,7 +1,7 @@
 #include "Menu.h"
 
-Menu::Menu()
-	: _currentHeight(0), _buttonWidth(100)
+Menu::Menu(const sf::Vector2f &size, bool mainMenu)
+	: _size(size), _mainMenu(mainMenu), _currentHeight(0), _buttonWidth(100)
 {
 }
 
@@ -15,6 +15,7 @@ Menu::~Menu()
 		delete (iter->second);
 		++iter;
 	}
+	this->_buttons.clear();
 }
 
 void Menu::addButton(const sf::String &id, GenericButton *button)
@@ -50,7 +51,10 @@ bool Menu::contains(const sf::Vector2f &point)
 		if (this->_hoveredButton != this->_buttonIds.end())
 			this->_buttons.at(*this->_hoveredButton)->setHovered(false);
 		pos.y = (point.y - pos.y) / this->_buttons.begin()->second->getHeight();
-		this->_buttons.at(this->_buttonIds.at(static_cast<sf::Uint16>(pos.y)))->setHovered(true);
+		if (static_cast<sf::Uint16>(pos.y) > this->_buttonIds.size())
+			this->_buttons.at(this->_buttonIds.back())->setHovered(true);
+		else
+			this->_buttons.at(this->_buttonIds.at(static_cast<sf::Uint16>(pos.y)))->setHovered(true);
 		this->_hoveredButton = this->_buttonIds.begin() + static_cast<sf::Uint16>(pos.y);
 		return (true);
 	}

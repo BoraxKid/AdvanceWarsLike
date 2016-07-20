@@ -14,7 +14,7 @@ public:
 	MapManager(ResourcesManager &resourcesManager, const sf::Font &font);
 	virtual ~MapManager();
 
-	void loadMap(const char *fileName);
+	bool loadMap(const char *fileName);
 	void removeUnit(const sf::Vector2u &position);
 	bool addUnit(IUnit *unit, sf::Vector2u position);
 	IUnit *getUnit(const sf::Vector2u &position);

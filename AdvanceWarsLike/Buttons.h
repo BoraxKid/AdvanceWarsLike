@@ -10,7 +10,7 @@ class GenericButton : public sf::Drawable, public sf::Transformable
 {
 public:
 	GenericButton();
-	GenericButton(const sf::Font &font, const sf::String &text, sf::Uint16 width = 100, sf::Uint16 height = 16);
+	GenericButton(const sf::Font &font, const sf::String &text, sf::Uint16 width = 100, sf::Uint16 height = 16, sf::Uint8 characterSize = 8, bool center = false);
 	virtual ~GenericButton();
 
 	virtual void activate();
@@ -34,6 +34,8 @@ protected:
 	sf::RectangleShape _rect;
 	sf::Uint16 _width;
 	sf::Uint16 _height;
+	sf::Uint8 _characterSize;
+	bool _center;
 };
 
 template <typename T>
@@ -55,6 +57,12 @@ public:
 	{
 	}
 
+	Button(T *obj, void (T::*ptr)(), const sf::Font &font, const sf::String &text, sf::Uint16 width, sf::Uint16 height, sf::Uint8 characterSize, bool center = false)
+		: GenericButton(font, text, width, height, characterSize, center), _obj(obj), _ptr(ptr)
+	{
+		this->init();
+	}
+
 	virtual ~Button()
 	{}
 
@@ -72,6 +80,30 @@ public:
 protected:
 	T *_obj;
 	void (T::*_ptr)();
+};
+
+template <typename T>
+class ConfigButton : public Button<T>
+{
+public:
+	ConfigButton(T *obj, void (T::*ptr)(sf::Uint8), sf::Uint8 data, const sf::Font &font, const sf::String &text, sf::Uint16 width = 100, sf::Uint16 height = 16, sf::Uint8 characterSize = 8, bool center = false)
+		: Button(obj, nullptr, font, text, width, height, characterSize, center), _ptrConfig(ptr), _data(data)
+	{
+		this->init();
+	}
+
+	virtual ~ConfigButton()
+	{}
+
+	virtual void activate()
+	{
+		if (this->_obj != nullptr && this->_ptrConfig != nullptr)
+			(this->_obj->*this->_ptrConfig)(this->_data);
+	}
+
+private:
+	void (T::*_ptrConfig)(sf::Uint8);
+	sf::Uint8 _data;
 };
 
 template <typename T>

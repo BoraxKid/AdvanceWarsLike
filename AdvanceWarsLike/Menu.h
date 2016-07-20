@@ -8,7 +8,7 @@
 class Menu : public sf::Drawable, public sf::Transformable
 {
 public:
-	Menu();
+	Menu(const sf::Vector2f &size, bool mainMenu = false);
 	virtual ~Menu();
 
 	void addButton(const sf::String &id, GenericButton *button);
@@ -21,12 +21,13 @@ private:
 	void resizeButtons();
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
+	sf::Vector2f _size;
+	bool _mainMenu;
 	sf::Uint16 _currentHeight;
 	sf::Uint16 _buttonWidth;
 	std::vector<sf::String> _buttonIds;
 	std::vector<sf::String>::iterator _hoveredButton;
 	std::map<sf::String, GenericButton *> _buttons;
-	//std::map<sf::String, GenericButton *>::iterator _hoveredButton;
 };
 
 #endif // MENU_H_

@@ -5,8 +5,8 @@ GenericButton::GenericButton()
 {
 }
 
-GenericButton::GenericButton(const sf::Font &font, const sf::String &text, sf::Uint16 width, sf::Uint16 height)
-	: _hovered(false), _text(text, font), _width(width), _height(16)
+GenericButton::GenericButton(const sf::Font &font, const sf::String &text, sf::Uint16 width, sf::Uint16 height, sf::Uint8 characterSize, bool center)
+	: _hovered(false), _text(text, font), _width(width), _height(height), _characterSize(characterSize), _center(center)
 {
 }
 
@@ -16,7 +16,6 @@ GenericButton::~GenericButton()
 
 void GenericButton::activate()
 {
-
 }
 
 void GenericButton::setPointer(void *ptr)
@@ -25,7 +24,7 @@ void GenericButton::setPointer(void *ptr)
 
 void GenericButton::init()
 {
-	this->_text.setCharacterSize(8);
+	this->_text.setCharacterSize(this->_characterSize);
 	this->_text.setColor(sf::Color::White);
 	sf::Uint16 tmp = static_cast<sf::Uint16>(this->_text.getLocalBounds().width);
 	if (tmp > this->_width)
@@ -35,7 +34,10 @@ void GenericButton::init()
 	this->_rect.setOutlineColor(sf::Color(239, 239, 239));
 	this->_rect.setOutlineThickness(1.0f);
 	this->_rect.setPosition(sf::Vector2f(0.0f, 0.0f));
-	this->_text.setPosition(sf::Vector2f(2.0f, this->_height - this->_text.getCharacterSize() - 4.0f));
+	if (this->_center)
+		this->_text.setPosition(sf::Vector2f((this->_width - this->_text.getLocalBounds().width) / 2, (this->_height - this->_text.getLocalBounds().height) / 2));
+	else
+		this->_text.setPosition(sf::Vector2f(2.0f, this->_height - this->_characterSize - 4.0f));
 }
 
 void GenericButton::setHovered(const bool &hovered)

@@ -114,6 +114,9 @@
     <ClCompile Include="AnimationManager.cpp">
       <Filter>Fichiers sources\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenuState.cpp">
+      <Filter>Fichiers sources\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -179,17 +182,19 @@
     <ClInclude Include="AnimationManager.h">
       <Filter>Fichiers d%27en-tête\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="MainMenuState.h">
+      <Filter>Fichiers d%27en-tête\States</Filter>
+    </ClInclude>
     <ClInclude Include="StrokeText.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="map.tmx" />
     <None Include="packages.config" />
     <None Include="shader.glsl">
       <Filter>Fichiers de ressources</Filter>
     </None>
-    <None Include="shaderStroke.glsl">
+    <None Include="maps\map_2p.tmx">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>

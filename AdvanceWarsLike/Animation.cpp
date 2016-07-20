@@ -2,14 +2,12 @@
 #include "GameState.h"
 
 NewTurnAnimation::NewTurnAnimation(const sf::Font &font, const sf::String &player, const sf::Uint32 &turns, const sf::Vector2f &size, const sf::Time animationTime)
-	: _animationTime(animationTime), _size(size)
+	: _animationTime(animationTime), _size(size), _turns("", font, 8), _player("", font, 8)
 {
-	this->_turns.setFont(font);
-	this->_turns.setCharacterSize(8);
 	this->_turns.setColor(sf::Color::Black);
-	this->_player.setFont(font);
-	this->_player.setCharacterSize(8);
+	this->_turns.setOutlineColor(sf::Color::White);
 	this->_player.setColor(sf::Color::Black);
+	this->_player.setOutlineColor(sf::Color::White);
 	this->changeText(player, turns);
 }
 
@@ -28,19 +26,19 @@ bool NewTurnAnimation::update(const sf::Time &elapsedTime)
 	if (this->_elapsedTime.asSeconds() < this->_animationTime.asSeconds() / 4.0f)
 	{
 		float tmp = ((this->_elapsedTime.asSeconds() / (this->_animationTime.asSeconds() / 4.0f)));
-		this->_turns.setPosition(sf::Vector2f(this->_size.x / 2.0f * tmp - this->_turns.getLocalBounds().width / 2.0f, this->_size.y / 2.0f));
-		this->_player.setPosition(sf::Vector2f(this->_size.x / 2.0f * tmp - this->_player.getLocalBounds().width / 2.0f, this->_size.y / 2.0f + this->_turns.getLocalBounds().height + 4));
+		this->_turns.setTextPosition(sf::Vector2f(this->_size.x / 2.0f * tmp - this->_turns.getTextLocalBounds().width / 2.0f, this->_size.y / 2.0f));
+		this->_player.setTextPosition(sf::Vector2f(this->_size.x / 2.0f * tmp - this->_player.getTextLocalBounds().width / 2.0f, this->_size.y / 2.0f + this->_turns.getTextLocalBounds().height + 4));
 	}
 	else if (this->_elapsedTime.asSeconds() < this->_animationTime.asSeconds() / 4.0f * 3.0f)
 	{
-		this->_turns.setPosition(sf::Vector2f(this->_size.x / 2.0f - this->_turns.getLocalBounds().width / 2.0f, this->_size.y / 2.0f));
-		this->_player.setPosition(sf::Vector2f(this->_size.x / 2.0f - this->_player.getLocalBounds().width / 2.0f, this->_size.y / 2.0f + this->_turns.getLocalBounds().height + 4));
+		this->_turns.setTextPosition(sf::Vector2f(this->_size.x / 2.0f - this->_turns.getTextLocalBounds().width / 2.0f, this->_size.y / 2.0f));
+		this->_player.setTextPosition(sf::Vector2f(this->_size.x / 2.0f - this->_player.getTextLocalBounds().width / 2.0f, this->_size.y / 2.0f + this->_turns.getTextLocalBounds().height + 4));
 	}
 	else
 	{
 		float tmp = (this->_elapsedTime.asSeconds() - (this->_animationTime.asSeconds() / 4.0f * 3.0f)) / (this->_animationTime.asSeconds() / 4.0f);
-		this->_turns.setPosition(sf::Vector2f(this->_size.x / 2.0f + this->_size.x / 2.0f * tmp - this->_turns.getLocalBounds().width / 2.0f, this->_size.y / 2.0f));
-		this->_player.setPosition(sf::Vector2f(this->_size.x / 2.0f + this->_size.x / 2.0f * tmp - this->_player.getLocalBounds().width / 2.0f, this->_size.y / 2.0f + this->_turns.getLocalBounds().height + 4));
+		this->_turns.setTextPosition(sf::Vector2f(this->_size.x / 2.0f + this->_size.x / 2.0f * tmp - this->_turns.getTextLocalBounds().width / 2.0f, this->_size.y / 2.0f));
+		this->_player.setTextPosition(sf::Vector2f(this->_size.x / 2.0f + this->_size.x / 2.0f * tmp - this->_player.getTextLocalBounds().width / 2.0f, this->_size.y / 2.0f + this->_turns.getTextLocalBounds().height + 4));
 	}
 	return (true);
 }

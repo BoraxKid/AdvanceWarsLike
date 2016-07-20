@@ -68,7 +68,7 @@ Player::Click Player::click(const sf::Vector2i &tilePos, MapManager &mapManager)
 	{
 		if (this->checkMovement(tilePos, (*this->_selectedUnit)->getMovement()))
 		{
-			if (this->_mapManager.canMove((*this->_selectedUnit)->getTilePosition(), sf::Vector2u(tilePos.x, tilePos.y)))
+			if (this->_mapManager.canMove((*this->_selectedUnit)->getTilePosition(), sf::Vector2u(tilePos.x, tilePos.y)) || sf::Vector2u(tilePos.x, tilePos.y) == (*this->_selectedUnit)->getTilePosition())
 			{
 				this->_aimedTile = sf::Vector2u(tilePos.x, tilePos.y);
 				return (AIMED);

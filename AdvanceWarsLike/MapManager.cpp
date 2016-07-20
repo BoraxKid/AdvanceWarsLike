@@ -9,11 +9,15 @@ MapManager::~MapManager()
 {
 }
 
-void MapManager::loadMap(const char *fileName)
+bool MapManager::loadMap(const char *fileName)
 {
 	this->_activeMaps.push_back(Map(this->_resourcesManager, this->_font));
 	if (!this->_mapLoader.loadMap(this->_activeMaps.back(), fileName))
+	{
 		this->_activeMaps.pop_back();
+		return (false);
+	}
+	return (true);
 }
 
 void MapManager::removeUnit(const sf::Vector2u &position)

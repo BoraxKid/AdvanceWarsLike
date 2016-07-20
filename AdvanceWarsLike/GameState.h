@@ -8,12 +8,13 @@
 #include "MenuManager.h"
 #include "AnimationManager.h"
 #include "Player.h"
+#include "StrokeText.h"
 
 class GameState : public IState
 {
 public:
-	enum GameMode { NORMAL, BATTLE, ANIMATION, ENDED };
-	GameState(ResourcesManager &resourcesManager);
+	enum GameMode { INVALID, NORMAL, BATTLE, ANIMATION, ENDED };
+	GameState(ResourcesManager &resourcesManager, const sf::Font &font, sf::String map);
 	virtual ~GameState();
 
 	virtual void pause();
@@ -22,6 +23,7 @@ public:
 	virtual void update(const sf::Time &time);
 	virtual void display(sf::RenderWindow &window);
 	virtual bool ended() const;
+	virtual IState *newState() const;
 	virtual sf::Vector2f getViewSize() const;
 
 	void movePlayerUnit();
@@ -40,6 +42,7 @@ private:
 
 	GameMode _gameMode;
 	ResourcesManager &_resourcesManager;
+	const sf::Font &_font;
 	MapManager _mapManager;
 	MenuManager _menuManager;
 	AnimationManager _animationManager;
@@ -55,8 +58,7 @@ private:
 	std::map<sf::String, Player *> _players;
 	sf::Vector2f _mousePosition;
 	sf::Vector2u _tilePosition;
-	sf::Font _font;
-	sf::Text _hp;
+	StrokeText _hp;
 	std::vector<IUnit *> _targets;
 	sf::Uint32 _turns;
 };

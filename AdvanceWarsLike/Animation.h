@@ -34,8 +34,8 @@ private:
 	const sf::Time _animationTime;
 	const sf::Vector2f &_size;
 	sf::Time _elapsedTime;
-	sf::Text _turns;
-	sf::Text _player;
+	StrokeText _turns;
+	StrokeText _player;
 };
 
 class MovementAnimation : public IAnimation
