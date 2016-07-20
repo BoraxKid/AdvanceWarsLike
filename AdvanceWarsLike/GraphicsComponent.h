@@ -6,6 +6,7 @@
 
 #include "IComponent.h"
 #include "AnimatedSprite.h"
+#include "StrokeText.h"
 
 class GraphicsComponent : public IComponent, public sf::Drawable, public sf::Transformable
 {
@@ -82,25 +83,53 @@ private:
 
 class Player;
 
-class PlayerGraphicsComponent : public GraphicsComponent
+class PlayerGraphicsComponent : public sf::Drawable, public sf::Transformable
 {
 public:
-	PlayerGraphicsComponent(Player *player, AnimatedSprite &sprite)
-		: GraphicsComponent(sprite)
-	{}
+	PlayerGraphicsComponent(Player *player, const sf::Font &font, sf::String name)
+		: _player(player), _font(font), _text("", _font, 8)
+	{
+		this->_text.setColor(sf::Color::Black);
+		this->_text.setOutlineColor(sf::Color::White);
+		if (name == "red")
+			this->_text.setColor(sf::Color(192, 64, 64));
+		if (name == "blue")
+			this->_text.setColor(sf::Color(65, 65, 255));
+		if (name == "green")
+			this->_text.setColor(sf::Color::Green);
+		if (name == "yellow")
+			this->_text.setColor(sf::Color(219, 169, 0));
+		std::string tmp = name.toAnsiString();
+		if (!tmp.empty())
+		{
+			tmp[0] = ::toupper(tmp[0]);
+
+			for (std::size_t i = 1; i < tmp.length(); ++i)
+				tmp[i] = ::tolower(tmp[i]);
+		}
+		this->_name = tmp;
+	}
 
 	virtual ~PlayerGraphicsComponent()
 	{}
+
+	void setBalance(const sf::Uint32 &balance)
+	{
+		this->_text.setString(this->_name + "'s balance: $" + std::to_string(balance));
+	}
 
 private:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
 	{
 		states.transform *= this->getTransform();
-		target.draw(this->_sprite, states);
+		target.draw(this->_text, states);
 	}
 
 	sf::RenderTexture _texture;
 	Player *_player;
+	const sf::Font &_font;
+	sf::String _name;
+	StrokeText _text;
 };
 
 #endif // GRAPHICSCOMPONENT_H_

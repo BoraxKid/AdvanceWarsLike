@@ -12,7 +12,7 @@ class Player : public sf::Drawable, public sf::Transformable
 {
 public:
 	enum Click { NOTINRANGE, AIMED, SELECTED, ACTED };
-	Player(sf::Uint8 id, MapManager &mapManager);
+	Player(sf::Uint8 id, MapManager &mapManager, const sf::Font &font, sf::String player);
 	virtual ~Player();
 
 	void endTurn();
@@ -47,7 +47,7 @@ private:
 
 	const sf::Uint8 _id;
 	MapManager &_mapManager;
-	//PlayerGraphicsComponent _graphics;
+	PlayerGraphicsComponent _graphics;
 	sf::Vector2u _mapSize;
 	sf::Uint32 _money;
 	std::vector<IUnit *> _units;

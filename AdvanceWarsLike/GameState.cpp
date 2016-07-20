@@ -64,11 +64,17 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 			if (this->_gameMode == NORMAL && this->_currentPlayer != this->_playersTeams.end())
 			{
 				if (event.mouseButton.button == sf::Mouse::Right)
+				{
 					this->_menuManager.openStartMenu(this->_mousePosition, this->_realMapSize);
+					this->_menuManager.mouseMoved(this->_mousePosition);
+				}
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
 					if (this->_menuManager.mouseMoved(this->_mousePosition))
+					{
 						this->_menuManager.click(this->_mousePosition);
+						this->_menuManager.mouseMoved(this->_mousePosition);
+					}
 					else
 					{
 						const std::vector<std::vector<IBuilding *>> &buildings = this->_mapManager.getBuildings();
@@ -77,7 +83,10 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 						this->_menuManager.reset();
 						Player::Click click = this->_players.at(*this->_currentPlayer)->click(tilePos, this->_mapManager);
 						if (click == Player::Click::AIMED)
+						{
 							this->_menuManager.openUnitActionMenu(this->_players.at(*this->_currentPlayer), this->_mousePosition, this->_realMapSize);
+							this->_menuManager.mouseMoved(this->_mousePosition);
+						}
 						else if (click == Player::Click::NOTINRANGE)
 						{
 							if (tilePos.x >= 0 && static_cast<sf::Uint32>(tilePos.x) < this->_mapSize.x && tilePos.y >= 0 && static_cast<sf::Uint32>(tilePos.y) < this->_mapSize.y)
@@ -87,6 +96,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 								{
 									this->_tilePosition = sf::Vector2u(tilePos);
 									this->_menuManager.openGFactoryMenu(this->_mousePosition, this->_realMapSize);
+									this->_menuManager.mouseMoved(this->_mousePosition);
 								}
 							}
 						}
@@ -156,6 +166,8 @@ void GameState::display(sf::RenderWindow &window)
 			}
 			++iter3;
 		}
+		if (this->_currentPlayer != this->_playersTeams.end())
+			window.draw(*this->_players.at(*this->_currentPlayer));
 		this->_menuManager.draw(window);
 		if (this->_gameMode == ANIMATION || this->_gameMode == ENDED)
 			this->_animationManager.draw(window);
@@ -302,8 +314,8 @@ void GameState::battle(const sf::Vector2i &tilePos)
 
 void GameState::addPlayer()
 {
-	Player *player = new Player(++this->_playersNumber, this->_mapManager);
-	this->_playersTeams.push_back(this->_availablePlayersTeams.at(this->_playersNumber));
+	this->_playersTeams.push_back(this->_availablePlayersTeams.at(++this->_playersNumber));
+	Player *player = new Player(this->_playersNumber, this->_mapManager, this->_font, this->_playersTeams.back());
 	player->setMapSize(this->_mapSize);
 	if (this->_playersNumber == 1)
 	{

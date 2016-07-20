@@ -43,7 +43,7 @@ void MenuManager::createMenusGameState(GameState *gameState, ResourcesManager &r
 	this->_menus["enemy_building"] = new Menu(this->_size);
 	this->_menus.at("enemy_building")->addButton("capture", new GenericButton(this->_font, "Capture"));
 	this->_menus["gfactory"] = new Menu(this->_size);
-	this->_menus.at("gfactory")->addButton("tank", new BuyButton<GameState>(resourcesManager.at("unit_tank"), gameState, &GameState::buyUnit, 1000, this->_font, "Create tank ($1000)"));
+	this->_menus.at("gfactory")->addButton("tank", new BuyButton<GameState>(resourcesManager.at("unit_tank"), gameState, &GameState::buyUnit, 6000, this->_font, "Create tank ($6000)"));
 }
 
 bool MenuManager::mouseMoved(const sf::Vector2f &mousePosition)

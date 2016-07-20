@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(sf::Uint8 id, MapManager &mapManager)
-	: _id(id), _mapManager(mapManager), _money(0), _selectedUnit(_units.end()), _towers(0), _moving(false)
+Player::Player(sf::Uint8 id, MapManager &mapManager, const sf::Font &font, sf::String player)
+	: _id(id), _mapManager(mapManager), _money(0), _selectedUnit(_units.end()), _towers(0), _moving(false), _graphics(this, font, player)
 {
 }
 
@@ -35,6 +35,7 @@ void Player::startTurn()
 	this->_selectedUnit = this->_units.end();
 	this->checkBuildings();
 	this->_money += this->_towers * 1000;
+	this->_graphics.setBalance(this->_money);
 }
 
 void Player::moveUnit()
@@ -238,6 +239,7 @@ bool Player::buy(const sf::Uint32 &cost)
 	if (this->_money >= cost)
 	{
 		this->_money -= cost;
+		this->_graphics.setBalance(this->_money);
 		return (true);
 	}
 	return (false);
@@ -384,4 +386,6 @@ void Player::checkBuildings()
 
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+	states.transform *= this->getTransform();
+	target.draw(this->_graphics, states);
 }
