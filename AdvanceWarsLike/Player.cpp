@@ -52,7 +52,8 @@ void Player::prepareAttackUnit()
 
 void Player::endAttack()
 {
-	(*this->_selectedUnit)->acted();
+	if (this->_selectedUnit != this->_units.end())
+		(*this->_selectedUnit)->acted();
 }
 
 Player::Click Player::click(const sf::Vector2i &tilePos, MapManager &mapManager)
@@ -197,7 +198,7 @@ void Player::drawMovement(sf::RenderWindow &window)
 		sf::Vector2u tmp;
 		sf::RectangleShape rect(sf::Vector2f(16, 16));
 		rect.setFillColor(sf::Color(0, 0, 255, 127));
-#ifdef _DEBUG
+#ifdef DEBUG
 		sf::Font font;
 		font.loadFromFile("uni0553-webfont.ttf");
 		const_cast<sf::Texture &>(font.getTexture(8)).setSmooth(false);
@@ -214,7 +215,7 @@ void Player::drawMovement(sf::RenderWindow &window)
 					rect.setPosition(sf::Vector2f(static_cast<float>(16 * tmp.x), static_cast<float>(16 * tmp.y)));
 					window.draw(rect);
 				}
-#ifdef _DEBUG
+#ifdef DEBUG
 				text.setString(std::to_string(this->_movement.at(tmp.x).at(tmp.y)));
 				text.setPosition(sf::Vector2f(static_cast<float>(16 * tmp.x), static_cast<float>(16 * tmp.y)));
 				window.draw(text);
@@ -309,6 +310,13 @@ std::vector<sf::Vector2u> Player::findPath()
 void Player::unselect()
 {
 	this->_moving = true;
+}
+
+IUnit *Player::getSelectedUnit() const
+{
+	if (this->_selectedUnit != this->_units.end())
+		return (*this->_selectedUnit);
+	return (nullptr);
 }
 
 void Player::resetMovementMap()

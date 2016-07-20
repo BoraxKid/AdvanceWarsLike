@@ -34,6 +34,7 @@ public:
 	bool buy(const sf::Uint32 &cost);
 	std::vector<sf::Vector2u> findPath();
 	void unselect();
+	IUnit *getSelectedUnit() const;
 
 private:
 	void resetMovementMap();

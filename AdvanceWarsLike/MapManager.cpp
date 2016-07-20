@@ -1,7 +1,7 @@
 #include "MapManager.h"
 
-MapManager::MapManager(ResourcesManager &resourcesManager)
-	: _resourcesManager(resourcesManager)
+MapManager::MapManager(ResourcesManager &resourcesManager, const sf::Font &font)
+	: _resourcesManager(resourcesManager), _font(font)
 {
 }
 
@@ -11,7 +11,7 @@ MapManager::~MapManager()
 
 void MapManager::loadMap(const char *fileName)
 {
-	this->_activeMaps.push_back(Map(this->_resourcesManager));
+	this->_activeMaps.push_back(Map(this->_resourcesManager, this->_font));
 	if (!this->_mapLoader.loadMap(this->_activeMaps.back(), fileName))
 		this->_activeMaps.pop_back();
 }
@@ -67,6 +67,11 @@ Tile MapManager::getTile(sf::Vector2i pos) const
 const std::vector<std::vector<IBuilding *>> &MapManager::getBuildings() const
 {
 	return (this->_activeMaps.back().getBuildings());
+}
+
+const std::vector<std::vector<IUnit *>> &MapManager::getUnits() const
+{
+	return (this->_activeMaps.back().getUnits());
 }
 
 bool MapManager::canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position)

@@ -51,6 +51,7 @@ private:
 	sf::Vector2f _mousePosition;
 	sf::Vector2u _tilePosition;
 	sf::Font _font;
+	sf::Text _hp;
 	std::vector<IUnit *> _targets;
 	sf::Uint32 _turns;
 };

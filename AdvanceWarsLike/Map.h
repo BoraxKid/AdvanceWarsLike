@@ -24,7 +24,7 @@ class Map : public sf::Drawable, public sf::Transformable
 {
 	friend class MapLoader;
 public:
-	Map(ResourcesManager &resourcesManager);
+	Map(ResourcesManager &resourcesManager, const sf::Font &font);
 	virtual ~Map();
 
 	void removeUnit(const sf::Vector2u &position);
@@ -34,6 +34,7 @@ public:
 	sf::Vector2u getTileSize() const;
 	sf::Uint8 getTileMovement(Tile tile) const;
 	const std::vector<std::vector<IBuilding *>> &getBuildings() const;
+	const std::vector<std::vector<IUnit *>> &getUnits() const;
 	Tile getTile(sf::Vector2i pos) const;
 	bool canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
@@ -43,6 +44,8 @@ private:
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
 	ResourcesManager &_resourcesManager;
+	const sf::Font &_font;
+	sf::Text _hp;
 	std::map<sf::String, std::vector<std::vector<Tile>>> _tiles;
 	std::vector<std::vector<IBuilding *>> _buildings;
 	std::vector<std::vector<IUnit *>> _units;

@@ -58,6 +58,21 @@ const sf::Uint8 &Unit::getMovement() const
 	return (this->_stats->getMovement());
 }
 
+const sf::Uint8 &Unit::getDamage() const
+{
+	return (this->_stats->getDamage());
+}
+
+const sf::Uint8 &Unit::getLife() const
+{
+	return (this->_stats->getLife());
+}
+
+bool Unit::hit(const sf::Uint8 &damage) const
+{
+	return (this->_stats->hit(damage));
+}
+
 void Unit::setTilePosition(const sf::Vector2u &position)
 {
 	this->_position = position;

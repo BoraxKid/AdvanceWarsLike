@@ -2,7 +2,7 @@
 #include "Unit.h"
 
 GameState::GameState(ResourcesManager &resourcesManager)
-	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager), _menuManager(_font), _animationManager(_resourcesManager, _mapManager, _font, _realMapSize), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1)
+	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager, _font), _menuManager(_font), _animationManager(_resourcesManager, _mapManager, _font, _realMapSize), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1)
 {
 	this->_mapManager.loadMap("map.tmx");
 	this->_mapSize = this->_mapManager.getMapSize();
@@ -14,6 +14,9 @@ GameState::GameState(ResourcesManager &resourcesManager)
 	if (!this->_font.loadFromFile("uni0553-webfont.ttf"))
 		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
 	const_cast<sf::Texture &>(this->_font.getTexture(8)).setSmooth(false);
+	const_cast<sf::Texture &>(this->_font.getTexture(10)).setSmooth(false);
+	this->_hp = sf::Text("", this->_font, 8);
+	this->_hp.setColor(sf::Color::White);
 	this->_menuManager.createMenus(this, this->_resourcesManager);
 }
 
@@ -122,6 +125,34 @@ void GameState::display(sf::RenderWindow &window)
 		window.draw(rect);
 		++iter;
 	}
+	const std::vector<std::vector<IUnit *>> &units = this->_mapManager.getUnits();
+	std::vector<std::vector<IUnit *>>::const_iterator iter3 = units.begin();
+	std::vector<std::vector<IUnit *>>::const_iterator iter4 = units.end();
+	sf::Vector2u pos;
+	while (iter3 != iter4)
+	{
+		iter = iter3->begin();
+		iter2 = iter3->end();
+		while (iter != iter2)
+		{
+			if ((*iter) != nullptr)
+			{
+				pos = (*iter)->getTilePosition();
+				this->_hp.setCharacterSize(10);
+				this->_hp.setColor(sf::Color::Black);
+				this->_hp.setString(std::to_string((*iter)->getLife()));
+				this->_hp.setPosition((pos.x + 1) * this->_tileSize.x - 10, (pos.y + 1) * this->_tileSize.y - 8);
+				window.draw(this->_hp);
+				this->_hp.setCharacterSize(8);
+				this->_hp.setColor(sf::Color::White);
+				this->_hp.setString(std::to_string((*iter)->getLife()));
+				this->_hp.setPosition((pos.x + 1) * this->_tileSize.x - 10, (pos.y + 1) * this->_tileSize.y - 7);
+				window.draw(this->_hp);
+			}
+			++iter;
+		}
+		++iter3;
+	}
 	this->_menuManager.draw(window);
 	if (this->_gameMode == ANIMATION)
 		this->_animationManager.draw(window);
@@ -206,11 +237,25 @@ void GameState::battle(const sf::Vector2i &tilePos)
 	{
 		while (iter != iter2)
 		{
-			if ((*iter)->getTilePosition() == uTilePos)
+			if ((*iter)->getTilePosition() == uTilePos && (*iter) != nullptr)
 			{
-				// TODO: calculate damages output and win if enemy has no more units
-				this->_mapManager.removeUnit(uTilePos);
-				this->_players.at(this->_playersTeams.at((*iter)->getPlayerId() - 1))->destroyUnit(*iter);
+				IUnit *attacker = this->_players.at(*this->_currentPlayer)->getSelectedUnit();
+				if (attacker != nullptr)
+				{
+					const sf::Uint8 &damageAttacker = static_cast<sf::Uint8>(attacker->getDamage() * 0.6f);
+					const sf::Uint8 &damageDefender = static_cast<sf::Uint8>((*iter)->getDamage() * 0.4f);
+					if ((*iter)->hit(damageAttacker))
+					{
+						this->_mapManager.removeUnit(uTilePos);
+						this->_players.at(this->_playersTeams.at((*iter)->getPlayerId() - 1))->destroyUnit(*iter);
+					}
+					else if (attacker->hit(damageDefender))
+					{
+						this->_mapManager.removeUnit(attacker->getTilePosition());
+						this->_players.at(*this->_currentPlayer)->destroyUnit(attacker);
+					}
+					// TODO: calculate damages output and win if enemy has no more units
+				}
 				this->_targets.clear();
 				this->_players.at(*this->_currentPlayer)->endAttack();
 				this->_gameMode = NORMAL;

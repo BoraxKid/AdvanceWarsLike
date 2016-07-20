@@ -1,7 +1,7 @@
 #include "Map.h"
 
-Map::Map(ResourcesManager &resourcesManager)
-	: _resourcesManager(resourcesManager)
+Map::Map(ResourcesManager &resourcesManager, const sf::Font &font)
+	: _resourcesManager(resourcesManager), _font(font)
 {
 }
 
@@ -73,6 +73,11 @@ sf::Uint8 Map::getTileMovement(Tile tile) const
 const std::vector<std::vector<IBuilding *>> &Map::getBuildings() const
 {
 	return (this->_buildings);
+}
+
+const std::vector<std::vector<IUnit *>> &Map::getUnits() const
+{
+	return (this->_units);
 }
 
 Tile Map::getTile(sf::Vector2i pos) const

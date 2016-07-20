@@ -11,7 +11,7 @@
 class MapManager
 {
 public:
-	MapManager(ResourcesManager &resourcesManager);
+	MapManager(ResourcesManager &resourcesManager, const sf::Font &font);
 	virtual ~MapManager();
 
 	void loadMap(const char *fileName);
@@ -23,12 +23,14 @@ public:
 	sf::Uint8 getTileMovement(Tile tile) const;
 	Tile getTile(sf::Vector2i pos) const;
 	const std::vector<std::vector<IBuilding *>> &getBuildings() const;
+	const std::vector<std::vector<IUnit *>> &getUnits() const;
 	bool canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void move(const sf::Vector2u &unitPosition, const sf::Vector2u &position);
 	void draw(sf::RenderWindow &window) const;
 
 private:
 	ResourcesManager &_resourcesManager;
+	const sf::Font &_font;
 	MapLoader _mapLoader;
 	std::vector<Map> _activeMaps;
 };

@@ -17,6 +17,9 @@ public:
 	virtual void changeSprite(const sf::String &sprite) = 0;
 	virtual sf::Uint32 getHeight() const = 0;
 	virtual const sf::Uint8 &getMovement() const = 0;
+	virtual const sf::Uint8 &getDamage() const = 0;
+	virtual const sf::Uint8 &getLife() const = 0;
+	virtual bool hit(const sf::Uint8 &damage) const = 0;
 	virtual void setTilePosition(const sf::Vector2u &position) = 0;
 	virtual sf::Vector2u getTilePosition() const = 0;
 	virtual void setSpritePosition(const sf::Vector2f &position) = 0;
