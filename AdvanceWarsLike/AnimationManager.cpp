@@ -1,10 +1,12 @@
 #include "AnimationManager.h"
 
-AnimationManager::AnimationManager(ResourcesManager &resourcesManager, MapManager &mapManager, const sf::Font &font, const sf::Vector2f &size)
+AnimationManager::AnimationManager(ResourcesManager &resourcesManager, MapManager &mapManager, GameState *gameState, const sf::Font &font, const sf::Vector2f &size)
 	: _resourcesManager(resourcesManager), _font(font)
 {
 	this->_animations.push_back(new NewTurnAnimation(font, "invalid", 0, size));
 	this->_animations.push_back(new MovementAnimation(resourcesManager, mapManager));
+	this->_animations.push_back(new AttackMovementAnimation(resourcesManager, mapManager, gameState));
+	this->_animations.push_back(new WinAnimation(resourcesManager, gameState, font, size));
 	this->_currentAnimation = this->_animations.end();
 }
 
@@ -28,6 +30,10 @@ void AnimationManager::play(AnimationManager::Infos infos)
 		reinterpret_cast<NewTurnAnimation *>((*this->_currentAnimation))->changeText(infos.player, infos.turns);
 	if (infos.type == MOVEUNIT)
 		reinterpret_cast<MovementAnimation *>((*this->_currentAnimation))->changePath(infos.playerPtr);
+	if (infos.type == ATTACKMOVEUNIT)
+		reinterpret_cast<AttackMovementAnimation *>((*this->_currentAnimation))->changePath(infos.playerPtr);
+	if (infos.type == WINNING)
+		reinterpret_cast<WinAnimation *>((*this->_currentAnimation))->setWinner(infos.player, infos.turns);
 }
 
 bool AnimationManager::update(const sf::Time &elapsedTime)

@@ -14,7 +14,7 @@ public:
 		: _sprite(sprite), _color(sf::Color::White), _gray(false)
 	{
 		if (!this->_shader.loadFromFile("shader.glsl", sf::Shader::Fragment))
-			std::cerr << "Can't load shader" << std::endl;
+			std::cerr << "Can't load shader.glsl" << std::endl;
 		this->_shader.setParameter(std::string("texture"), sf::Shader::CurrentTexture);
 		this->_shader.setParameter(std::string("color"), this->_color);
 	}

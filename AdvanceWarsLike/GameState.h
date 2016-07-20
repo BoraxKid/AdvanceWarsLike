@@ -12,7 +12,7 @@
 class GameState : public IState
 {
 public:
-	enum GameMode { NORMAL, BATTLE, ANIMATION };
+	enum GameMode { NORMAL, BATTLE, ANIMATION, ENDED };
 	GameState(ResourcesManager &resourcesManager);
 	virtual ~GameState();
 
@@ -21,12 +21,15 @@ public:
 	virtual void handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &events);
 	virtual void update(const sf::Time &time);
 	virtual void display(sf::RenderWindow &window);
+	virtual bool ended() const;
 	virtual sf::Vector2f getViewSize() const;
 
 	void movePlayerUnit();
 	void changeTurn();
 	void findTargets();
 	void buyUnit(sf::Uint32 cost);
+	void battleMode();
+	void endGame();
 
 private:
 	void battle(const sf::Vector2i &tilePos);
@@ -40,6 +43,8 @@ private:
 	MapManager _mapManager;
 	MenuManager _menuManager;
 	AnimationManager _animationManager;
+	bool _finished;
+	bool _paused;
 	sf::Vector2u _mapSize;
 	sf::Vector2u _tileSize;
 	sf::Vector2f _realMapSize;

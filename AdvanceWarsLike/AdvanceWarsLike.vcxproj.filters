@@ -58,6 +58,12 @@
     <Filter Include="Fichiers sources\Player">
       <UniqueIdentifier>{c8b486b2-6c07-4083-97b0-10cc9d7fcb8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\Animation">
+      <UniqueIdentifier>{28c3311b-18cf-4ae5-b456-8153a8dd2cad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Animation">
+      <UniqueIdentifier>{f917d057-562b-4e75-91e2-52c6e520f476}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -102,11 +108,11 @@
     <ClCompile Include="Player.cpp">
       <Filter>Fichiers sources\Player</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Animation.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationManager.cpp">
+      <Filter>Fichiers sources\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +173,13 @@
     <ClInclude Include="Player.h">
       <Filter>Fichiers d%27en-tête\Player</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Animation.h">
+      <Filter>Fichiers d%27en-tête\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationManager.h">
+      <Filter>Fichiers d%27en-tête\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="StrokeText.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -178,6 +187,9 @@
     <None Include="map.tmx" />
     <None Include="packages.config" />
     <None Include="shader.glsl">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="shaderStroke.glsl">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>

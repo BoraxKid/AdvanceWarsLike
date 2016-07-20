@@ -1,9 +1,26 @@
 #include "GameState.h"
 #include "Unit.h"
 
+//#include <Windows.h>
+
 GameState::GameState(ResourcesManager &resourcesManager)
-	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager, _font), _menuManager(_font), _animationManager(_resourcesManager, _mapManager, _font, _realMapSize), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1)
+	: _gameMode(NORMAL), _resourcesManager(resourcesManager), _mapManager(_resourcesManager, _font), _menuManager(_font), _animationManager(_resourcesManager, _mapManager, this, _font, _realMapSize), _paused(false), _playersNumber(0), _mousePosition(0.0f, 0.0f), _turns(1)
 {
+	//std::vector<std::string> names;
+	//std::string search_path = "./maps/*.*";
+	//WIN32_FIND_DATA fd;
+	//HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
+	//if (hFind != INVALID_HANDLE_VALUE) {
+	//	do {
+	//		// read all (real) files in current folder
+	//		// , delete '!' read other 2 default folder . and ..
+	//		if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+	//			std::cout << fd.cFileName << std::endl;
+	//			names.push_back(fd.cFileName);
+	//		}
+	//	} while (::FindNextFile(hFind, &fd));
+	//	::FindClose(hFind);
+	//}
 	this->_mapManager.loadMap("map.tmx");
 	this->_mapSize = this->_mapManager.getMapSize();
 	this->_tileSize = this->_mapManager.getTileSize();
@@ -15,6 +32,8 @@ GameState::GameState(ResourcesManager &resourcesManager)
 		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
 	const_cast<sf::Texture &>(this->_font.getTexture(8)).setSmooth(false);
 	const_cast<sf::Texture &>(this->_font.getTexture(10)).setSmooth(false);
+	const_cast<sf::Texture &>(this->_font.getTexture(16)).setSmooth(false);
+	const_cast<sf::Texture &>(this->_font.getTexture(24)).setSmooth(false);
 	this->_hp = sf::Text("", this->_font, 8);
 	this->_hp.setColor(sf::Color::White);
 	this->_menuManager.createMenus(this, this->_resourcesManager);
@@ -34,10 +53,12 @@ GameState::~GameState()
 
 void GameState::pause()
 {
+	this->_paused = true;
 }
 
 void GameState::resume()
 {
+	this->_paused = false;
 }
 
 void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &events)
@@ -45,7 +66,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 	sf::Event event;
 	sf::Vector2i tilePos;
 
-	while (!events.empty())
+	while (!events.empty() && !this->_paused)
 	{
 		event = events.front();
 		if (event.type == sf::Event::MouseMoved)
@@ -95,6 +116,8 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 					this->battle(tilePos);
 				}
 			}
+			else if (this->_gameMode == ENDED)
+				this->_finished = true;
 		}
 		events.pop();
 	}
@@ -103,11 +126,12 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 void GameState::update(const sf::Time &time)
 {
 	this->_resourcesManager.update(time);
-	if (this->_gameMode == ANIMATION)
-	{
-		if (!this->_animationManager.update(time))
-			this->_gameMode = NORMAL;
-	}
+	if (!this->_paused)
+		if (this->_gameMode == ANIMATION)
+		{
+			if (!this->_animationManager.update(time) && this->_gameMode == ANIMATION)
+				this->_gameMode = NORMAL;
+		}
 }
 
 void GameState::display(sf::RenderWindow &window)
@@ -141,12 +165,12 @@ void GameState::display(sf::RenderWindow &window)
 				this->_hp.setCharacterSize(10);
 				this->_hp.setColor(sf::Color::Black);
 				this->_hp.setString(std::to_string((*iter)->getLife()));
-				this->_hp.setPosition((pos.x + 1) * this->_tileSize.x - 10, (pos.y + 1) * this->_tileSize.y - 8);
+				this->_hp.setPosition(static_cast<float>((pos.x + 1) * this->_tileSize.x - 10), static_cast<float>((pos.y + 1) * this->_tileSize.y - 8));
 				window.draw(this->_hp);
 				this->_hp.setCharacterSize(8);
 				this->_hp.setColor(sf::Color::White);
 				this->_hp.setString(std::to_string((*iter)->getLife()));
-				this->_hp.setPosition((pos.x + 1) * this->_tileSize.x - 10, (pos.y + 1) * this->_tileSize.y - 7);
+				this->_hp.setPosition(static_cast<float>((pos.x + 1) * this->_tileSize.x - 10), static_cast<float>((pos.y + 1) * this->_tileSize.y - 7));
 				window.draw(this->_hp);
 			}
 			++iter;
@@ -154,8 +178,13 @@ void GameState::display(sf::RenderWindow &window)
 		++iter3;
 	}
 	this->_menuManager.draw(window);
-	if (this->_gameMode == ANIMATION)
+	if (this->_gameMode == ANIMATION || this->_gameMode == ENDED)
 		this->_animationManager.draw(window);
+}
+
+bool GameState::ended() const
+{
+	return (this->_finished);
 }
 
 sf::Vector2f GameState::getViewSize() const
@@ -167,7 +196,6 @@ void GameState::movePlayerUnit()
 {
 	this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::MOVEUNIT, this->_players.at(*this->_currentPlayer)));
 	this->_gameMode = ANIMATION;
-	//this->_players.at(*this->_currentPlayer)->moveUnit();
 }
 
 void GameState::changeTurn()
@@ -212,8 +240,8 @@ void GameState::findTargets()
 	}
 	if (!this->_targets.empty())
 	{
-		this->_players.at(*this->_currentPlayer)->prepareAttackUnit();
-		this->_gameMode = BATTLE;
+		this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::ATTACKMOVEUNIT, this->_players.at(*this->_currentPlayer)));
+		this->_gameMode = ANIMATION;
 	}
 }
 
@@ -225,6 +253,17 @@ void GameState::buyUnit(sf::Uint32 cost)
 		this->spawnUnit(this->_players.at(*this->_currentPlayer), unit, this->_tilePosition);
 		unit->acted();
 	}
+}
+
+void GameState::battleMode()
+{
+	if (this->_gameMode == ANIMATION)
+		this->_gameMode = BATTLE;
+}
+
+void GameState::endGame()
+{
+	this->_gameMode = ENDED;
 }
 
 void GameState::battle(const sf::Vector2i &tilePos)
@@ -239,6 +278,7 @@ void GameState::battle(const sf::Vector2i &tilePos)
 		{
 			if ((*iter)->getTilePosition() == uTilePos && (*iter) != nullptr)
 			{
+				const sf::Uint8 &id = (*iter)->getPlayerId() - 1;
 				IUnit *attacker = this->_players.at(*this->_currentPlayer)->getSelectedUnit();
 				if (attacker != nullptr)
 				{
@@ -247,18 +287,27 @@ void GameState::battle(const sf::Vector2i &tilePos)
 					if ((*iter)->hit(damageAttacker))
 					{
 						this->_mapManager.removeUnit(uTilePos);
-						this->_players.at(this->_playersTeams.at((*iter)->getPlayerId() - 1))->destroyUnit(*iter);
+						this->_players.at(this->_playersTeams.at(id))->destroyUnit(*iter);
 					}
 					else if (attacker->hit(damageDefender))
 					{
 						this->_mapManager.removeUnit(attacker->getTilePosition());
 						this->_players.at(*this->_currentPlayer)->destroyUnit(attacker);
 					}
-					// TODO: calculate damages output and win if enemy has no more units
 				}
 				this->_targets.clear();
 				this->_players.at(*this->_currentPlayer)->endAttack();
 				this->_gameMode = NORMAL;
+				if (this->_players.at(this->_playersTeams.at(id))->getUnitsNumber() == 0)
+				{
+					this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::WINNING, (*this->_currentPlayer), this->_turns));
+					this->_gameMode = ANIMATION;
+				}
+				else if (this->_players.at(*this->_currentPlayer)->getUnitsNumber() == 0)
+				{
+					this->_animationManager.play(AnimationManager::Infos(AnimationManager::Type::WINNING, this->_playersTeams.at(id), this->_turns));
+					this->_gameMode = ANIMATION;
+				}
 				break;
 			}
 			++iter;
@@ -273,9 +322,9 @@ void GameState::addPlayer()
 	player->setMapSize(this->_mapSize);
 	if (this->_playersNumber == 1)
 	{
-		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 4));
+		//this->spawnUnit(player, new Unit(), sf::Vector2u(2, 4));
 		this->spawnUnit(player, new Unit(), sf::Vector2u(1, 1));
-		this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
+		//this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
 	}
 	else if (this->_playersNumber == 2)
 	{

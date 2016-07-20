@@ -11,7 +11,9 @@ public:
 	enum Type
 	{
 		NEWTURN = 0,
-		MOVEUNIT = 1
+		MOVEUNIT = 1,
+		ATTACKMOVEUNIT = 2,
+		WINNING = 3
 	};
 	struct Infos
 	{
@@ -26,7 +28,7 @@ public:
 		const sf::Uint32 &turns = 0;
 		Player *playerPtr = nullptr;
 	};
-	AnimationManager(ResourcesManager &resourcesManager, MapManager &mapManager, const sf::Font &font, const sf::Vector2f &size);
+	AnimationManager(ResourcesManager &resourcesManager, MapManager &mapManager, GameState *gameState, const sf::Font &font, const sf::Vector2f &size);
 	virtual ~AnimationManager();
 
 	void play(AnimationManager::Infos infos);

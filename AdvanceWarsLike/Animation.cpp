@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include "GameState.h"
 
 NewTurnAnimation::NewTurnAnimation(const sf::Font &font, const sf::String &player, const sf::Uint32 &turns, const sf::Vector2f &size, const sf::Time animationTime)
 	: _animationTime(animationTime), _size(size)
@@ -83,8 +84,7 @@ bool MovementAnimation::update(const sf::Time &elapsedTime)
 		this->_unit->changeSprite("stand");
 		this->_elapsedTime = sf::Time();
 		this->_unit->setTilePosition(*(this->_positions.end() - 1));
-		if (this->_player != nullptr)
-			this->_player->moveUnit();
+		this->end();
 		this->_unit = nullptr;
 		return (false);
 	}
@@ -127,12 +127,19 @@ bool MovementAnimation::update(const sf::Time &elapsedTime)
 
 void MovementAnimation::changePath(Player *player)
 {
+	this->_elapsedTime = sf::Time();
 	this->_player = player;
 	this->_player->unselect();
 	this->_positions = player->findPath();
 	this->_currentPosition = this->_positions.begin();
 	this->_unit = this->_mapManager.getUnit(this->_positions.at(0));
 	this->_mapManager.removeUnit(this->_positions.at(0));
+}
+
+void MovementAnimation::end()
+{
+	if (this->_player != nullptr)
+		this->_player->moveUnit();
 }
 
 void MovementAnimation::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -143,4 +150,80 @@ void MovementAnimation::draw(sf::RenderTarget &target, sf::RenderStates states) 
 		this->_unit->setSpritePosition(this->_unitPos);
 		target.draw(*this->_unit, states);
 	}
+}
+
+AttackMovementAnimation::AttackMovementAnimation(ResourcesManager &resourcesManager, MapManager &mapManager, GameState *gameState, const sf::Time animationTime)
+	: MovementAnimation(resourcesManager, mapManager, animationTime), _gameState(gameState)
+{
+}
+
+AttackMovementAnimation::~AttackMovementAnimation()
+{
+}
+
+void AttackMovementAnimation::end()
+{
+	if (this->_player != nullptr)
+		this->_player->attackMoveUnit();
+	if (this->_gameState != nullptr)
+		this->_gameState->battleMode();
+}
+
+WinAnimation::WinAnimation(ResourcesManager &resourcesManager, GameState *gameState, const sf::Font &font, const sf::Vector2f &size, const sf::Time animationTime)
+	: _resourcesManager(resourcesManager), _gameState(gameState), _font(font), _size(size), _animationTime(animationTime), _congratulations("Congratulations !", _font, 24), _player("", this->_font, 16), _continue("Click anywhere to continue", this->_font, 16)
+{
+	this->_congratulations.setColor(sf::Color::White);
+	this->_congratulations.setOutlineColor(sf::Color::Black);
+	this->_player.setColor(sf::Color::Black);
+	this->_player.setOutlineColor(sf::Color::White);
+	this->_continue.setColor(sf::Color::Black);
+	this->_continue.setOutlineColor(sf::Color::White);
+}
+
+WinAnimation::~WinAnimation()
+{
+}
+
+bool WinAnimation::update(const sf::Time &elapsedTime)
+{
+	this->_elapsedTime += elapsedTime;
+	if (this->_elapsedTime > this->_animationTime)
+	{
+		if (this->_gameState != nullptr)
+			this->_gameState->endGame();
+	}
+	if (this->_elapsedTime.asSeconds() < 0.5f)
+	{
+		float tmp = (this->_elapsedTime.asSeconds() / 0.5f);
+		this->_congratulations.setTextPosition(sf::Vector2f(this->_size.x / 2 - this->_congratulations.getTextLocalBounds().width / 2, this->_size.y / 2 * tmp - this->_congratulations.getTextLocalBounds().height));
+		this->_player.setTextPosition(sf::Vector2f(this->_size.x / 2 - this->_player.getTextLocalBounds().width / 2, this->_congratulations.getTextPosition().y + this->_congratulations.getTextLocalBounds().height + 10));
+	}
+	else if (this->_elapsedTime > this->_animationTime)
+	{
+		this->_continue.setTextPosition(this->_size.x / 2 - this->_continue.getTextLocalBounds().width / 2, this->_size.y - this->_continue.getTextLocalBounds().height * 2);
+	}
+	return (true);
+}
+
+void WinAnimation::setWinner(const sf::String &player, const sf::Uint32 &turns)
+{
+	this->_elapsedTime = sf::Time();
+	std::string tmp = player.toAnsiString();
+	if (!tmp.empty())
+	{
+		tmp[0] = ::toupper(tmp[0]);
+
+		for (std::size_t i = 1; i < tmp.length(); ++i)
+			tmp[i] = ::tolower(tmp[i]);
+	}
+	this->_player.setString(tmp + " wins in " + std::to_string(turns) + " turns");
+}
+
+void WinAnimation::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+	states.transform *= this->getTransform();
+	target.draw(this->_congratulations, states);
+	target.draw(this->_player, states);
+	if (this->_elapsedTime > this->_animationTime)
+		target.draw(this->_continue, states);
 }

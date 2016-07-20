@@ -11,6 +11,14 @@ Application::Application(sf::Vector2u winSize)
 
 Application::~Application()
 {
+	std::vector<IState *>::iterator iter = this->_states.begin();
+	std::vector<IState *>::iterator iter2 = this->_states.end();
+
+	while (iter != iter2)
+	{
+		delete (*iter);
+		++iter;
+	}
 	this->_states.clear();
 }
 
@@ -36,7 +44,14 @@ void Application::run()
 		this->_window.clear(sf::Color::Cyan);
 		this->_states.back()->display(this->_window);
 		this->_window.display();
+		if (this->_states.back()->ended())
+		{
+			delete (this->_states.back());
+			this->_states.erase(this->_states.end() - 1);
+		}
 	}
+	if (this->_window.isOpen())
+		this->_window.close();
 }
 
 void Application::resize(sf::Vector2f winSize, sf::Vector2f viewSize)

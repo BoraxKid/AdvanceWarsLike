@@ -96,9 +96,9 @@ void Unit::setPlayer(sf::Uint8 id)
 		this->_color = sf::Color(192, 64, 64);
 	if (this->_playerId == 2)
 		this->_color = sf::Color(65, 65, 255);
-	if (this->_playerId == 1)
+	if (this->_playerId == 3)
 		this->_color = sf::Color::Green;
-	if (this->_playerId == 2)
+	if (this->_playerId == 4)
 		this->_color = sf::Color(219, 169, 0);
 	if (this->_currentGraphics != "")
 		this->_graphics.at(this->_currentGraphics)->setColor(this->_color);

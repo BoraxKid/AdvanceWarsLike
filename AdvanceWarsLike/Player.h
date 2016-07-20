@@ -18,7 +18,7 @@ public:
 	void endTurn();
 	void startTurn();
 	void moveUnit();
-	void prepareAttackUnit();
+	void attackMoveUnit();
 	void endAttack();
 	Click click(const sf::Vector2i &tilePos, MapManager &mapManager);
 	void destroyUnit(IUnit *unit);
@@ -35,6 +35,7 @@ public:
 	std::vector<sf::Vector2u> findPath();
 	void unselect();
 	IUnit *getSelectedUnit() const;
+	sf::Uint32 getUnitsNumber() const;
 
 private:
 	void resetMovementMap();

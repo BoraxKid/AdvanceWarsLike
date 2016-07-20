@@ -45,9 +45,10 @@ void Player::moveUnit()
 	this->_selectedUnit = this->_units.end();
 }
 
-void Player::prepareAttackUnit()
+void Player::attackMoveUnit()
 {
-	this->_mapManager.move((*this->_selectedUnit)->getTilePosition(), this->_aimedTile);
+	this->_moving = false;
+	this->_mapManager.addUnit(*this->_selectedUnit, this->_aimedTile);
 }
 
 void Player::endAttack()
@@ -317,6 +318,11 @@ IUnit *Player::getSelectedUnit() const
 	if (this->_selectedUnit != this->_units.end())
 		return (*this->_selectedUnit);
 	return (nullptr);
+}
+
+sf::Uint32 Player::getUnitsNumber() const
+{
+	return (this->_units.size());
 }
 
 void Player::resetMovementMap()
