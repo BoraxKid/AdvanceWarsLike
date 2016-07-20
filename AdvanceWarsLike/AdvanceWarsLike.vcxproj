@@ -174,19 +174,19 @@
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="maps\map_2p.tmx" />
     <None Include="packages.config" />
-    <None Include="shader.glsl" />
+    <None Include="resources\shader.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bot.png" />
-    <Image Include="tiles.png" />
-    <Image Include="units.png" />
-    <Image Include="units2.png" />
+    <Image Include="resources\tiles.png" />
+    <Image Include="resources\units.png" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="tiles.xml" />
-    <Xml Include="units.xml" />
+    <Xml Include="resources\tiles.xml" />
+    <Xml Include="resources\units.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resources\uni0553-webfont.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

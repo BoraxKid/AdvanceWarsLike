@@ -191,29 +191,29 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="shader.glsl">
-      <Filter>Fichiers de ressources</Filter>
-    </None>
-    <None Include="maps\map_2p.tmx">
+    <None Include="resources\shader.glsl">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="tiles.png">
+    <Image Include="resources\tiles.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
-    <Image Include="units.png">
-      <Filter>Fichiers de ressources</Filter>
-    </Image>
-    <Image Include="units2.png">
-      <Filter>Fichiers de ressources</Filter>
-    </Image>
-    <Image Include="bot.png">
+    <Image Include="resources\units.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="tiles.xml" />
-    <Xml Include="units.xml" />
+    <Xml Include="resources\tiles.xml">
+      <Filter>Fichiers de ressources</Filter>
+    </Xml>
+    <Xml Include="resources\units.xml">
+      <Filter>Fichiers de ressources</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resources\uni0553-webfont.ttf">
+      <Filter>Fichiers de ressources</Filter>
+    </Font>
   </ItemGroup>
 </Project>

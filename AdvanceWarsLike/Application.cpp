@@ -3,7 +3,7 @@
 Application::Application(sf::Vector2u winSize)
 	: _window(sf::VideoMode(winSize.x, winSize.y), "Advance Wars Like"), _winSize(sf::Vector2f(winSize)), _view(sf::Vector2f(0, 0), _winSize), _resourcesManager()
 {
-	if (!this->_font.loadFromFile("uni0553-webfont.ttf"))
+	if (!this->_font.loadFromFile("resources/uni0553-webfont.ttf"))
 		std::cerr << "Can't load font in file " << __FILE__ << " at line " << __LINE__ << std::endl;
 	const_cast<sf::Texture &>(this->_font.getTexture(8)).setSmooth(false);
 	const_cast<sf::Texture &>(this->_font.getTexture(10)).setSmooth(false);
@@ -64,7 +64,7 @@ void Application::resize(sf::Vector2f winSize, sf::Vector2f viewSize)
 {
 	this->_winSize.x = winSize.x;
 	this->_winSize.y = winSize.y;
-	this->_view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(winSize.x, winSize.y));
+	this->_view = sf::View(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(winSize.x, winSize.y));
 	this->_view.setCenter(viewSize.x / 2, viewSize.y / 2);
 	float a = viewSize.x / winSize.x;
 	float b = viewSize.y / winSize.y;
@@ -77,6 +77,7 @@ void Application::pushState(IState *state)
 	if (!this->_states.empty())
 		this->_states.back()->pause();
 	this->_states.push_back(state);
+	this->resize(sf::Vector2f(static_cast<float>(this->_winSize.x), static_cast<float>(this->_winSize.y)), this->_states.back()->getViewSize());
 }
 
 void Application::popState()

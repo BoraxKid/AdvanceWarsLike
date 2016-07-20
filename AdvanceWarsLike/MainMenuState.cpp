@@ -82,7 +82,7 @@ sf::Vector2f MainMenuState::getViewSize() const
 
 void MainMenuState::configPlayer(sf::Uint8 number)
 {
-	this->_state = new GameState(this->_resourcesManager, this->_font, "./maps/map_" + std::to_string(number) + "p.tmx");
+	this->_state = new GameState(this->_resourcesManager, this->_font, "./resources/map_" + std::to_string(number) + "p.tmx");
 }
 
 void MainMenuState::quit()

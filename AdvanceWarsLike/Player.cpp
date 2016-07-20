@@ -364,7 +364,7 @@ void Player::calculateMovement(MapManager &mapManager, const sf::Vector2i &tileP
 
 void Player::checkTile(MapManager &mapManager, std::vector<sf::Vector2i> &q, sf::Vector2i pos, sf::Vector2i pos2)
 {
-	Tile tile = mapManager.getTile(pos2);
+	TileType tile = mapManager.getTile(pos2);
 	if (tile != WATER && tile != MOUNTAIN)
 	{
 		this->_movement.at(pos2.x).at(pos2.y) = this->_movement.at(pos.x).at(pos.y) + 1 + mapManager.getTileMovement(tile);

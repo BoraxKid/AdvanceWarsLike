@@ -14,7 +14,7 @@ public:
 	GraphicsComponent(AnimatedSprite &sprite)
 		: _sprite(sprite), _color(sf::Color::White), _gray(false)
 	{
-		if (!this->_shader.loadFromFile("shader.glsl", sf::Shader::Fragment))
+		if (!this->_shader.loadFromFile("resources/shader.glsl", sf::Shader::Fragment))
 			std::cerr << "Can't load shader.glsl" << std::endl;
 		this->_shader.setParameter(std::string("texture"), sf::Shader::CurrentTexture);
 		this->_shader.setParameter(std::string("color"), this->_color);
@@ -91,6 +91,7 @@ public:
 	{
 		this->_text.setColor(sf::Color::Black);
 		this->_text.setOutlineColor(sf::Color::White);
+		this->setPosition(sf::Vector2f(4.0f, 0.0f));
 		if (name == "red")
 			this->_text.setColor(sf::Color(192, 64, 64));
 		if (name == "blue")

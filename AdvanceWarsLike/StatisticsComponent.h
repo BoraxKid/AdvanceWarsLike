@@ -53,7 +53,7 @@ class TankStatisticsComponent : public StatisticsComponent
 {
 public:
 	TankStatisticsComponent()
-		: StatisticsComponent(5, 4, 1)
+		: StatisticsComponent(10, 4, 1)
 	{}
 
 	virtual ~TankStatisticsComponent()

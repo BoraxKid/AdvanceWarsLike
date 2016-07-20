@@ -2,8 +2,8 @@
 
 ResourcesManager::ResourcesManager()
 {
-	this->loadSprites("tiles.xml");
-	this->loadSprites("units.xml");
+	this->loadSprites("resources/tiles.xml");
+	this->loadSprites("resources/units.xml");
 }
 
 ResourcesManager::~ResourcesManager()
@@ -24,7 +24,7 @@ void ResourcesManager::update(const sf::Time &elapsed)
 
 void ResourcesManager::loadTexture(sf::String textureName)
 {
-	if (!this->_textures[textureName].loadFromFile(textureName))
+	if (this->_textures.find(textureName) == this->_textures.end() && !this->_textures[textureName].loadFromFile("resources/" + textureName))
 		std::cerr << "Texture " << textureName.toAnsiString() << " couldn't be loaded" << std::endl;
 }
 
@@ -54,7 +54,7 @@ void ResourcesManager::loadSprites(const char *file)
 			while (elem)
 			{
 				this->_sprites[spriteName].addFrame(sf::IntRect(elem.attribute("x").as_uint(), elem.attribute("y").as_uint(), elem.attribute("width").as_uint(), elem.attribute("height").as_uint()));
-				if (spriteName.find("left") != sf::String::InvalidPos)
+				if (spriteName.find("move_left") != sf::String::InvalidPos)
 				{
 					this->_sprites.at(spriteName).setScale(static_cast<float>(-1), static_cast<float>(1));
 					this->_sprites.at(spriteName).setOrigin(static_cast<float>(elem.attribute("width").as_uint()), static_cast<float>(0));

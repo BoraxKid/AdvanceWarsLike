@@ -1,7 +1,7 @@
 #include "Map.h"
 
 Map::Map(ResourcesManager &resourcesManager, const sf::Font &font)
-	: _resourcesManager(resourcesManager), _font(font)
+	: _resourcesManager(resourcesManager), _font(font), _qg(0)
 {
 }
 
@@ -42,32 +42,35 @@ sf::Vector2u Map::getTileSize() const
 	return (this->_tileSize);
 }
 
-sf::Uint8 Map::getTileMovement(Tile tile) const
+sf::Int8 Map::getTileMovement(TileType tile) const
 {
 	switch (tile)
 	{
 	case NONE:
-		return (sf::Uint8(0));
+		return (sf::Int8(1));
 		break;
 	case GROUND:
-		return (sf::Uint8(0));
+		return (sf::Int8(1));
 		break;
 	case WATER:
-		return (sf::Uint8(0));
+		return (sf::Int8(1));
 		break;
 	case FOREST:
-		return (sf::Uint8(1));
+		return (sf::Int8(2));
 		break;
 	case MOUNTAIN:
-		return (sf::Uint8(2));
+		return (sf::Int8(3));
 		break;
 	case BUILDING:
-		return (sf::Uint8(1));
+		return (sf::Int8(2));
+		break;
+	case ROAD:
+		return (sf::Int8(0));
 		break;
 	default:
 		break;
 	}
-	return (sf::Uint8(0));
+	return (sf::Int8(1));
 }
 
 const std::vector<std::vector<IBuilding *>> &Map::getBuildings() const
@@ -80,9 +83,9 @@ const std::vector<std::vector<IUnit *>> &Map::getUnits() const
 	return (this->_units);
 }
 
-Tile Map::getTile(sf::Vector2i pos) const
+TileType Map::getTile(sf::Vector2i pos) const
 {
-	Tile tmp = NONE;
+	TileType tmp = NONE;
 	if (pos.x >= 0 && static_cast<sf::Uint32>(pos.x) < this->_size.x && pos.y >= 0 && static_cast<sf::Uint32>(pos.y) < this->_size.y)
 	{
 		if (this->_buildings.at(pos.x).at(pos.y) != nullptr)
@@ -92,12 +95,17 @@ Tile Map::getTile(sf::Vector2i pos) const
 
 		while (iter != iter2)
 		{
-			if (iter->second.at(pos.x).at(pos.y) != NONE)
-				tmp = iter->second.at(pos.x).at(pos.y);
+			if (iter->second.at(pos.x).at(pos.y).type != NONE)
+				tmp = iter->second.at(pos.x).at(pos.y).type;
 			++iter;
 		}
 	}
 	return (tmp);
+}
+
+const sf::Uint8 &Map::getQG() const
+{
+	return (this->_qg);
 }
 
 bool Map::canMove(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
@@ -126,37 +134,12 @@ void Map::move(const sf::Vector2u &unitPosition, const sf::Vector2u &position)
 	}
 }
 
-void Map::dump() const
-{
-	std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iterMap = this->_tiles.begin();
-
-	while (iterMap != this->_tiles.end())
-	{
-		std::vector<std::vector<Tile>>::const_iterator iter = iterMap->second.begin();
-		std::vector<Tile>::const_iterator iter2;
-		while (iter != iterMap->second.end())
-		{
-			iter2 = (*iter).begin();
-			while (iter2 != (*iter).end())
-			{
-				std::cout << " - " << (*iter2);
-				++iter2;
-			}
-			std::cout << std::endl;
-			++iter;
-		}
-		std::cout << std::endl;
-		++iterMap;
-	}
-}
-
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	sf::Uint32 i;
 	sf::Uint32 x = this->_size.x;
 	sf::Uint32 j;
 	sf::Uint32 y = this->_size.y;
-	std::map<Tile, sf::String>::const_iterator iter;
 	std::map<sf::String, std::vector<std::vector<Tile>>>::const_iterator iterMap = this->_tiles.begin();
 	IBuilding *building;
 	IUnit *unit;
@@ -173,10 +156,10 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 			{
 				pos.x = static_cast<float>(i * this->_tileSize.x);
 				pos.y = static_cast<float>(j * this->_tileSize.y);
-				iter = this->_tilesNames.find(iterMap->second.at(i).at(j)); 
-				if (iter != this->_tilesNames.end())
+				const Tile &tile = iterMap->second.at(i).at(j);
+				if (tile.type != NONE)
 				{
-					AnimatedSprite &sprite = this->_resourcesManager.at(iter->second);
+					AnimatedSprite &sprite = this->_resourcesManager.at(tile.tile);
 					sprite.setPosition(pos.x, pos.y + this->_tileSize.y - sprite.getHeight());
 					target.draw(sprite, states);
 				}

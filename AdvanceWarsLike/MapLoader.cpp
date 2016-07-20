@@ -15,6 +15,21 @@ bool MapLoader::printError(pugi::xml_parse_result &result) const
 	return (false);
 }
 
+TileType MapLoader::getTileType(const sf::String &name) const
+{
+	if (name.find("ground") != std::string::npos)
+		return (GROUND);
+	if (name.find("water") != std::string::npos)
+		return (WATER);
+	if (name.find("forest") != std::string::npos)
+		return (FOREST);
+	if (name.find("mountain") != std::string::npos)
+		return (MOUNTAIN);
+	if (name.find("road") != std::string::npos)
+		return (ROAD);
+	return (BUILDING);
+}
+
 bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Tile>> &tiles, const sf::Vector2u &size) const
 {
 	pugi::xml_node tile;
@@ -27,7 +42,8 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 	iter2 = (*iter).begin();
 	while (tile)
 	{
-		(*iter2) = static_cast<Tile>(tile.first_attribute().as_uint());
+		if (tile.first_attribute().as_uint() != 0 && this->_tiles.find(tile.first_attribute().as_uint()) != this->_tiles.end())
+			(*iter2) = Tile(this->getTileType(this->_tiles.at(tile.first_attribute().as_uint())), this->_tiles.at(tile.first_attribute().as_uint()));
 		++iter;
 		if (iter == tiles.end())
 		{
@@ -40,7 +56,7 @@ bool MapLoader::loadLayer(const pugi::xml_node data, std::vector<std::vector<Til
 	return (false);
 }
 
-bool MapLoader::loadBuildings(const pugi::xml_node data, std::vector<std::vector<IBuilding *>> &tiles, const sf::Vector2u &size, std::map<Tile, sf::String> &tilesNames) const
+bool MapLoader::loadBuildings(const pugi::xml_node data, std::vector<std::vector<IBuilding *>> &tiles, const sf::Vector2u &size, sf::Uint8 &qg) const
 {
 	pugi::xml_node tile;
 	std::vector<std::vector<IBuilding *>>::iterator iter;
@@ -52,11 +68,11 @@ bool MapLoader::loadBuildings(const pugi::xml_node data, std::vector<std::vector
 	iter2 = (*iter).begin();
 	while (tile)
 	{
-		if (tile.first_attribute().as_uint() != 0)
+		if (tile.first_attribute().as_uint() != 0 && this->_tiles.find(tile.first_attribute().as_uint()) != this->_tiles.end())
 		{
-			std::map<Tile, sf::String>::iterator tmp = tilesNames.find(static_cast<Tile>(tile.first_attribute().as_uint()));
-			if (tmp != tilesNames.end())
-				(*iter2) = new Building(tmp->second);
+			(*iter2) = new Building(this->_tiles.at(tile.first_attribute().as_uint()));
+			if (this->_tiles.at(tile.first_attribute().as_uint()).find("qg") != std::string::npos)
+				++qg;
 		}
 		++iter;
 		if (iter == tiles.end())
@@ -70,11 +86,11 @@ bool MapLoader::loadBuildings(const pugi::xml_node data, std::vector<std::vector
 	return (false);
 }
 
-bool MapLoader::loadMap(Map &map, const char *fileName) const
+bool MapLoader::loadMap(Map &map, const char *fileName)
 {
 	std::vector<std::vector<Tile>>::iterator iter;
 	std::vector<std::vector<IUnit *>>::iterator iterUnits;
-	std::vector<Tile>::iterator iter2;
+	std::vector<TileType>::iterator iter2;
 	pugi::xml_parse_result result;
 	pugi::xml_document doc;
 	pugi::xml_node data;
@@ -94,10 +110,9 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 	}
 	data = doc.child("map").child("tileset").child("image");
 	tile = doc.child("map").child("tileset").child("tile");
-	map._tilesNames[NONE] = "invalid";
 	while (tile)
 	{
-		map._tilesNames[static_cast<Tile>(tile.attribute("id").as_uint() + 1)] = sf::String(tile.child("properties").child("property").attribute("value").as_string());
+		this->_tiles[tile.attribute("id").as_uint() + 1] = sf::String(tile.child("properties").child("property").attribute("value").as_string());
 		tile = tile.next_sibling();
 	}
 	data = doc.child("map").child("layer");
@@ -113,7 +128,7 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 				(*iterBuilding) = std::vector<IBuilding *>(map._size.y, nullptr);
 				++iterBuilding;
 			}
-			this->loadBuildings(data.child("data"), map._buildings, map._size, map._tilesNames);
+			this->loadBuildings(data.child("data"), map._buildings, map._size, map._qg);
 		}
 		else
 		{
@@ -121,7 +136,7 @@ bool MapLoader::loadMap(Map &map, const char *fileName) const
 			iter = map._tiles[name].begin();
 			while (iter != map._tiles[name].end())
 			{
-				(*iter) = std::vector<Tile>(map._size.y, GROUND);
+				(*iter) = std::vector<Tile>(map._size.y, Tile());
 				++iter;
 			}
 			this->loadLayer(data.child("data"), map._tiles[name], map._size);

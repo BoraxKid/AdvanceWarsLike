@@ -78,7 +78,7 @@ void GameState::handleEvents(sf::RenderWindow &window, std::queue<sf::Event> &ev
 					else
 					{
 						const std::vector<std::vector<IBuilding *>> &buildings = this->_mapManager.getBuildings();
-						Tile tile = this->_mapManager.getTile(tilePos);
+						TileType tile = this->_mapManager.getTile(tilePos);
 						// TODO: display tiles stats
 						this->_menuManager.reset();
 						Player::Click click = this->_players.at(*this->_currentPlayer)->click(tilePos, this->_mapManager);
@@ -317,17 +317,6 @@ void GameState::addPlayer()
 	this->_playersTeams.push_back(this->_availablePlayersTeams.at(++this->_playersNumber));
 	Player *player = new Player(this->_playersNumber, this->_mapManager, this->_font, this->_playersTeams.back());
 	player->setMapSize(this->_mapSize);
-	if (this->_playersNumber == 1)
-	{
-		//this->spawnUnit(player, new Unit(), sf::Vector2u(2, 4));
-		this->spawnUnit(player, new Unit(), sf::Vector2u(1, 1));
-		//this->spawnUnit(player, new Unit(), sf::Vector2u(12, 2));
-	}
-	else if (this->_playersNumber == 2)
-	{
-		this->spawnUnit(player, new Unit(), sf::Vector2u(4, 2));
-		this->spawnUnit(player, new Unit(), sf::Vector2u(2, 12));
-	}
 	this->_players[this->_playersTeams.at(this->_playersNumber - 1)] = player;
 }
 
@@ -389,7 +378,8 @@ void GameState::setupTeams()
 	this->_availablePlayersTeams.push_back("green");
 	this->_availablePlayersTeams.push_back("yellow");
 	this->_availablePlayersTeams.push_back("black");
-	this->addPlayer();
-	this->addPlayer();
+	const sf::Uint8 &players = this->_mapManager.getQG();
+	while (this->_playersNumber < players && this->_playersNumber < 4)
+		this->addPlayer();
 	this->_currentPlayer = this->_playersTeams.begin();
 }
