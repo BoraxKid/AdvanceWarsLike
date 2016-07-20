@@ -2,7 +2,7 @@
 #include "GameState.h"
 
 MainMenuState::MainMenuState(ResourcesManager &resourcesManager, const sf::Font &font, const sf::Vector2f &winSize)
-	: _resourcesManager(resourcesManager), _font(font), _size(winSize), _menuManager(_font, winSize), _paused(false), _quit(false), _gameTitle("Tanks!", _font, 48)
+	: _resourcesManager(resourcesManager), _font(font), _size(winSize), _menuManager(_font, winSize), _paused(false), _quit(false), _gameTitle("TANKS!", _font, 48)
 {
 	this->_menuManager.createMenusMainMenuState(this, resourcesManager);
 	this->_menuManager.openMainMenu();
